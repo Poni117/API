@@ -8,5 +8,5 @@ typedef struct Response
     
 }response_t;
 
-request_t* antisound_http_parseRuqest(char* request);
-char* antisound_http_builResponse(response_t* response)
+request_t* antiSound_http_parseRuqest(char* request);
+char* antiSound_http_builResponse(response_t* response)

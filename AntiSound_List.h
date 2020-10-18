@@ -1,5 +1,5 @@
-void antisound_list_new();
-void antisound_list_add(); 
-void antisound_list_update(); 
-void antisound_list_get(); 
-void antisound_list_remove();
+void antiSound_list_new();
+void antiSound_list_add(); 
+void antiSound_list_update(); 
+void antiSound_list_get(); 
+void antiSound_list_remove();
