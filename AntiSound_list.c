@@ -82,9 +82,8 @@ void* antiSound_list_get(list_t* list, int id)
         pointer = pointer->next;
     }
 
-    if(isIdExist = false)
+    if(isIdExist == false)
     {
-        //Exception
         return isUpdateSuccess;
     }
 
