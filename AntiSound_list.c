@@ -13,7 +13,6 @@ int antiSound_list_add(list_t* list, int data)
 {
     list_t* pointer = list;
     
-
     if(list == NULL)
     {
         pointer = malloc(sizeof(list_t));
@@ -59,7 +58,6 @@ bool antiSound_list_update(list_t* list, int id, void* newData)
 
     if(isIdExist != false || newData != NULL)
     {
-        //Exception
         pointer->next->data = newData;
         isUpdateSuccess = true;
     }
