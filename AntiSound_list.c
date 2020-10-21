@@ -92,9 +92,25 @@ void* antiSound_list_get(list_t* list, int id)
 
 bool antiSound_list_remove(list_t* list, int id)
 {
+    bool isIdExist = false;
+
     list_t* pointer = list;
 
-    bool isIdExist = false;
+    if(id == 0)
+    {
+        pointer = pointer->next;
+        free(list);
+        while(pointer->next != NULL)
+        {
+            pointer->task->id = pointer->task->id - 1;
+            pointer = pointer->next;
+        }
+
+        return isIdExist = true;
+    }
+
+    list_t* lastList = list;
+    
 
     while(pointer->next != NULL)
     {
