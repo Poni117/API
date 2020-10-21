@@ -2,6 +2,7 @@ typedef struct List
 {
     void* data;
     struct List* next;
+    struct Task* task;
 }list_t;
 
 /* 
