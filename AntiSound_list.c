@@ -3,22 +3,23 @@
 
 list_t* antiSound_list_new()
 {
-    list_t* list = NULL;
-    antiSound_list_add(list, NULL);
+    list_t* list = malloc(sizeof(list_t));
+    list->data = NULL;
+    list->next = NULL;
+    list->task = NULL;
 
     return list;
 }
 
 int antiSound_list_add(list_t* list, void* data)
 {
-    if(list == NULL)
+    if(list->task == NULL)
     {
-        list = malloc(sizeof(list_t));
         list->data = data;
+        list->task = malloc(sizeof(task_t));
         list->task->id = 0;
-        list->next = NULL;
 
-        return  pointer->task->id;
+        return list->task->id;
     }
 
     list_t* pointer = list;
@@ -29,12 +30,11 @@ int antiSound_list_add(list_t* list, void* data)
     }
     
     pointer->next = malloc(sizeof(list_t));
-
-    pointer->next->task = malloc(sizeof(task_t));
-    
     pointer->next->data = data;
-    pointer->next->task->id = pointer->task->id + 1;
     pointer->next->next = NULL;
+    
+    pointer->next->task = malloc(sizeof(task_t));
+    pointer->next->task->id = pointer->task->id + 1;
     
     return pointer->next->task->id;
 }
