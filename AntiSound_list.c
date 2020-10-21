@@ -101,7 +101,7 @@ bool antiSound_list_remove(list_t* list, int id)
         if(pointer->next->task->id == id)
         {
             isIdExist = true;
-            return;
+            break;
         }
         
         pointer = pointer->next;
