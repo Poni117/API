@@ -4,12 +4,12 @@
 list_t* antiSound_list_new()
 {
     list_t* list = NULL;
-    antiSound_list_add(list);
+    antiSound_list_add(list, NULL);
 
     return list;
 }
 
-int antiSound_list_add(list_t* list, int data)
+int antiSound_list_add(list_t* list, void* data)
 {
     if(list == NULL)
     {
@@ -42,32 +42,20 @@ int antiSound_list_add(list_t* list, int data)
 bool antiSound_list_update(list_t* list, int id, void* newData)
 {
     bool isUpdateSuccess = false;
-    bool isIdExist = false;
 
-    list_t* pointer = list;
-
-    while(pointer->next != NULL)
+    if(newData == NULL)
     {
-        if(pointer->next->task->id == id)
-        {
-            isIdExist = true;
-            break;
-        }
-        pointer = pointer->next;
+        return isUpdateSuccess;
     }
 
-    if(isIdExist != false || newData != NULL)
-    {
-        pointer->next->data = newData;
-        isUpdateSuccess = true;
-    }
+    void* updateData = antiSound_list_get(list, id);
+    updateData = newData;
 
-    return isUpdateSuccess;
+    return isUpdateSuccess = true;
 }
 
 void* antiSound_list_get(list_t* list, int id)
 {
-    bool isUpdateSuccess = false;
     bool isIdExist = false;
 
     list_t* pointer = list;
@@ -80,11 +68,6 @@ void* antiSound_list_get(list_t* list, int id)
             break;
         }
         pointer = pointer->next;
-    }
-
-    if(isIdExist == false)
-    {
-        return isUpdateSuccess;
     }
 
     return pointer->next->data;
@@ -110,7 +93,6 @@ bool antiSound_list_remove(list_t* list, int id)
     }
 
     list_t* lastList = list;
-    
 
     while(pointer->next != NULL)
     {
@@ -128,9 +110,12 @@ bool antiSound_list_remove(list_t* list, int id)
         return isIdExist;
     }
 
-    list_t* deleteList = pointer->next;
-    pointer->next = deleteList->next;
-    free(deleteList);
+    if(pointer->next != NULL)
+    {
+        list_t* deleteList = pointer->next;
+        pointer->next = deleteList->next;
+        free(deleteList);
+    }
 
     int i = 0;
     while(pointer != NULL)
