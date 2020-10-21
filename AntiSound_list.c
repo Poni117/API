@@ -11,17 +11,17 @@ list_t* antiSound_list_new()
 
 int antiSound_list_add(list_t* list, int data)
 {
-    list_t* pointer = list;
-    
     if(list == NULL)
     {
-        pointer = malloc(sizeof(list_t));
-        pointer->data = data;
-        pointer->task->id = 0;
-        pointer->next = NULL;
+        list = malloc(sizeof(list_t));
+        list->data = data;
+        list->task->id = 0;
+        list->next = NULL;
 
         return  pointer->task->id;
     }
+
+    list_t* pointer = list;
 
     while(pointer->next != NULL)
     {
