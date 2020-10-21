@@ -70,6 +70,11 @@ void* antiSound_list_get(list_t* list, int id)
         pointer = pointer->next;
     }
 
+    if(isIdExist == false)
+    {
+        //exception
+    }
+
     return pointer->next->data;
 }
 
@@ -138,5 +143,5 @@ int antiSound_list_length(list_t* list)
         pointer = pointer->next;
     }
     
-    return pointer->task->id;
+    return pointer->task->id + 1;
 }
