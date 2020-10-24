@@ -1,25 +1,21 @@
 #include "AntiSound_List.h"
-#include "Task.h"
 
 list_t* antiSound_list_new()
 {
     list_t* list = malloc(sizeof(list_t));
-    list->data = NULL;
     list->next = NULL;
-    list->task = NULL;
 
     return list;
 }
 
 int antiSound_list_add(list_t* list, void* data)
 {
-    if(list->task == NULL)
+    if(list->data == NULL)
     {
+        list->id = 0;
         list->data = data;
-        list->task = malloc(sizeof(task_t));
-        list->task->id = 0;
 
-        return list->task->id;
+        return list->id;
     }
 
     list_t* pointer = list;
@@ -30,13 +26,10 @@ int antiSound_list_add(list_t* list, void* data)
     }
     
     pointer->next = malloc(sizeof(list_t));
-    pointer->next->data = data;
+    pointer->next->id = pointer->id + 1;
     pointer->next->next = NULL;
     
-    pointer->next->task = malloc(sizeof(task_t));
-    pointer->next->task->id = pointer->task->id + 1;
-    
-    return pointer->next->task->id;
+    return pointer->next->id;
 }
 
 bool antiSound_list_update(list_t* list, int id, void* newData)
@@ -62,7 +55,7 @@ void* antiSound_list_get(list_t* list, int id)
 
     while(pointer->next != NULL)
     {
-        if(pointer->next->task->id == id)
+        if(pointer->next->id == id)
         {
             isIdExist = true;
             break;
@@ -90,7 +83,7 @@ bool antiSound_list_remove(list_t* list, int id)
         free(list);
         while(pointer->next != NULL)
         {
-            pointer->task->id = pointer->task->id - 1;
+            pointer->id = pointer->id - 1;
             pointer = pointer->next;
         }
 
@@ -101,7 +94,7 @@ bool antiSound_list_remove(list_t* list, int id)
 
     while(pointer->next != NULL)
     {
-        if(pointer->next->task->id == id)
+        if(pointer->next->id == id)
         {
             isIdExist = true;
             break;
@@ -125,7 +118,7 @@ bool antiSound_list_remove(list_t* list, int id)
     int i = 0;
     while(pointer != NULL)
     {
-        pointer->task->id = i;
+        pointer->id = i;
         i++;
 
         pointer = pointer->next;
@@ -143,5 +136,5 @@ int antiSound_list_length(list_t* list)
         pointer = pointer->next;
     }
     
-    return pointer->task->id + 1;
+    return pointer->id + 1;
 }

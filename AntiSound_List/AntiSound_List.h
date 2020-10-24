@@ -1,8 +1,8 @@
 typedef struct List
 {
+    int id;
     void* data;
     struct List* next;
-    struct Task* task;
 }list_t;
 
 /* 
