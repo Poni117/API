@@ -4,9 +4,11 @@
 #include <string.h>
 #include "AntiSound_List.h"
 
+void antiSound_list_message(int id);
+
 int main()
 {
-    printf("choose test:\ntestNew/testAdd/testGetItem/testGetData/testUpdate/testRemove/testShowList\n");
+    antiSound_list_message(0);
 
     list_t* list = NULL;
 
@@ -33,10 +35,7 @@ int main()
 
         if (strcmp(start, "testNew") != 0)
         {
-            printf("------------------------------\n");
-            printf("a list is`t create\nrun testNew\n");
-            printf("------------------------------\n");
-
+            antiSound_list_message(1);
         }
         
     }
@@ -90,7 +89,7 @@ int main()
 
 bool antiSound_list_testNew()
 {
-    printf("------------------------------\n");
+    antiSound_list_message(2);
     printf("< antiSound_list_testNew >\n\n");
 
     bool isListCreated = false;
@@ -103,7 +102,7 @@ bool antiSound_list_testNew()
     }
 
     printf("isListCreated[%d]\n", isListCreated); 
-    printf("------------------------------\n");
+    antiSound_list_message(2);
 
 
     return isListCreated;
@@ -113,25 +112,24 @@ void antiSound_list_testAdd(list_t* list)
 {
     printf("< antiSound_list_testAdd >\n\n");
 
-    printf("Insert Data\n");
-
+    antiSound_list_message(4);
     char data[256] = "\0";
     scanf("%s", data);
 
     antiSound_list_add(list, data);
 
-    printf("------------------------------\n");
+    antiSound_list_message(2);
 }
 
 void antiSound_list_testUpdate(list_t* list)
 {
     printf("< antiSound_list_testUpdate >\n\n");
 
-    printf("Insert Id:\n");
+    antiSound_list_message(3);
     char id[256] = "\0";
     scanf("%s", id);
     
-    printf("Insert newData\n");
+    antiSound_list_message(4);
     char newData[256] = "\0";
     scanf("%s", newData);
 
@@ -144,29 +142,28 @@ void antiSound_list_testUpdate(list_t* list)
     bool isUpdateSuccess = antiSound_list_update(list, atoi(id), newData);
     printf("isUpdateSuccess[%d]\n\n", isUpdateSuccess); 
 
-    printf("------------------------------\n");
+    antiSound_list_message(2);
 }
 
 void antiSound_list_testGetItem(list_t* list)
 {
     printf("< antiSound_list_testGetItem >\n\n");
 
-    printf("Insert Id:\n");
-
+    antiSound_list_message(3);
     char id[256] = "\0";
     scanf("%s", id);
 
     list_t* item  =  antiSound_list_getItem(list, atoi(id));
     printf("item - [%p]\n", item);
     
-    printf("------------------------------\n");
+    antiSound_list_message(2);
 }
 
 void antiSound_list_testGetData(list_t* list)
 {
     printf("< antiSound_list_testGetData >\n\n");
 
-    printf("Insert Id:\n");
+    antiSound_list_message(3);
 
     char id[256] = "\0";
     scanf("%s", id);
@@ -174,7 +171,7 @@ void antiSound_list_testGetData(list_t* list)
     void* data = antiSound_list_getData(list, atoi(id));
     printf("id - [%d]\ndata - [%s]\n", atoi(id), (char*)data);
 
-    printf("------------------------------\n");
+    antiSound_list_message(2);
 
 }
 
@@ -182,7 +179,7 @@ void antiSound_list_testRemove(list_t* list)
 {
     printf("< antiSound_list_testRemove >\n\n");
 
-    printf("Insert Id:\n");
+    antiSound_list_message(3);
 
     char id[256] = "\0";
     scanf("%s", id);
@@ -193,7 +190,7 @@ void antiSound_list_testRemove(list_t* list)
     bool isRemoveSuccess = antiSound_list_remove(list, atoi(id));
     printf("isRemoveSuccess[%d]\n\n", isRemoveSuccess);
 
-    printf("------------------------------\n");
+    antiSound_list_message(2);
 }
 
 void antiSound_list_testLength(list_t* list)
@@ -202,24 +199,25 @@ void antiSound_list_testLength(list_t* list)
 
     if(list == NULL)
     {
-        printf("list is epmty\n");
-        printf("------------------------------\n");
+        antiSound_list_message(5);
         return;
     }
 
     int lengthOfList = antiSound_list_length(list);
 
     printf("lengthOfList[%d]\n", lengthOfList);
-    printf("------------------------------\n");
+    antiSound_list_message(2);
+
 }
 
 void antiSound_list_testShowList(list_t* list)
 {
+    printf("< antiSound_list_testShowList >\n\n");
+
     list_t* pointer = list->next;
     if(list == NULL)
     {
-        printf("list is epmty\n");
-        printf("------------------------------\n");
+        antiSound_list_message(5);
         return;
     }
 
@@ -230,5 +228,34 @@ void antiSound_list_testShowList(list_t* list)
         pointer = pointer->next;
     }
     
-    printf("------------------------------\n");
+    antiSound_list_message(2);
+}
+
+void antiSound_list_message(int id)
+{
+        switch (id)
+        {
+        case 0:
+            printf("choose test:\ntestNew/testAdd/testGetItem/testGetData/testUpdate/testRemove/testShowList\n");
+            break;
+        
+        case 1:
+            antiSound_list_message(2);
+            printf("a list is`t create\nrun testNew\n");
+            antiSound_list_message(2);
+            break;
+        case 2:
+            printf("------------------------------\n");
+            break;
+        case 3:
+            printf("Insert Id:\n");
+            break;
+        case 4:
+            printf("Insert Data\n");
+            break;
+        case 5:
+            printf("list is epmty\n");
+            antiSound_list_message(2);
+            break;
+        }
 }
