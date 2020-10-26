@@ -81,7 +81,7 @@ bool antiSound_list_remove(list_t* list, int id)
     bool isRemoveSuccess = false;
 
     list_t* deleteItem = antiSound_list_getItem(list, id);
-    
+
     if(deleteItem != NULL)
     {
         isRemoveSuccess = true;
@@ -110,7 +110,7 @@ int antiSound_list_length(list_t* list)
         pointer = pointer->next;
     }
 
-    int lengthOfList = pointer->id;
+    int lengthOfList = pointer->id + 1;
      
     return lengthOfList;
 }
