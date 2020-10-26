@@ -68,9 +68,12 @@ void antiSound_list_testUpdate(list_t* list, int id)
 {
     printf("< antiSound_list_testUpdate >\n\n");
 
+    list_t* updatedItem = antiSound_list_getItem(list, id);
+    
     void* newData = "name=Vanya";
-    bool isUpdateSuccess = antiSound_list_update(list, id, newData);
+    printf("updateItem:\n[%d] - [%s] to [%s]\n\n", updatedItem->id, (char*)updatedItem->data, (char*)newData);
 
+    bool isUpdateSuccess = antiSound_list_update(list, id, newData);
     printf("isUpdateSuccess[%d]\n\n", isUpdateSuccess); 
 
     antiSound_list_showList(list);
@@ -83,7 +86,6 @@ void antiSound_list_testGetItem(list_t* list, int id)
     printf("< antiSound_list_testGetItem >\n\n");
 
     list_t* item  =  antiSound_list_getItem(list, id);
-
     printf("id - [%d]\nitem - [%p]\n", id, item);
     
     printf("------------------------------\n");
@@ -94,7 +96,6 @@ void antiSound_list_testGetData(list_t* list, int id)
     printf("< antiSound_list_testGetData >\n\n");
 
     void* data = antiSound_list_getData(list, id);
-
     printf("id - [%d]\ndata - [%s]\n", id, (char*)data);
 
     printf("------------------------------\n");
@@ -105,8 +106,10 @@ void antiSound_list_testRemove(list_t* list, int id)
 {
     printf("< antiSound_list_testRemove >\n\n");
 
-    bool isRemoveSuccess = antiSound_list_remove(list, id);
+    list_t* deletedItem = antiSound_list_getItem(list, id);
+    printf("removedItem:\nid[%d] - [%s]\n\n", deletedItem->id, (char*)deletedItem->data);
 
+    bool isRemoveSuccess = antiSound_list_remove(list, id);
     printf("isRemoveSuccess[%d]\n\n", isRemoveSuccess);
 
     antiSound_list_showList(list);
