@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 typedef struct List
 {
     int id;
@@ -25,7 +27,12 @@ bool antiSound_list_update(list_t* list, int id, void* newData);
 /*
  * returns data of item by id  
  */
-void* antiSound_list_get(list_t* list, int id); 
+void* antiSound_list_getData(list_t* list, int id);
+
+/*
+ *  find request id and return item
+ */
+list_t* antiSound_list_getItem(list_t* list, int id);
 
 /*
  *  removes item by id
@@ -37,3 +44,5 @@ bool antiSound_list_remove(list_t* list, int id);
  * returns length of the list 
  */
 int antiSound_list_length(list_t* list);
+
+void antiSound_list_redefineId(list_t* pointer);
