@@ -35,8 +35,9 @@ void antiSound_list_testAdd(list_t* list)
 void antiSound_list_testUpdate(list_t* list)
 {
     void* newData = "name=Vanya";
+    bool isUpdateSuccess = antiSound_list_update(list, 3, newData);
 
-    printf("isUpdateSuccess[%d]\n", antiSound_list_update(list, 3, newData));
+    printf("isUpdateSuccess[%d]\n", isUpdateSuccess); 
     printf("------------------------------\n");
 }
 
@@ -49,12 +50,14 @@ void antiSound_list_testGetItem(list_t* list)
 
 void antiSound_list_testRemove(list_t* list)
 {
-    printf("isRemoveSuccess[%d]\n", antiSound_list_remove(list, 5));
+    bool isRemoveSuccess = antiSound_list_remove(list, 5);
+    printf("isRemoveSuccess[%d]\n", isRemoveSuccess);
     printf("------------------------------\n");
 }
 
 void antiSound_list_testLength(list_t* list)
 {
-    printf("lengthOfList[%d]\n", antiSound_list_length(list));
+    int lengthOfList = antiSound_list_length(list);
+    printf("lengthOfList[%d]\n", lengthOfList);
     printf("------------------------------\n");
 }
