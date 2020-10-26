@@ -21,13 +21,19 @@ int main()
     printf("id[%d]\n", antiSound_list_add(newList, data4));
     printf("id[%d]\n", antiSound_list_add(newList, data5));
     printf("id[%d]\n", antiSound_list_add(newList, data6));
+    printf("------------------------------------------------------------------------\n");
 
     printf("isUpdateSuccess[%d]\n", antiSound_list_update(newList, 3, newData));
+    printf("------------------------------------------------------------------------\n");
 
     list_t* item  =  antiSound_list_getItem(newList, 0);
     printf("getItemId[%d]\n", item->id);
+    printf("------------------------------------------------------------------------\n");
 
     printf("isRemoveSuccess[%d]\n", antiSound_list_remove(newList, 5));
+    printf("------------------------------------------------------------------------\n");
 
     printf("lengthOfList[%d]\n", antiSound_list_length(newList));
+    printf("------------------------------------------------------------------------\n");
+
 }
