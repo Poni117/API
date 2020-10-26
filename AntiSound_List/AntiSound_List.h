@@ -44,5 +44,32 @@ bool antiSound_list_remove(list_t* list, int id);
  * returns length of the list 
  */
 int antiSound_list_length(list_t* list);
-
+/*
+ * redifine id of lists
+ */
 void antiSound_list_redefineId(list_t* pointer);
+
+/*
+ * test of antiSound_list_add
+ */
+void antiSound_list_testAdd(list_t* list);
+
+/*
+ * test of antiSound_list_update
+ */
+void antiSound_list_testUpdate(list_t* list);
+
+/*
+ * test of antiSound_list_getItem
+ */
+void antiSound_list_testGetItem(list_t* list);
+
+/*
+ * test of antiSound_list_remove
+ */
+void antiSound_list_testRemove(list_t* list);
+
+/*
+ * test of antiSound_list_length
+ */
+void antiSound_list_testLength(list_t* list);
