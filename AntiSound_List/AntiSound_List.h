@@ -41,13 +41,18 @@ list_t* antiSound_list_getItem(list_t* list, int id);
 bool antiSound_list_remove(list_t* list, int id);
 
 /*
- * returns length of the list 
+ * returns length of the list
  */
 int antiSound_list_length(list_t* list);
 /*
- * redifine id of lists
+ * redifine id of the lists
  */
 void antiSound_list_redefineId(list_t* pointer);
+
+/*
+ * test of antiSound_list_new
+ */
+bool antiSound_list_testNew();
 
 /*
  * test of antiSound_list_add
@@ -57,19 +62,29 @@ void antiSound_list_testAdd(list_t* list);
 /*
  * test of antiSound_list_update
  */
-void antiSound_list_testUpdate(list_t* list);
+void antiSound_list_testUpdate(list_t* list, int id);
 
 /*
  * test of antiSound_list_getItem
  */
-void antiSound_list_testGetItem(list_t* list);
+void antiSound_list_testGetItem(list_t* list, int id);
+
+/*
+ * test of antiSound_list_getData
+ */
+void antiSound_list_testGetData(list_t* list, int id);
 
 /*
  * test of antiSound_list_remove
  */
-void antiSound_list_testRemove(list_t* list);
+void antiSound_list_testRemove(list_t* list, int id);
 
 /*
  * test of antiSound_list_length
  */
 void antiSound_list_testLength(list_t* list);
+
+/*
+ * show list
+ */
+void antiSound_list_showList(list_t* list);

@@ -80,23 +80,24 @@ bool antiSound_list_remove(list_t* list, int id)
 {
     bool isRemoveSuccess = false;
 
-    list_t* pointer = list;
-
-    while (pointer->next != NULL)
+    list_t* deleteItem = antiSound_list_getItem(list, id);
+    
+    if(deleteItem != NULL)
     {
-        if(pointer->next->id == id)
-        {
-            isRemoveSuccess = true;
-            break;
-        }
-        pointer = pointer->next;
+        isRemoveSuccess = true;
     }
 
-    list_t* deletedTask = pointer->next;
-    pointer->next = deletedTask->next;
-    free(deletedTask);
+    list_t* pointer = list;
 
-    antiSound_list_redefineId(pointer);
+    while (pointer->next != deleteItem)
+    {
+        pointer = pointer->next;
+    }
+    
+    pointer->next = deleteItem->next;
+    free(deleteItem);
+
+    antiSound_list_redefineId(list);
     return isRemoveSuccess;
 }
 
@@ -114,12 +115,13 @@ int antiSound_list_length(list_t* list)
     return lengthOfList;
 }
 
-void antiSound_list_redefineId(list_t* pointer)
+void antiSound_list_redefineId(list_t* list)
 {
+    list_t* pointer = list;
+
     while (pointer->next != NULL)
     {
-        pointer->next->id = pointer->next->id - 1;
+        pointer->next->id = pointer->id + 1;
         pointer = pointer->next;
     }
-    
 }
