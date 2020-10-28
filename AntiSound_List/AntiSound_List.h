@@ -52,7 +52,7 @@ void antiSound_list_redefineId(list_t* pointer);
 /*
  * test of antiSound_list_new
  */
-bool antiSound_list_testNew();
+list_t* antiSound_list_testNew();
 
 /*
  * test of antiSound_list_add

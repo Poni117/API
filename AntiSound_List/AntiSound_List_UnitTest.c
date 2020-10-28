@@ -10,187 +10,110 @@ int main()
 {
     antiSound_list_message(0);
 
-    list_t* list = NULL;
+    list_t* list = antiSound_list_testNew();
 
-    while(true)
-    {
-        char start[256] = "\0";
-        scanf("%s", start);
+    antiSound_list_message(1);
 
-        if(strcmp(start, "exit") == 0)
-        {
-            return - 1;
-        }
+    antiSound_list_testAdd(list);
 
-        if (strcmp(start, "testNew") == 0)
-        {
-            if(antiSound_list_testNew() == false)
-            {
-                return - 1;
-            }
+    antiSound_list_testUpdate(list); 
 
-            list =  antiSound_list_new();
-            break;
-        }
+    antiSound_list_testGetItem(list);
 
-        if (strcmp(start, "testNew") != 0)
-        {
-            antiSound_list_message(1);
-        }
-        
-    }
+    antiSound_list_testGetData(list);
+    antiSound_list_testRemove(list);
 
-    while(true)
-    {
-        char test[256] = "\0";
-        scanf("%s", test);
+    antiSound_list_testLength(list);
 
-        if (strcmp(test, "testAdd") == 0)
-        {
-            antiSound_list_testAdd(list);
-        }
+    antiSound_list_testShowList(list);
 
-        if (strcmp(test, "testUpdate") == 0)
-        {
-            antiSound_list_testUpdate(list); 
-        }
-
-        if (strcmp(test, "testGetItem") == 0)
-        {
-            antiSound_list_testGetItem(list);
-        }
-
-        if (strcmp(test, "testGetData") == 0)
-        {
-            antiSound_list_testGetData(list);
-        }
-
-        if (strcmp(test, "testRemove") == 0)
-        {
-            antiSound_list_testRemove(list);
-        }
-
-        if(strcmp(test, "testLength") == 0)
-        {
-            antiSound_list_testLength(list);
-        }
-
-        if(strcmp(test, "testShowList") == 0)
-        {
-            antiSound_list_testShowList(list);
-        }
-
-        if(strcmp(test, "exit") == 0)
-        {
-            break;
-        }
-    }
 }
 
-bool antiSound_list_testNew()
+list_t* antiSound_list_testNew()
 {
-    antiSound_list_message(2);
+    antiSound_list_message(0);
     printf("< antiSound_list_testNew >\n\n");
-
-    bool isListCreated = false;
 
     list_t* list = antiSound_list_new();
 
-    if(list != NULL)
-    {
-        isListCreated = true;
-    }
-
-    printf("isListCreated[%d]\n", isListCreated); 
-    antiSound_list_message(2);
-
-
-    return isListCreated;
+    antiSound_list_testShowList(list);
+    return list;
 }
 
 void antiSound_list_testAdd(list_t* list)
 {
     printf("< antiSound_list_testAdd >\n\n");
 
-    antiSound_list_message(4);
-    char data[256] = "\0";
-    scanf("%s", data);
+    void* data = "name=Dmitry";
+    void* data1 = "name=Petya";
+    void* data2 = "name=Katya";
+    void* data3 = "name=Nastya";
+    void* data4 = "name=Dasha";
 
     antiSound_list_add(list, data);
+    antiSound_list_add(list, data1);
+    antiSound_list_add(list, data2);
+    antiSound_list_add(list, data3);
+    antiSound_list_add(list, data4);
 
-    antiSound_list_message(2);
+    antiSound_list_testShowList(list);
+    antiSound_list_message(0);
 }
 
 void antiSound_list_testUpdate(list_t* list)
 {
     printf("< antiSound_list_testUpdate >\n\n");
 
-    antiSound_list_message(3);
-    char id[256] = "\0";
-    scanf("%s", id);
-    
-    antiSound_list_message(4);
-    char newData[256] = "\0";
-    scanf("%s", newData);
-
-    printf("\n");
-
-    list_t* updatedItem = antiSound_list_getItem(list, atoi(id));
+    void* newData = "name=Roma";
+    int id = 2;
+    list_t* updatedItem = antiSound_list_getItem(list, id);
     
     printf("updateItem:\n[%d] - [%s] to [%s]\n\n", updatedItem->id, (char*)updatedItem->data, (char*)newData);
 
-    bool isUpdateSuccess = antiSound_list_update(list, atoi(id), newData);
+    bool isUpdateSuccess = antiSound_list_update(list, id, newData);
     printf("isUpdateSuccess[%d]\n\n", isUpdateSuccess); 
 
-    antiSound_list_message(2);
+    antiSound_list_testShowList(list);
+
+    antiSound_list_message(0);
 }
 
 void antiSound_list_testGetItem(list_t* list)
 {
     printf("< antiSound_list_testGetItem >\n\n");
 
-    antiSound_list_message(3);
-    char id[256] = "\0";
-    scanf("%s", id);
-
-    list_t* item  =  antiSound_list_getItem(list, atoi(id));
-    printf("item - [%p]\n", item);
+    int id = 3;
+    list_t* item = antiSound_list_getItem(list, id);
+    printf("address - [%p]\n[%d] - [%s]\n", item, item->id, (char*)item->data);
     
-    antiSound_list_message(2);
+    antiSound_list_message(0);
 }
 
 void antiSound_list_testGetData(list_t* list)
 {
     printf("< antiSound_list_testGetData >\n\n");
 
-    antiSound_list_message(3);
-
-    char id[256] = "\0";
-    scanf("%s", id);
-
-    void* data = antiSound_list_getData(list, atoi(id));
-    printf("id - [%d]\ndata - [%s]\n", atoi(id), (char*)data);
-
-    antiSound_list_message(2);
-
+    int id = 3;
+    void* data = antiSound_list_getData(list, id);
+    printf("id - [%d]\ndata - [%s]\n", id, (char*)data);
+    
+    antiSound_list_message(0);
 }
 
 void antiSound_list_testRemove(list_t* list)
 {
     printf("< antiSound_list_testRemove >\n\n");
 
-    antiSound_list_message(3);
-
-    char id[256] = "\0";
-    scanf("%s", id);
-
-    list_t* deletedItem = antiSound_list_getItem(list, atoi(id));
+    int id = 1;
+    list_t* deletedItem = antiSound_list_getItem(list, id);
     printf("removedItem:\nid[%d] - [%s]\n\n", deletedItem->id, (char*)deletedItem->data);
 
-    bool isRemoveSuccess = antiSound_list_remove(list, atoi(id));
+    bool isRemoveSuccess = antiSound_list_remove(list, id);
     printf("isRemoveSuccess[%d]\n\n", isRemoveSuccess);
 
-    antiSound_list_message(2);
+    antiSound_list_testShowList(list);
+
+    antiSound_list_message(0);
 }
 
 void antiSound_list_testLength(list_t* list)
@@ -199,25 +122,23 @@ void antiSound_list_testLength(list_t* list)
 
     if(list == NULL)
     {
-        antiSound_list_message(5);
+        antiSound_list_message(1);
         return;
     }
 
     int lengthOfList = antiSound_list_length(list);
 
     printf("lengthOfList[%d]\n", lengthOfList);
-    antiSound_list_message(2);
+    antiSound_list_message(0);
 
 }
 
 void antiSound_list_testShowList(list_t* list)
 {
-    printf("< antiSound_list_testShowList >\n\n");
-
     list_t* pointer = list->next;
     if(list == NULL)
     {
-        antiSound_list_message(5);
+        antiSound_list_message(1);
         return;
     }
 
@@ -227,8 +148,6 @@ void antiSound_list_testShowList(list_t* list)
         printf("%s\n", (char* )pointer->data);
         pointer = pointer->next;
     }
-    
-    antiSound_list_message(2);
 }
 
 void antiSound_list_message(int id)
@@ -236,26 +155,11 @@ void antiSound_list_message(int id)
         switch (id)
         {
         case 0:
-            printf("choose test:\ntestNew/testAdd/testGetItem/testGetData/testUpdate/testRemove/testShowList\n");
-            break;
-        
-        case 1:
-            antiSound_list_message(2);
-            printf("a list is`t create\nrun testNew\n");
-            antiSound_list_message(2);
-            break;
-        case 2:
             printf("------------------------------\n");
             break;
-        case 3:
-            printf("Insert Id:\n");
-            break;
-        case 4:
-            printf("Insert Data\n");
-            break;
-        case 5:
-            printf("list is epmty\n");
-            antiSound_list_message(2);
+        case 1:
+            printf("The list is epmty\n");
+            antiSound_list_message(0);
             break;
         }
 }
