@@ -103,7 +103,7 @@ bool antiSound_list_remove(list_t* list, int id)
 
 int antiSound_list_length(list_t* list)
 {  
-    list_t* pointer = list->next;
+    list_t* pointer = list;
 
     while (pointer->next != NULL)
     {
@@ -121,7 +121,7 @@ void antiSound_list_redefineId(list_t* list)
 
     while (pointer->next != NULL)
     {
-        pointer->next->id = pointer->id + 1;
+        pointer->next->id = pointer->id + 2;
         pointer = pointer->next;
     }
 }

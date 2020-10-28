@@ -83,8 +83,3 @@ void antiSound_list_testRemove(list_t* list);
  * test of antiSound_list_length
  */
 void antiSound_list_testLength(list_t* list);
-
-/*
- * show list
- */
-void antiSound_list_testShowList(list_t* list);

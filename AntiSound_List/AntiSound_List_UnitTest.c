@@ -25,18 +25,26 @@ int main()
 
     antiSound_list_testLength(list);
 
-    antiSound_list_testShowList(list);
-
 }
 
 list_t* antiSound_list_testNew()
 {
     antiSound_list_message(0);
-    printf("< antiSound_list_testNew >\n\n");
+    printf("< antiSound_list_testNew >\n");
+
+    bool status = false;
 
     list_t* list = antiSound_list_new();
 
-    antiSound_list_testShowList(list);
+    if(list != NULL)
+    {
+        status = true;
+    }
+
+    printf("status[%d]\n", status);
+
+    antiSound_list_message(0);
+
     return list;
 }
 
@@ -44,19 +52,19 @@ void antiSound_list_testAdd(list_t* list)
 {
     printf("< antiSound_list_testAdd >\n\n");
 
+    bool status = false;
+
     void* data = "name=Dmitry";
-    void* data1 = "name=Petya";
-    void* data2 = "name=Katya";
-    void* data3 = "name=Nastya";
-    void* data4 = "name=Dasha";
 
-    antiSound_list_add(list, data);
-    antiSound_list_add(list, data1);
-    antiSound_list_add(list, data2);
-    antiSound_list_add(list, data3);
-    antiSound_list_add(list, data4);
+    int id = antiSound_list_add(list, data);
 
-    antiSound_list_testShowList(list);
+    if(id != -1)
+    {
+        status = true;
+    }
+
+    printf("status[%d]\n", status);
+
     antiSound_list_message(0);
 }
 
@@ -64,28 +72,34 @@ void antiSound_list_testUpdate(list_t* list)
 {
     printf("< antiSound_list_testUpdate >\n\n");
 
+    bool status = false;
+
     void* newData = "name=Roma";
     int id = 2;
-    list_t* updatedItem = antiSound_list_getItem(list, id);
-    
-    printf("updateItem:\n[%d] - [%s] to [%s]\n\n", updatedItem->id, (char*)updatedItem->data, (char*)newData);
 
-    bool isUpdateSuccess = antiSound_list_update(list, id, newData);
-    printf("isUpdateSuccess[%d]\n\n", isUpdateSuccess); 
+    status = antiSound_list_update(list, id, newData);
 
-    antiSound_list_testShowList(list);
+    printf("status[%d]\n", status); 
 
     antiSound_list_message(0);
 }
 
 void antiSound_list_testGetItem(list_t* list)
 {
+    bool status = false;
+
     printf("< antiSound_list_testGetItem >\n\n");
 
     int id = 3;
     list_t* item = antiSound_list_getItem(list, id);
-    printf("address - [%p]\n[%d] - [%s]\n", item, item->id, (char*)item->data);
+
+    if(item != NULL)
+    {
+        status = true;
+    }
     
+    printf("status[%d]\n", status);
+
     antiSound_list_message(0);
 }
 
@@ -93,10 +107,17 @@ void antiSound_list_testGetData(list_t* list)
 {
     printf("< antiSound_list_testGetData >\n\n");
 
+    bool status = false;
+
     int id = 3;
     void* data = antiSound_list_getData(list, id);
-    printf("id - [%d]\ndata - [%s]\n", id, (char*)data);
+
+    if(data != NULL)
+    {
+        status = true;
+    } 
     
+    printf("status[%d]\n", status);
     antiSound_list_message(0);
 }
 
@@ -104,14 +125,13 @@ void antiSound_list_testRemove(list_t* list)
 {
     printf("< antiSound_list_testRemove >\n\n");
 
+    bool status = false;
+
     int id = 1;
-    list_t* deletedItem = antiSound_list_getItem(list, id);
-    printf("removedItem:\nid[%d] - [%s]\n\n", deletedItem->id, (char*)deletedItem->data);
 
-    bool isRemoveSuccess = antiSound_list_remove(list, id);
-    printf("isRemoveSuccess[%d]\n\n", isRemoveSuccess);
+    status = antiSound_list_remove(list, id);
 
-    antiSound_list_testShowList(list);
+    printf("status[%d]\n", status);
 
     antiSound_list_message(0);
 }
@@ -120,34 +140,19 @@ void antiSound_list_testLength(list_t* list)
 {
     printf("< antiSound_list_testLength >\n\n");
 
-    if(list == NULL)
-    {
-        antiSound_list_message(1);
-        return;
-    }
+    bool status = false;
 
     int lengthOfList = antiSound_list_length(list);
 
-    printf("lengthOfList[%d]\n", lengthOfList);
+    if(lengthOfList != -1)
+    {
+        status = true;
+    }
+
+    printf("status[%d]\n", status);
+
     antiSound_list_message(0);
 
-}
-
-void antiSound_list_testShowList(list_t* list)
-{
-    list_t* pointer = list->next;
-    if(list == NULL)
-    {
-        antiSound_list_message(1);
-        return;
-    }
-
-    while(pointer != NULL)
-    {
-        printf("[%d] - ", pointer->id);
-        printf("%s\n", (char* )pointer->data);
-        pointer = pointer->next;
-    }
 }
 
 void antiSound_list_message(int id)
@@ -156,10 +161,6 @@ void antiSound_list_message(int id)
         {
         case 0:
             printf("------------------------------\n");
-            break;
-        case 1:
-            printf("The list is epmty\n");
-            antiSound_list_message(0);
             break;
         }
 }
