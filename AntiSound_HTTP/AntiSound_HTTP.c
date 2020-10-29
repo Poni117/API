@@ -2,8 +2,5 @@
 
 request_t* antiSound_http_parseRuqest(char* request)
 {
-    
-
-    return structOfrequest;
-    
+   return NULL;
 }
