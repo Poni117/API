@@ -10,7 +10,7 @@ typedef struct HttpVersion
 {
     int minor;
     int major;
-}http_t;
+}httpVersion_t;
 
 typedef struct Response
 {
