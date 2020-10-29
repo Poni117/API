@@ -6,7 +6,7 @@ typedef struct Request
     http_t* http;
 }request_t;
 
-typedef struct HTTP
+typedef struct HttpVersion
 {
     int minor;
     int major;
