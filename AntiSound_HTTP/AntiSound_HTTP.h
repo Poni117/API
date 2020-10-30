@@ -32,7 +32,7 @@ typedef struct QueryParameter
     char* value;
 }queryParameter_t;
 
-typedef struct Body
+typedef struct BodyParameter
 {
     char* name;
     char* value;
