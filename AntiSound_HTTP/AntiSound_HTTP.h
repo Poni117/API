@@ -1,4 +1,6 @@
+#include "../AntiSound_List/AntiSound_List.h"
 #include <stdbool.h>
+
 
 typedef struct HttpVersion
 {
@@ -11,8 +13,9 @@ typedef struct Url
     char* host;
     char* port;
     char* path;
-    char* queryParameters;
+    list_t* list;
     char* anchor;
+
 }url_t;
 
 typedef struct Parameters
@@ -26,10 +29,7 @@ typedef struct Request
     char* method;
     httpVersion_t* http;
     url_t* url;
-    parameters_t parameters;
 }request_t;
-
-
 
 typedef struct Response
 {

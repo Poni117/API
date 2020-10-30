@@ -4,6 +4,7 @@ typedef struct List
 {
     int id;
     void* data;
+    char* parametr;
     struct List* next;
 }list_t;
 
