@@ -15,7 +15,6 @@ typedef struct Url
     char* path;
     list_t* queryParameters;
     char* anchor;
-
 }url_t;
 
 typedef struct Request
@@ -23,6 +22,8 @@ typedef struct Request
     char* method;
     httpVersion_t* http;
     url_t* url;
+    list_t* headers;
+    list_t* body;
 }request_t;
 
 typedef struct QueryParameter
@@ -30,6 +31,12 @@ typedef struct QueryParameter
     char* name;
     char* value;
 }queryParameter_t;
+
+typedef struct Body
+{
+    char* name;
+    char* value;
+}body_t;
 
 typedef struct Response
 {

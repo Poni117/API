@@ -1,17 +1,11 @@
 #include <stdbool.h>
-s
+
 typedef struct List
 {
     int id;
     void* data;
     struct List* next;
 }list_t;
-
-typedef struct QueryParameter
-{
-    char* name;
-    char* value;
-}queryParameter_t;
 
 /* 
  * initializes List and returns pointer to list
