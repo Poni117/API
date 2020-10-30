@@ -13,7 +13,7 @@ typedef struct Url
     char* host;
     char* port;
     char* path;
-    list_t* list;
+    list_t* queryParameters;
     char* anchor;
 
 }url_t;
@@ -24,6 +24,12 @@ typedef struct Request
     httpVersion_t* http;
     url_t* url;
 }request_t;
+
+typedef struct QueryParameter
+{
+    char* name;
+    char* value;
+}queryParameter_t;
 
 typedef struct Response
 {
