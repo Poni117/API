@@ -18,12 +18,6 @@ typedef struct Url
 
 }url_t;
 
-typedef struct Parameters
-{
-    char* parametr;
-    struct Parameters* next;
-}parameters_t;
-
 typedef struct Request
 {
     char* method;
