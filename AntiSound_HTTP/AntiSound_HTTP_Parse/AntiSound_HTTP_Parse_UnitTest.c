@@ -8,24 +8,31 @@
 
 int main()
 {
-    antiSound_http_testParseMethod();
-    antiSound_http_testParseHttpVersion();
-}
-
-void antiSound_http_testParseMethod()
-{
-    bool isParseMethodSuccess = false;
-    bool isMethodExist = false;
-
-    char* requestData = "NULL / HTTP/1.1\n";
-
     request_t* request = malloc(sizeof(request_t));
 
-    isParseMethodSuccess = antiSound_http_parseMethod(request, requestData);
+    antiSound_http_testParseMethod(request);
+    antiSound_http_testParseHttpVersion(request);
+}
 
-    if(isParseMethodSuccess == false)
+void antiSound_http_testParseMethod(request_t* request)
+{
+    bool isParseMethodSuccess = false;
+
+    bool isMethodExist = false;
+    
+    bool isMethodGetParsed = false;
+    bool isMethodPutParsed = false;
+    bool isMethodPostParsed = false;
+    bool isMethodDeleteParsed = false;
+
+    char* getRequestData = 
+    "GET /\n";
+
+    isMethodGetParsed = antiSound_http_parseMethod(request, getRequestData);
+
+    if(isMethodGetParsed == true && isMethodPutParsed == true && isMethodPostParsed == true && isMethodDeleteParsed == true)
     {
-        return;
+        isParseMethodSuccess = true;
     }
 
     char* method = request->method;
@@ -59,15 +66,21 @@ void antiSound_http_testParseMethod()
     }
 }
 
-void antiSound_http_testParseHttpVersion()
+void antiSound_http_testParseHttpVersion(request_t* request)
 {
     bool isParseHttpVersionSuccess = false;
 
-    char* requestData = "NULL / HTTP/1.1\n";
+    bool isMethodGetHttpParsed = false;
 
-    request_t* request = malloc(sizeof(request_t));
+    char* httpRequestData = 
+    "/ HTTP/1.1\n";
 
-    isParseHttpVersionSuccess = antiSound_http_parseHttpVersion(request, requestData);
+    isMethodGetHttpParsed = antiSound_http_parseHttpVersion(request, httpRequestData);
+
+    if(isMethodGetHttpParsed == true)
+    {
+        isParseHttpVersionSuccess = true;
+    }
 
     if(isParseHttpVersionSuccess != true)
     {

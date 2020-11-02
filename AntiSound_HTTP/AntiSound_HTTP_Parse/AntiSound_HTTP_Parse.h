@@ -17,11 +17,11 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData);
 /*
  *  test of antiSound_http_parseHttpVersion
  */
-void antiSound_http_testParseMethod();
+void antiSound_http_testParseMethod(request_t* request);
 
 /*
  *  testParseHttpVersion
  */
-void antiSound_http_testParseHttpVersion();
+void antiSound_http_testParseHttpVersion(request_t* request);
 
 #endif // ANTISOUND_HTTP_PARSE_H

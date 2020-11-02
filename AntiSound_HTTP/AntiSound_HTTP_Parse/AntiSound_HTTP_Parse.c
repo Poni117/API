@@ -44,7 +44,7 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
 {
     bool isParseHttpVersionSuccess = false;
 
-    char* isolatedHttp = antiSound_http_isolateHttp(requestData);
+    char* isolatedHttp = antiSound_http_isolateHttp(request, requestData);
 
     request->http = malloc(sizeof(httpVersion_t));
 
