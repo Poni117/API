@@ -1,4 +1,8 @@
+#ifndef ANTISOUND_LIST_H
+#define ANTISOUND_LIST_H
+
 #include <stdbool.h>
+
 
 typedef struct List
 {
@@ -83,3 +87,5 @@ void antiSound_list_testRemove(list_t* list);
  * test of antiSound_list_length
  */
 void antiSound_list_testLength(list_t* list);
+
+#endif // ANTISOUND_LIST_H
