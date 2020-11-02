@@ -9,12 +9,19 @@
  */
 bool antiSound_http_parseMethod(request_t* request, char* requestData);
 
+/*
+ *  parse http from requestData and return true if parse success, otherwise return false;
+ */
 bool antiSound_http_parseHttpVersion(request_t* request, char* requestData);
 
+/*
+ *  test of antiSound_http_parseHttpVersion
+ */
 void antiSound_http_testParseMethod();
 
+/*
+ *  testParseHttpVersion
+ */
 void antiSound_http_testParseHttpVersion();
-
-
 
 #endif // ANTISOUND_HTTP_PARSE_H
