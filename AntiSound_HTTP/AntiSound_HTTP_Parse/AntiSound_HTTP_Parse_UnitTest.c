@@ -20,48 +20,23 @@ void antiSound_http_testParseMethod(request_t* request)
 
     bool isMethodExist = false;
     
-    bool isMethodGetParsed = false;
-    bool isMethodPutParsed = false;
-    bool isMethodPostParsed = false;
-    bool isMethodDeleteParsed = false;
+    char* getRequestData = "GET /";
 
-    char* getRequestData = 
-    "GET /\n";
-
-    isMethodGetParsed = antiSound_http_parseMethod(request, getRequestData);
-
-    if(isMethodGetParsed == true && isMethodPutParsed == true && isMethodPostParsed == true && isMethodDeleteParsed == true)
-    {
-        isParseMethodSuccess = true;
-    }
+    isParseMethodSuccess = antiSound_http_parseMethod(request, getRequestData);;
 
     char* method = request->method;
 
-    if(strcmp(method, "POST") == 0)
+    if(strcmp(method, "POST") == 0 || strcmp(method, "GET") == 0 || strcmp(method, "POST") == 0 || strcmp(method, "DELETE") == 0)
     {
         isMethodExist = true;
     }
 
-    if(strcmp(method, "GET") == 0)
-    {
-        isMethodExist = true;
-    }
-
-    if(strcmp(method, "POST") == 0)
-    {
-        isMethodExist = true;
-    }
-
-    if(strcmp(method, "DELETE") == 0)
-    {
-        isMethodExist = true;
-    }
-
-    if(isParseMethodSuccess != true && isMethodExist != true)
+    if(isParseMethodSuccess == false || isMethodExist == false)
     {
         printf("-------------------------\n");
         printf("< antiSound_http_testParseMethod >\n\n");
         printf("isParseMethodSuccess[%d]\n", isParseMethodSuccess);
+        printf("isMethodExist[%d]\n", isMethodExist);
         printf("-------------------------\n");
     }
 }
