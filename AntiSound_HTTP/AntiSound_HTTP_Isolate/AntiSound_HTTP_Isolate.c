@@ -62,3 +62,49 @@ char* antiSound_http_isolateHttp(request_t* request, char* requestData)
 
     return isolatedHttp;
 }
+
+char* antiSound_http_isolsteQuaryParameters(char* requestData)
+{
+    size_t sizeOfRequestOfData = strlen(requestData);
+
+    int l = 0;
+    while (l < sizeOfRequestOfData)
+    {
+        if(requestData[l] == '?')
+        {
+            break;
+        }
+        l++;
+    }
+
+    l++;
+
+    int i = l;
+
+    while (l < sizeOfRequestOfData)
+    {
+        if(requestData[l] == ' ')
+        {
+            break;
+        }
+        l++;
+    }
+
+    char* isolatedQueryParameters = calloc(l, sizeof(char));
+    isolatedQueryParameters[0] = '\0';
+
+    int j = 0;
+    while (i < sizeOfRequestOfData)
+    {
+        if(requestData[i] == ' ')
+        {
+            break;
+        }
+
+        isolatedQueryParameters[j] = requestData[i];
+        i++;
+        j++;
+    }
+
+    return isolatedQueryParameters;
+}
