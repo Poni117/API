@@ -9,15 +9,27 @@
 request_t* antiSound_http_initializeRequest()
 {
     request_t* request = malloc(sizeof(request_t));
+    request->method = NULL;
 
-    request->body = NULL;
-    request->headers = NULL;
+    request->body = malloc(sizeof(list_t));
+    request->body->data = NULL;
+    request->body->id = -1;
+    request->body->next = NULL;
+
+    request->headers = malloc(sizeof(list_t));
+    request->headers->data = NULL;
+    request->headers->id = -1;
+    request->headers->next = NULL;
+
     request->http = malloc(sizeof(httpVersion_t));
+    request->http->major = -1;
+    request->http->minor = -1;
 
     request->url = malloc(sizeof(url_t));
-    request->method = NULL;
-    request->headers = NULL;
-    request->body = NULL;
+    request->url->host = NULL;
+    request->url->port = NULL;
+    request->url->path = NULL;
+    request->url->anchor = NULL;
 
     request->url->queryParameters = malloc(sizeof(list_t));
     request->url->queryParameters->data = NULL;

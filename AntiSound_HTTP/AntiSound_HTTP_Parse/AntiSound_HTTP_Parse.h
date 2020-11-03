@@ -25,6 +25,8 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData);
  */
 bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData);
 
+
+void antiSound_http_testInitializeRequest();
 /*
  *  test of antiSound_http_parseHttpVersion
  */
