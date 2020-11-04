@@ -15,6 +15,7 @@ int main()
     antiSound_http_testParseMethod(request);
     antiSound_http_testParseHttpVersion(request);
     antiSound_http_testParseQueryParameters(request);
+    antiSound_http_testParseUrl(request);
 }
 
 void antiSound_http_testInitializeRequest()
@@ -128,6 +129,44 @@ void antiSound_http_testParseQueryParameters(request_t* request)
         printf("-------------------------\n");
         printf("< antiSound_http_testParseQueryParameters >\n\n");
         printf("isParseQueryParametersSuccess[%d]\n", isParseQueryParametersSuccess);
+        printf("-------------------------\n");
+    }
+}
+
+void antiSound_http_testParseUrl(request_t* request)
+{
+    bool isParseUrlSuccess = false;
+    bool isParseUrlExist = false;
+    bool isHostCorrect = false;
+    bool isPortCorrect = false;
+    
+    char* host = "127.0.0.1";
+    char* port = "8090";
+
+    char* url = "\nHost: 127.0.0.1:8090\n";
+
+    isParseUrlExist = antiSound_http_parseUrl(request, url);
+
+    if(strcmp(request->url->host, host) == 0)
+    {
+        isHostCorrect = true;
+    }
+
+    if(strcmp(request->url->port, port) == 0)
+    {
+        isPortCorrect = true;
+    }
+
+    if(isParseUrlExist == true && isHostCorrect == true && isPortCorrect == true)
+    {
+        isParseUrlSuccess = true;
+    }
+
+    if (isParseUrlSuccess == false)
+    {
+        printf("-------------------------\n");
+        printf("< antiSound_http_testParseUrl >\n\n");
+        printf("isParseUrlSuccess[%d]\n", isParseUrlSuccess);
         printf("-------------------------\n");
     }
 }

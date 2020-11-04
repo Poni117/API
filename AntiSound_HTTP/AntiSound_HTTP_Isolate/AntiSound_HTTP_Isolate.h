@@ -13,4 +13,6 @@ char* antiSound_http_isolateHttp(request_t* request, char* requestData);
  */
 char* antiSound_http_isolsteQuaryParameters(char* requestData);
 
+
+char* antiSound_http_isolateUrl(char* requestData);
 #endif // ANTISOUND_HTTP_ISOLATE_H

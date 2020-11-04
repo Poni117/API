@@ -217,8 +217,7 @@ bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
 
     pointer->next = malloc(sizeof(list_t));
 
-    pointer->next->data = calloc(sizeOfQueryParameter + 1, sizeof(char));
-    strncpy(pointer->next->data, quaryParameter, sizeOfQueryParameter);
+    pointer->next->data = realloc(quaryParameter, sizeOfQueryParameter);
 
     pointer->next->id = pointer->id + 1;
 
@@ -233,4 +232,84 @@ bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
     }
 
     return isParseQuareParametersSuccess;
+}
+
+bool antiSound_http_parseUrl(request_t* request, char* requestData)
+{
+    bool isParseUrlSuccess = false;
+    bool isHostExist = false;
+    bool isPortExist = false;
+
+    char* isolatedUrl = antiSound_http_isolateUrl(requestData);
+
+    size_t sizeOfIsolatedUrl = strlen(isolatedUrl);
+
+    int i = 0;
+    
+    while(i < sizeOfIsolatedUrl)
+    {
+        if(isolatedUrl[i] == ' ')
+        {
+            break;
+        }
+        i++;
+    }
+    i++;
+
+    int j = 0;
+
+    char* host = calloc(j, sizeof(char));
+
+    while (i < sizeOfIsolatedUrl)
+    {
+        if(isolatedUrl[i] == ':')
+        {
+            break;
+        }
+        host = realloc(host, j + 1);
+        host[j] = isolatedUrl[i];
+        j++;
+        i++;
+        /* code */
+    }
+    if(host[0] != '\0')
+    {
+        isHostExist = true;
+    }
+
+    size_t sizeOfHost = strlen(host);
+    request->url->host = realloc(host, sizeOfHost);
+
+    i++;
+
+    j = 0;
+
+    char* port = calloc(j, sizeof(char));
+
+    while (i < sizeOfIsolatedUrl)
+    {
+        if(isolatedUrl[i] == '\n')
+        {
+            break;
+        }
+        port = realloc(port, j + 1);
+        port[j] = isolatedUrl[i];
+        j++;
+        i++;
+    }
+    if(port[0] != '\0')
+    {
+        isPortExist = true;
+    }
+
+    size_t sizeOfPort = strlen(port);
+
+    request->url->port = realloc(port, sizeOfPort);
+
+    if(isHostExist == true && isPortExist == true)
+    {
+        isParseUrlSuccess = true;
+    }
+    
+    return isParseUrlSuccess;
 }
