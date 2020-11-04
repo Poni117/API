@@ -45,9 +45,9 @@ bool antiSound_http_parseMethod(request_t* request, char* requestData)
 
     size_t sizeOfRequesData = strlen(requestData);
 
-    char bufferOfMethod[256] = "\0";
-    
     int i = 0;
+
+    char* method = calloc(i, sizeof(char));
 
     while(i < sizeOfRequesData)
     {
@@ -55,15 +55,15 @@ bool antiSound_http_parseMethod(request_t* request, char* requestData)
         {
             break;
         }
-
-        bufferOfMethod[i] = requestData[i];
+        method = realloc(method, i + 1);
+        method[i] = requestData[i];
         i++;
     }
 
-    size_t sizeOfBufferOfMethod = strlen(bufferOfMethod);
+    size_t sizeOfMethod = strlen(method);
 
-    request->method = calloc(sizeOfBufferOfMethod + 1, sizeof(char));
-    strncpy(request->method, bufferOfMethod, sizeOfBufferOfMethod);
+    request->method = realloc(method, sizeof(char));
+    strncpy(request->method, method, sizeOfMethod);
 
     if(request->method[0] != '\0')
     {
@@ -84,72 +84,15 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
         return isParseHttpVersionSuccess;
     }
 
-    size_t sizeOfIsolatedHttp = strlen(isolatedHttp);
+    char* minor = antiSound_http_parseData(isolatedHttp, '/', '.');
 
-    int i = 0;
-    while(i < sizeOfIsolatedHttp)
-    {
-        if(isolatedHttp[i] == '/')
-        {
-            break;
-        }
-        i++;
-    }
+    request->http->minor = atoi(minor);
 
-    i++;
+    char* major = antiSound_http_parseData(isolatedHttp, '.', '\0');
 
-    char bufferOfMinor[256] = "\0";
+    request->http->major = atoi(major);
 
-
-    int j = 0;
-
-    while (i < sizeOfIsolatedHttp)
-    {
-        if(isolatedHttp[i] == '.')
-        {
-            break;
-        }
-        bufferOfMinor[j] = isolatedHttp[i];
-
-        j++;
-        i++;
-    }
-    
-
-    size_t sizeOfBufferMinor = strlen(bufferOfMinor);
-
-    char* charMinor = calloc(sizeOfBufferMinor + 1, sizeof(char));
-    strncpy(charMinor, bufferOfMinor, sizeOfBufferMinor);
-
-    request->http->minor = atoi(charMinor);
-
-    i++;
-
-    char bufferOfMajor[256] = "\0";
-
-    j = 0;
-
-    while (i < sizeOfIsolatedHttp)
-    {
-        if(isolatedHttp[i] == '\0')
-        {
-            break;
-        }
-
-        bufferOfMajor[j] = isolatedHttp[i];
-        j++;
-        i++;
-    }
-
-
-    size_t sizeOfBufferMajor = strlen(bufferOfMajor);
-
-    char* charMajor = calloc(sizeOfBufferMajor + 1, sizeof(char));
-    strncpy(charMajor, bufferOfMajor, sizeOfBufferMajor);
-
-    request->http->major = atoi(charMajor);
-
-    if(charMinor[0] != '\0' && charMajor[0] != '\0')
+    if(minor[0] != '\0' && major[0] != '\0')
     {
         isParseHttpVersionSuccess = true;
     }
@@ -184,31 +127,14 @@ bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
         isolatedQuereParameters = requestData;
     }
     
-    size_t sizeOfIsolatedQueryParameters = strlen(isolatedQuereParameters);
-
-    int i = 0;
-
-    char* quaryParameter = calloc(1, sizeof(char));
-
-    int j = 0;
-    while(i < sizeOfIsolatedQueryParameters)
-    {
-        if(isolatedQuereParameters[i] == '&' || isolatedQuereParameters[i] == '\0')
-        {
-            break;
-        }
-        quaryParameter = (char*)realloc(quaryParameter, i + 1);
-        quaryParameter[j] = isolatedQuereParameters[i];
-        i++;
-        j++;
-    }
+    char* quaryParameter = antiSound_http_parseData(isolatedQuereParameters, isolatedQuereParameters[0], '&');
+    
+    size_t sizeOfQueryParameter = strlen(quaryParameter);
 
     if(quaryParameter[0] != '\0')
     {
         isParseQuareParametersSuccess = true;
     }
-
-    size_t sizeOfQueryParameter = strlen(quaryParameter);
     
     while(pointer->next != NULL)
     {
@@ -242,61 +168,21 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
 
     char* isolatedUrl = antiSound_http_isolateUrl(requestData);
 
-    size_t sizeOfIsolatedUrl = strlen(isolatedUrl);
+    char* host = antiSound_http_parseData(isolatedUrl, ' ', ':');
 
-    int i = 0;
-    
-    while(i < sizeOfIsolatedUrl)
-    {
-        if(isolatedUrl[i] == ' ')
-        {
-            break;
-        }
-        i++;
-    }
-    i++;
-
-    int j = 0;
-
-    char* host = calloc(j, sizeof(char));
-
-    while (i < sizeOfIsolatedUrl)
-    {
-        if(isolatedUrl[i] == ':')
-        {
-            break;
-        }
-        host = realloc(host, j + 1);
-        host[j] = isolatedUrl[i];
-        j++;
-        i++;
-        /* code */
-    }
     if(host[0] != '\0')
     {
         isHostExist = true;
     }
 
+    char* alteradeIsolatedUrl = strchr(isolatedUrl, ':');
+    alteradeIsolatedUrl++;
+
     size_t sizeOfHost = strlen(host);
     request->url->host = realloc(host, sizeOfHost);
 
-    i++;
+    char* port = antiSound_http_parseData(alteradeIsolatedUrl, ':', '\n');
 
-    j = 0;
-
-    char* port = calloc(j, sizeof(char));
-
-    while (i < sizeOfIsolatedUrl)
-    {
-        if(isolatedUrl[i] == '\n')
-        {
-            break;
-        }
-        port = realloc(port, j + 1);
-        port[j] = isolatedUrl[i];
-        j++;
-        i++;
-    }
     if(port[0] != '\0')
     {
         isPortExist = true;
@@ -310,6 +196,45 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
     {
         isParseUrlSuccess = true;
     }
-    
+
     return isParseUrlSuccess;
+}
+
+char* antiSound_http_parseData(char* isolatedData, int start, int end)
+{
+    size_t sizeOfRequestData = strlen(isolatedData);
+
+    int i = 0;
+
+    if(isolatedData[0] != start)
+    {
+        while (i < sizeOfRequestData)
+        {
+            if(isolatedData[i] == start)
+            {
+                break;
+            }
+            i++;
+        }
+        i++;
+    }
+    
+    int j = 0;
+
+    char* parsedData = calloc(j, sizeof(char));
+
+    while (i < sizeOfRequestData)
+    {
+        if(isolatedData[i] == end)
+        {
+            break;
+        }
+
+        parsedData = realloc(parsedData, j + 1);
+        parsedData[j] = isolatedData[i];
+        j++;
+        i++;
+    }
+    
+    return parsedData;
 }
