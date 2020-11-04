@@ -2,6 +2,8 @@
 #define ANTISOUND_HTTP_PARSE_H
 
 #include "../AntiSound_HTTP.h"
+#include "../../AntiSound_List/AntiSound_List.h"
+
 #include <stdbool.h>
 
 
@@ -31,9 +33,17 @@ bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData);
 bool antiSound_http_parseUrl(request_t* request, char* requestData);
 
 /*
+ * parses headers from requestData and returns true if parse success, otherwise return false
+ */
+bool antiSound_http_parseHeaders(request_t* request, char* requestData);
+
+/*
  * isolates data from isolatedData and returns isolated data
  */
 char* antiSound_http_isolateData(char* isolatedData, int start, int end);
+
+
+//======================================================================================================================================
 
 /*
  *  tests of antiSound_http_initializeRequest
@@ -59,6 +69,11 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
  *  tests of antiSound_http_parseUrl
  */
 void antiSound_http_testParseUrl(request_t* request, char* requestData);
+
+/*
+ *  tests of antiSound_http_parseHeaders
+ */
+void antiSound_http_testParseHeaders(request_t* request, char* requestData);
 
 /*
  *  tests of antiSound_http_isolatedData

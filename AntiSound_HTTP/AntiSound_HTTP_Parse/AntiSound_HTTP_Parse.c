@@ -1,5 +1,6 @@
 #include "AntiSound_HTTP_Parse.h"
-#include "../AntiSound_HTTP_Isolate/AntiSound_HTTP_Isolate.h"
+#include "../AntiSound_HTTP.h"
+#include "../../AntiSound_List/AntiSound_List.c"
 
 #include <stdbool.h>
 #include <string.h>
@@ -11,15 +12,11 @@ request_t* antiSound_http_initializeRequest()
     request_t* request = malloc(sizeof(request_t));
     request->method = NULL;
 
-    request->body = malloc(sizeof(list_t));
-    request->body->data = NULL;
-    request->body->id = -1;
-    request->body->next = NULL;
+    request->body = antiSound_list_new();
 
-    request->headers = malloc(sizeof(list_t));
-    request->headers->data = NULL;
-    request->headers->id = -1;
-    request->headers->next = NULL;
+
+    request->headers = antiSound_list_new();
+
 
     request->http = malloc(sizeof(httpVersion_t));
     request->http->major = -1;
@@ -31,10 +28,7 @@ request_t* antiSound_http_initializeRequest()
     request->url->path = NULL;
     request->url->anchor = NULL;
 
-    request->url->queryParameters = malloc(sizeof(list_t));
-    request->url->queryParameters->data = NULL;
-    request->url->queryParameters->id = -1;
-    request->url->queryParameters->next = NULL;
+    request->url->queryParameters = antiSound_list_new();
 
     return request;
 }
@@ -198,6 +192,36 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
     return isParseUrlSuccess;
 }
 
+bool antiSound_http_parseHeaders(request_t* request, char* requestData)
+{
+    bool isParseHeadersExist = false;
+
+    char* alteratedRequestData = NULL;
+
+    if(request->headers->data == NULL)
+    {
+        alteratedRequestData = strchr(requestData, '\n');
+        alteratedRequestData++;
+    }
+    else
+    {
+        alteratedRequestData = requestData;
+    }
+    
+    char* islatedParameter = antiSound_http_isolateData(alteratedRequestData,'\n', '\n');
+
+ 
+    if(islatedParameter[0] != '\0')
+    {
+        isParseHeadersExist = true;
+
+        antiSound_list_add(request->headers, islatedParameter);
+        antiSound_http_parseHeaders(request, alteratedRequestData);
+    }
+    
+    return isParseHeadersExist;
+}
+
 char* antiSound_http_isolateData(char* isolatedData, int start, int end)
 {
     size_t sizeOfRequestData = strlen(isolatedData);
@@ -236,3 +260,4 @@ char* antiSound_http_isolateData(char* isolatedData, int start, int end)
     
     return parsedData;
 }
+

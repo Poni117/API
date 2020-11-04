@@ -24,6 +24,7 @@ int main()
     antiSound_http_testParseHttpVersion(request, requestData);
     antiSound_http_testParseQueryParameters(request, requestData);
     antiSound_http_testParseUrl(request, requestData);
+    antiSound_http_testParseHeaders(request, requestData);
 }
 
 //===============================================================================================================================
@@ -179,6 +180,7 @@ void antiSound_http_testParseUrl(request_t* request, char* requestData)
 }
 
 //===============================================================================================================================
+
 void antiSound_http_testIsolateData(char* requestData)
 {
     bool isIsolatesSuccess = false;
@@ -244,6 +246,50 @@ void antiSound_http_testIsolateData(char* requestData)
         printf("-------------------------\n");
         printf("< antiSound_http_testIsolateData >\n\n");
         printf("isIsolatesSuccess[%d]\n", isIsolatesSuccess);
+        printf("-------------------------\n");
+    }
+}
+
+//===============================================================================================================================
+
+void antiSound_http_testParseHeaders(request_t* request, char* requestData)
+{
+    bool isParseHeadersSuccess = false;
+
+    bool isParseHeadersExist = false;
+    bool isHeadersListCorrect = true;
+
+//--------------------------------------------------------------------------------------------------------------------------------
+    char* arrayOfHeaders[] = 
+    {
+    "User-Agent: curl/7.68.0",
+    "Accept: */*",
+    "Content-Type: application/json",
+    };
+//--------------------------------------------------------------------------------------------------------------------------------
+    isParseHeadersExist = antiSound_http_parseHeaders(request, requestData);
+
+    list_t* pointer = request->headers->next;
+
+    while (pointer != NULL)
+    {
+        if(strcmp(pointer->data, arrayOfHeaders[pointer->id]) != 0)
+        {
+            isHeadersListCorrect = false;
+        }
+        pointer = pointer->next;
+    }
+//--------------------------------------------------------------------------------------------------------------------------------
+    if(isParseHeadersExist == true && isHeadersListCorrect == true)
+    {
+        isParseHeadersSuccess = true;
+    }
+//--------------------------------------------------------------------------------------------------------------------------------
+    if(isParseHeadersSuccess == false)
+    {
+        printf("-------------------------\n");
+        printf("< antiSound_http_testParseHeaders >\n\n");
+        printf("isParseHeadersSuccess[%d]\n", isParseHeadersSuccess);
         printf("-------------------------\n");
     }
 }
