@@ -6,64 +6,64 @@
 
 
 /*
- *  initialize struct Request and return pointer to request_t
+ *  initializes struct Request and returns pointer to request_t
  */
 request_t* antiSound_http_initializeRequest();
 
 /*
- *  parse method from requestData and return true if parse success, otherwise return false
+ *  parses method from requestData and returns true if parse success, otherwise return false
  */
 bool antiSound_http_parseMethod(request_t* request, char* requestData);
 
-
-
-
 /*
- *  parse http from requestData and return true if parse success, otherwise return false
+ *  parses http from requestData and returns true if parse success, otherwise return false
  */
 bool antiSound_http_parseHttpVersion(request_t* request, char* requestData);
 
 /*
- * parse query parameters from requestData and return true if parse success, otherwise return false
+ * parses query parameters from requestData and returns true if parse success, otherwise return false
  */
 bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData);
 
 /*
- * parse url from requestData and return true if parse success, otherwise return false
+ * parses url from requestData and returns true if parse success, otherwise return false
  */
 bool antiSound_http_parseUrl(request_t* request, char* requestData);
 
 /*
- * parse data from isolatedData and returns pasred data
+ * isolates data from isolatedData and returns isolated data
  */
-char* antiSound_http_parseData(char* isolatedData, int start, int end);
+char* antiSound_http_isolateData(char* isolatedData, int start, int end);
 
 /*
- *  test of antiSound_http_initializeRequest
+ *  tests of antiSound_http_initializeRequest
  */
 void antiSound_http_testInitializeRequest();
 
 /*
- *  test of antiSound_http_parseMethod
+ *  tests of antiSound_http_parseMethod
  */
-void antiSound_http_testParseMethod(request_t* request);
+void antiSound_http_testParseMethod(request_t* request, char* requestData);
 
 /*
- *  test of antiSound_http_parseHttpVersion
+ *  tests of antiSound_http_parseHttpVersion
  */
-void antiSound_http_testParseHttpVersion(request_t* request);
+void antiSound_http_testParseHttpVersion(request_t* request, char* requestData);
 
 /*
- *  test of antiSound_http_parseQuaryParameters
+ *  tests of antiSound_http_parseQuaryParameters
  */
-void antiSound_http_testParseQueryParameters(request_t* request);
+void antiSound_http_testParseQueryParameters(request_t* request, char* requestData);
 
 /*
- *  test of antiSound_http_parseUrl
+ *  tests of antiSound_http_parseUrl
  */
-void antiSound_http_testParseUrl(request_t* request);
+void antiSound_http_testParseUrl(request_t* request, char* requestData);
 
-void antiSound_http_testParseIsolatedData();
+/*
+ *  tests of antiSound_http_isolatedData
+ */
+void antiSound_http_testIsolatedData(char* requestData);
 
 
 

@@ -43,27 +43,11 @@ bool antiSound_http_parseMethod(request_t* request, char* requestData)
 {
     bool isParseMethodSuccess = false;
 
-    size_t sizeOfRequesData = strlen(requestData);
-
-    int i = 0;
-
-    char* method = calloc(i, sizeof(char));
-
-    while(i < sizeOfRequesData)
-    {
-        if(requestData[i] == ' ')
-        {
-            break;
-        }
-        method = realloc(method, i + 1);
-        method[i] = requestData[i];
-        i++;
-    }
+    char* method = antiSound_http_isolateData(requestData, requestData[0], ' ');
 
     size_t sizeOfMethod = strlen(method);
 
-    request->method = realloc(method, sizeof(char));
-    strncpy(request->method, method, sizeOfMethod);
+    request->method = realloc(method, sizeOfMethod);
 
     if(request->method[0] != '\0')
     {
@@ -77,18 +61,32 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
 {
     bool isParseHttpVersionSuccess = false;
 
-    char* isolatedHttp = antiSound_http_isolateHttp(request, requestData);
+    char* method = request->method;
+
+    char* isolatedHttp = NULL;
+
+    if(strcmp(method, "POST") == 0 || strcmp(method, "GET") == 0)
+    {
+        char* alteradeIsolatedHttp = strchr(requestData, '/');
+        isolatedHttp = antiSound_http_isolateData(alteradeIsolatedHttp, ' ', '\n');
+    }
+
+    if(strcmp(method, "PUT") == 0 || strcmp(method, "DELETE") == 0)
+    {
+        isolatedHttp = antiSound_http_isolateData(requestData, '/', '\n');
+    }
+    
 
     if(isolatedHttp[0] == '\0')
     {
         return isParseHttpVersionSuccess;
     }
 
-    char* minor = antiSound_http_parseData(isolatedHttp, '/', '.');
+    char* minor = antiSound_http_isolateData(isolatedHttp, '/', '.');
 
     request->http->minor = atoi(minor);
 
-    char* major = antiSound_http_parseData(isolatedHttp, '.', '\0');
+    char* major = antiSound_http_isolateData(isolatedHttp, '.', '\0');
 
     request->http->major = atoi(major);
 
@@ -120,14 +118,14 @@ bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
 
     if(pointer->data == NULL)
     {
-        isolatedQuereParameters = antiSound_http_isolsteQuaryParameters(requestData);
+        isolatedQuereParameters = antiSound_http_isolateData(requestData, '?', ' ');
     }
     else
     {
-        isolatedQuereParameters = requestData;
+        isolatedQuereParameters = requestData; //requestData = recurcive - char* alteradeIsolateQuareParameters (155)
     }
     
-    char* quaryParameter = antiSound_http_parseData(isolatedQuereParameters, isolatedQuereParameters[0], '&');
+    char* quaryParameter = antiSound_http_isolateData(isolatedQuereParameters, isolatedQuereParameters[0], '&');
     
     size_t sizeOfQueryParameter = strlen(quaryParameter);
 
@@ -166,9 +164,9 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
     bool isHostExist = false;
     bool isPortExist = false;
 
-    char* isolatedUrl = antiSound_http_isolateUrl(requestData);
+    char* isolatedUrl = antiSound_http_isolateData(requestData, '\n', '\r');
 
-    char* host = antiSound_http_parseData(isolatedUrl, ' ', ':');
+    char* host = antiSound_http_isolateData(isolatedUrl, ' ', ':');
 
     if(host[0] != '\0')
     {
@@ -181,7 +179,7 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
     size_t sizeOfHost = strlen(host);
     request->url->host = realloc(host, sizeOfHost);
 
-    char* port = antiSound_http_parseData(alteradeIsolatedUrl, ':', '\n');
+    char* port = antiSound_http_isolateData(alteradeIsolatedUrl, ':', '\n');
 
     if(port[0] != '\0')
     {
@@ -200,7 +198,7 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
     return isParseUrlSuccess;
 }
 
-char* antiSound_http_parseData(char* isolatedData, int start, int end)
+char* antiSound_http_isolateData(char* isolatedData, int start, int end)
 {
     size_t sizeOfRequestData = strlen(isolatedData);
 
