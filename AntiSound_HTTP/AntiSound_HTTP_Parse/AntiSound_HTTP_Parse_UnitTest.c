@@ -35,12 +35,12 @@ void antiSound_http_testInitializeRequest()
     bool status = false;
 //--------------------------------------------------------------------------------------------------------------------------------
     request_t* request = antiSound_http_initializeRequest();
-    
+//--------------------------------------------------------------------------------------------------------------------------------
     if(request->method == NULL && request->url->host == NULL && request->url->queryParameters->data == NULL && request->headers->data == NULL)
     {
         status = true;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+
     if(status == false)
     {
         printf("< antiSound_http_testInitializeRequest >\n");
@@ -55,16 +55,29 @@ void antiSound_http_testParseMethod(request_t* request, char* requestData)
     bool isParseMethodSuccess = false;
 
     bool isMethodExist = false;
+    
+    char* methods[] = 
+    {
+    "POST",
+    "GET",
+    "PUT",
+    "DELETE"
+    };
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseMethodSuccess = antiSound_http_parseMethod(request, requestData);
-    
-    char* method = request->method;
 
-    if(strcmp(method, "POST") == 0 || strcmp(method, "GET") == 0 || strcmp(method, "PUT") == 0 || strcmp(method, "DELETE") == 0)
+    int i = 0;
+
+    while(i < strlen(*methods))
     {
-        isMethodExist = true;
+        if(strcmp(methods[i], request->method) == 0)
+        {
+            isMethodExist = true;
+        }
+        i++;
     }
 //--------------------------------------------------------------------------------------------------------------------------------
+    
     if(isParseMethodSuccess == false || isMethodExist == false)
     {
         printf("-------------------------\n");
@@ -75,6 +88,8 @@ void antiSound_http_testParseMethod(request_t* request, char* requestData)
     }
 }
 
+//===============================================================================================================================
+
 void antiSound_http_testParseHttpVersion(request_t* request, char* requestData)
 {
     bool isParseHttpVersionSuccess = false;
@@ -82,12 +97,13 @@ void antiSound_http_testParseHttpVersion(request_t* request, char* requestData)
     bool isMethodGetHttpParsed = false;
 //--------------------------------------------------------------------------------------------------------------------------------
     isMethodGetHttpParsed = antiSound_http_parseHttpVersion(request, requestData);
+//--------------------------------------------------------------------------------------------------------------------------------
 
     if(isMethodGetHttpParsed == true)
     {
         isParseHttpVersionSuccess = true;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+
     if(isParseHttpVersionSuccess != true)
     {
         printf("-------------------------\n");
@@ -102,8 +118,10 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
 {
     bool isParseQueryParametersSuccess = false;
 
-    bool isPrarametersCorrect = true;
+    bool isListCorrect = true;
     bool isParseQueryParametersExist = false;
+
+    bool isLengthCorrect = false;
 
     char* arrayOfQueryParameters[] = 
     {
@@ -114,20 +132,26 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
     };
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseQueryParametersExist = antiSound_http_parseQuaryParameters(request, requestData);
-//--------------------------------------------------------------------------------------------------------------------------------
-    list_t* pointer = request->url->queryParameters->next;
 
-    while (pointer != NULL)
+    list_t* pointer = request->url->queryParameters;
+
+    while (pointer->next!= NULL)
     {
-        if(strcmp(pointer->data, arrayOfQueryParameters[pointer->id]) != 0)
+        if(strcmp(pointer->next->data, arrayOfQueryParameters[pointer->next->id]) != 0)
         {
-            isPrarametersCorrect = false;
+            isListCorrect = false;
         }
         pointer = pointer->next;
     }
+
+    int length = antiSound_list_length(pointer);
 //--------------------------------------------------------------------------------------------------------------------------------
-    
-    if(isParseQueryParametersExist == true && isPrarametersCorrect == true)
+    if(pointer->id + 1 == length)
+    {
+        isLengthCorrect = true;
+    }
+
+    if(isParseQueryParametersExist == true && isListCorrect == true && isLengthCorrect == true)
     {
         isParseQueryParametersSuccess = true;
     }
@@ -198,18 +222,10 @@ void antiSound_http_testIsolateData(char* requestData)
 //--------------------------------------------------------------------------------------------------------------------------------
     char* isoltedMethod = antiSound_http_isolateData(requestData, requestData[0], ' ');
 
-    if(strcmp(method, isoltedMethod) == 0)
-    {
-        isMethodIsolated = true;
-    }
-//--------------------------------------------------------------------------------------------------------------------------------
     char* isolatedQueryParameters = antiSound_http_isolateData(requestData, '?', ' ');
 
-    if(strcmp(queryParameters, isolatedQueryParameters) == 0)
-    {
-        isQueryParametersIsolated = true;
-    }
-//--------------------------------------------------------------------------------------------------------------------------------
+    char* isolatedUrl = antiSound_http_isolateData(requestData, '\n', '\r');
+
     char* isolatedHttp = NULL;
 
     if(strcmp(method, "POST") == 0 || strcmp(method, "GET") == 0)
@@ -223,19 +239,26 @@ void antiSound_http_testIsolateData(char* requestData)
         isolatedHttp = antiSound_http_isolateData(requestData, '/', '\n');
     }
 
+//--------------------------------------------------------------------------------------------------------------------------------
     if(strcmp(http, isolatedHttp) == 0)
     {
         isHttpIsolated = true;
     }
 
-//--------------------------------------------------------------------------------------------------------------------------------
-    char* isolatedUrl = antiSound_http_isolateData(requestData, '\n', '\r');
+    if(strcmp(method, isoltedMethod) == 0)
+    {
+        isMethodIsolated = true;
+    }
 
+    if(strcmp(queryParameters, isolatedQueryParameters) == 0)
+    {
+        isQueryParametersIsolated = true;
+    }
     if(strcmp(url, isolatedUrl) == 0)
     {
         isUrlIsolated = true;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+
     if (isMethodIsolated == true && isHttpIsolated == true && isUrlIsolated == true && isQueryParametersIsolated == true)
     {
         isIsolatesSuccess = true;
@@ -253,18 +276,66 @@ void antiSound_http_testIsolateData(char* requestData)
 //===============================================================================================================================
 void antiSound_http_testParseBody(request_t* request, char* requestData)
 {
-    antiSound_http_parseBody(request, requestData);
+    bool isParseBodySuccess = false;
+    bool isParsedBodyExist = false;
+    
+    bool isLengthCorrect = false;
+    bool isListCorrect = true;
+
+    char* body[] = 
+    {
+    "\"id\":\"0\"",
+    "\"name\":\"Dmitry\"",
+    "\"lastname\":\"Ivanov\"",
+    "\"nickname\":\"Poni117\""
+    };
+//--------------------------------------------------------------------------------------------------------------------------------
+    isParsedBodyExist = antiSound_http_parseBody(request, requestData);
+
+    list_t* pointer = request->body;
+
+    while (pointer->next != NULL)
+    {
+        if(strcmp(pointer->next->data, body[pointer->next->id]) != 0)
+        {
+            isListCorrect = false;
+        }
+        pointer = pointer->next;
+    }
+
+    int length = antiSound_list_length(pointer);
+//--------------------------------------------------------------------------------------------------------------------------------
+    if(pointer->id + 1 == length)
+    {
+        isLengthCorrect = true;
+    }
+
+    if(isParsedBodyExist == true && isLengthCorrect == true && isListCorrect == true)
+    {
+        isParseBodySuccess = true;
+    }
+
+    if(isParseBodySuccess == false)
+    {
+        printf("-------------------------\n");
+        printf("< antiSound_http_testParseBody >\n\n");
+        printf("isParseBodySuccess[%d]\n", isParseBodySuccess);
+        printf("-------------------------\n");
+    }
+
 }
+
 //===============================================================================================================================
 
 void antiSound_http_testParseHeaders(request_t* request, char* requestData)
 {
     bool isParseHeadersSuccess = false;
-
     bool isParseHeadersExist = false;
-    bool isHeadersListCorrect = true;
 
-    char* arrayOfHeaders[] = 
+    bool isListCorrect = true;
+    bool isLengthCorrect = false;
+
+    char* headers[] = 
     {
     "User-Agent: curl/7.68.0",
     "Accept: */*",
@@ -272,20 +343,26 @@ void antiSound_http_testParseHeaders(request_t* request, char* requestData)
     };
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseHeadersExist = antiSound_http_parseHeaders(request, requestData);
-//--------------------------------------------------------------------------------------------------------------------------------
 
-    list_t* pointer = request->headers->next;
+    list_t* pointer = request->headers;
 
-    while (pointer != NULL)
+    while (pointer->next != NULL)
     {
-        if(strcmp(pointer->data, arrayOfHeaders[pointer->id]) != 0)
+        if(strcmp(pointer->next->data, headers[pointer->next->id]) != 0)
         {
-            isHeadersListCorrect = false;
+            isListCorrect = false;
         }
         pointer = pointer->next;
     }
+
+    int length = antiSound_list_length(pointer);
 //--------------------------------------------------------------------------------------------------------------------------------
-    if(isParseHeadersExist == true && isHeadersListCorrect == true)
+    if(pointer->id + 1 == length)
+    {
+        isLengthCorrect = true;
+    }
+
+    if(isParseHeadersExist == true && isListCorrect == true && isLengthCorrect == true)
     {
         isParseHeadersSuccess = true;
     }

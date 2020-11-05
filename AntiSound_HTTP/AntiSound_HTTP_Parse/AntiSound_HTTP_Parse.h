@@ -45,7 +45,7 @@ bool antiSound_http_parseBody(request_t* request, char* requestData);
 /*
  * parses Parameters from isolatedData and returns true if parse success, otherwise returns false
  */
-bool antiSound_http_parseParameters(list_t* list, char* isolatedData, char delimiter);
+bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter);
 
 /*
  * isolates data from isolatedData and returns isolated data

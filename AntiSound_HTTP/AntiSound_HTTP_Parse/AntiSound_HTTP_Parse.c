@@ -14,9 +14,7 @@ request_t* antiSound_http_initializeRequest()
 
     request->body = antiSound_list_new();
 
-
     request->headers = antiSound_list_new();
-
 
     request->http = malloc(sizeof(httpVersion_t));
     request->http->major = -1;
@@ -35,7 +33,7 @@ request_t* antiSound_http_initializeRequest()
 
 bool antiSound_http_parseMethod(request_t* request, char* requestData)
 {
-    bool isParseMethodSuccess = false;
+    bool isParsedMethodExist = false;
 
     char* method = antiSound_http_isolateData(requestData, requestData[0], ' ');
 
@@ -45,16 +43,16 @@ bool antiSound_http_parseMethod(request_t* request, char* requestData)
 
     if(request->method[0] != '\0')
     {
-        isParseMethodSuccess = true;
+        isParsedMethodExist = true;
     }
 
-    return isParseMethodSuccess;
+    return isParsedMethodExist;
 }
 
 bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
 {
-    bool isParseHttpVersionSuccess = false;
-
+    bool isParsedHttpVersionExist = false;
+    
     char* method = request->method;
 
     char* isolatedHttp = NULL;
@@ -70,12 +68,6 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
         isolatedHttp = antiSound_http_isolateData(requestData, '/', '\n');
     }
     
-
-    if(isolatedHttp[0] == '\0')
-    {
-        return isParseHttpVersionSuccess;
-    }
-
     char* minor = antiSound_http_isolateData(isolatedHttp, '/', '.');
 
     request->http->minor = atoi(minor);
@@ -86,10 +78,10 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
 
     if(minor[0] != '\0' && major[0] != '\0')
     {
-        isParseHttpVersionSuccess = true;
+        isParsedHttpVersionExist = true;
     }
 
-    return isParseHttpVersionSuccess;
+    return isParsedHttpVersionExist;
 }
 
 bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
@@ -98,7 +90,7 @@ bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
 
     char* isolatedQueryParameters = antiSound_http_isolateData(requestData, '?', ' ');
 
-    isParseQuareParametersExist = antiSound_http_parseParameters(request->url->queryParameters, isolatedQueryParameters, '&');
+    isParseQuareParametersExist = antiSound_http_parseData(request->url->queryParameters, isolatedQueryParameters, '&');
 
     return isParseQuareParametersExist;
 }
@@ -154,9 +146,7 @@ bool antiSound_http_parseHeaders(request_t* request, char* requestData)
     
     char* isolatedHeaders = antiSound_http_isolateData(alteratedRequestData, '\n', '\n');
     
-    //printf("isolatedHeaders\n%s\n", isolatedHeaders);
-    
-    isParseHeadersExist = antiSound_http_parseParameters(request->headers, isolatedHeaders, '\n');
+    isParseHeadersExist = antiSound_http_parseData(request->headers, isolatedHeaders, '\n');
     
     return isParseHeadersExist;
 }
@@ -164,19 +154,19 @@ bool antiSound_http_parseHeaders(request_t* request, char* requestData)
 bool antiSound_http_parseBody(request_t* request, char* requestData)
 {
     bool isParseBodyExist = false;
-
+    if(requestData == NULL)
     {
         return isParseBodyExist;
     }
 
     char* isolatedBodyParameters = antiSound_http_isolateData(requestData, '{', '}');
 
-    isParseBodyExist = antiSound_http_parseParameters(request->body, isolatedBodyParameters, ',');
+    isParseBodyExist = antiSound_http_parseData(request->body, isolatedBodyParameters, ',');
     
     return isParseBodyExist;
 }
 
-bool antiSound_http_parseParameters(list_t* list, char* isolatedData, char delimiter)
+bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
 {
     bool isParseExist = false;
 
@@ -186,6 +176,7 @@ bool antiSound_http_parseParameters(list_t* list, char* isolatedData, char delim
     }
 
     char* quaryParameter = antiSound_http_isolateData(isolatedData, isolatedData[0], delimiter);
+
     antiSound_list_add(list, quaryParameter);
 
     if(quaryParameter[0] != '\0')
@@ -198,7 +189,7 @@ bool antiSound_http_parseParameters(list_t* list, char* isolatedData, char delim
     if(alterateIsolatedData != NULL)
     {
         alterateIsolatedData++;
-        antiSound_http_parseParameters(list, alterateIsolatedData, delimiter);
+        antiSound_http_parseData(list, alterateIsolatedData, delimiter);
     }
 
     return isParseExist;
