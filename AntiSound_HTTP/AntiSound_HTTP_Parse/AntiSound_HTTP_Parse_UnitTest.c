@@ -16,7 +16,8 @@ int main()
     "User-Agent: curl/7.68.0\n"
     "Accept: */*\n"
     "Content-Type: application/json\n"
-    "\n";
+    "\n"
+    "{\"id\":\"0\",\"name\":\"Dmitry\",\"lastname\":\"Ivanov\",\"nickname\":\"Poni117\"}";
 
     request_t* request = antiSound_http_initializeRequest();
     
@@ -25,6 +26,7 @@ int main()
     antiSound_http_testParseQueryParameters(request, requestData);
     antiSound_http_testParseUrl(request, requestData);
     antiSound_http_testParseHeaders(request, requestData);
+    antiSound_http_testParseBody(request, requestData);
 }
 
 //===============================================================================================================================
@@ -121,7 +123,6 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
         {
             isPrarametersCorrect = false;
         }
-        printf("[%s] - [%s]\n", (char*)pointer->data, arrayOfQueryParameters[pointer->id]);
         pointer = pointer->next;
     }
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -250,6 +251,11 @@ void antiSound_http_testIsolateData(char* requestData)
 }
 
 //===============================================================================================================================
+void antiSound_http_testParseBody(request_t* request, char* requestData)
+{
+    antiSound_http_parseBody(request, requestData);
+}
+//===============================================================================================================================
 
 void antiSound_http_testParseHeaders(request_t* request, char* requestData)
 {
@@ -283,7 +289,7 @@ void antiSound_http_testParseHeaders(request_t* request, char* requestData)
     {
         isParseHeadersSuccess = true;
     }
-    
+
     if(isParseHeadersSuccess == false)
     {
         printf("-------------------------\n");

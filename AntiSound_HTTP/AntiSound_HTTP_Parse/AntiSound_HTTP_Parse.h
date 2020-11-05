@@ -18,17 +18,17 @@ request_t* antiSound_http_initializeRequest();
 bool antiSound_http_parseMethod(request_t* request, char* requestData);
 
 /*
- *  parses http from requestData and returns true if parse success, otherwise return false
+ *  parses http from requestData and returns true if parse success, otherwise returns false
  */
 bool antiSound_http_parseHttpVersion(request_t* request, char* requestData);
 
 /*
- * parses query parameters from requestData and returns true if parse success, otherwise return false
+ * parses query parameters from requestData and returns true if parse success, otherwise returns false
  */
 bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData);
 
 /*
- * parses url from requestData and returns true if parse success, otherwise return false
+ * parses url from requestData and returns true if parse success, otherwise returns false
  */
 bool antiSound_http_parseUrl(request_t* request, char* requestData);
 
@@ -36,6 +36,16 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData);
  * parses headers from requestData and returns true if parse success, otherwise return false
  */
 bool antiSound_http_parseHeaders(request_t* request, char* requestData);
+
+/*
+ * parses body from requestData and returns true if parse success, otherwise returns false
+ */
+bool antiSound_http_parseBody(request_t* request, char* requestData);
+
+/*
+ * parses Parameters from isolatedData and returns true if parse success, otherwise returns false
+ */
+bool antiSound_http_parseParameters(list_t* list, char* isolatedData, char delimiter);
 
 /*
  * isolates data from isolatedData and returns isolated data
@@ -74,6 +84,11 @@ void antiSound_http_testParseUrl(request_t* request, char* requestData);
  *  tests of antiSound_http_parseHeaders
  */
 void antiSound_http_testParseHeaders(request_t* request, char* requestData);
+
+/*
+ *  tests of antiSound_http_parseBody
+ */
+void antiSound_http_testParseBody(request_t* request, char* requestData);
 
 /*
  *  tests of antiSound_http_isolatedData

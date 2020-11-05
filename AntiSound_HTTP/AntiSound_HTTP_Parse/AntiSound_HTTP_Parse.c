@@ -96,37 +96,9 @@ bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
 {
     bool isParseQuareParametersExist = false;
 
-    if(requestData == NULL)
-    {
-        return isParseQuareParametersExist;
-    }
+    char* isolatedQueryParameters = antiSound_http_isolateData(requestData, '?', ' ');
 
-    char* isolatedQueryParameters = NULL;
-    char* quaryParameter = NULL;
-
-    if(request->url->queryParameters->next == NULL)
-    {
-        isolatedQueryParameters = antiSound_http_isolateData(requestData, '?', ' ');
-    }
-    else
-    {
-        isolatedQueryParameters = requestData;
-    }
-    
-    char* alterateIsolatedQueryParameters = strchr(isolatedQueryParameters, '&');
-    
-
-    quaryParameter = antiSound_http_isolateData(isolatedQueryParameters, isolatedQueryParameters[0], '&');
-    antiSound_list_add(request->url->queryParameters, quaryParameter);
-
-    printf("\n%s\n", quaryParameter);
-
-    if(alterateIsolatedQueryParameters != NULL)
-    {
-        alterateIsolatedQueryParameters++;
-    }
-
-    antiSound_http_parseQuaryParameters(request, alterateIsolatedQueryParameters);
+    isParseQuareParametersExist = antiSound_http_parseParameters(request->url->queryParameters, isolatedQueryParameters, '&');
 
     return isParseQuareParametersExist;
 }
@@ -177,30 +149,60 @@ bool antiSound_http_parseHeaders(request_t* request, char* requestData)
 
     char* alteratedRequestData = NULL;
 
-    if(request->headers->data == NULL)
-    {
-        alteratedRequestData = strchr(requestData, '\n');
-        alteratedRequestData++;
-    }
-    else
-    {
-        alteratedRequestData = requestData;
-    }
+    alteratedRequestData = strchr(requestData, '\n');
+    alteratedRequestData++;
     
-    char* isolatedParameter = antiSound_http_isolateData(alteratedRequestData,'\n', '\n');
-
- 
-    if(isolatedParameter[0] != '\0')
-    {
-        isParseHeadersExist = true;
-
-        antiSound_list_add(request->headers, isolatedParameter);
-        antiSound_http_parseHeaders(request, alteratedRequestData);
-    }
+    char* isolatedHeaders = antiSound_http_isolateData(alteratedRequestData, '\n', '\n');
+    
+    //printf("isolatedHeaders\n%s\n", isolatedHeaders);
+    
+    isParseHeadersExist = antiSound_http_parseParameters(request->headers, isolatedHeaders, '\n');
     
     return isParseHeadersExist;
 }
 
+bool antiSound_http_parseBody(request_t* request, char* requestData)
+{
+    bool isParseBodyExist = false;
+
+    {
+        return isParseBodyExist;
+    }
+
+    char* isolatedBodyParameters = antiSound_http_isolateData(requestData, '{', '}');
+
+    isParseBodyExist = antiSound_http_parseParameters(request->body, isolatedBodyParameters, ',');
+    
+    return isParseBodyExist;
+}
+
+bool antiSound_http_parseParameters(list_t* list, char* isolatedData, char delimiter)
+{
+    bool isParseExist = false;
+
+    if(isolatedData == NULL)
+    {
+        return isParseExist;
+    }
+
+    char* quaryParameter = antiSound_http_isolateData(isolatedData, isolatedData[0], delimiter);
+    antiSound_list_add(list, quaryParameter);
+
+    if(quaryParameter[0] != '\0')
+    {
+        isParseExist = true;
+    }
+    
+    char* alterateIsolatedData = strchr(isolatedData, delimiter);
+
+    if(alterateIsolatedData != NULL)
+    {
+        alterateIsolatedData++;
+        antiSound_http_parseParameters(list, alterateIsolatedData, delimiter);
+    }
+
+    return isParseExist;
+}
 char* antiSound_http_isolateData(char* isolatedData, int start, int end)
 {
     size_t sizeOfRequestData = strlen(isolatedData);
@@ -236,7 +238,22 @@ char* antiSound_http_isolateData(char* isolatedData, int start, int end)
         j++;
         i++;
     }
-    
+
+    if(start == end)
+    {
+        while (i < sizeOfRequestData)
+        {
+            if(isolatedData[i] == end && isolatedData[i + 1] == end)
+            {
+                break;
+            }
+
+            parsedData = realloc(parsedData, j + 1);
+            parsedData[j] = isolatedData[i];
+            j++;
+            i++;
+        }
+    }
     return parsedData;
 }
 
