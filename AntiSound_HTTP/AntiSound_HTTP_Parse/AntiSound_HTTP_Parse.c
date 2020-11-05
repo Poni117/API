@@ -94,62 +94,41 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
 
 bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
 {
-    bool isParseQuareParametersSuccess = false;
+    bool isParseQuareParametersExist = false;
 
     if(requestData == NULL)
     {
-        return isParseQuareParametersSuccess;
+        return isParseQuareParametersExist;
     }
 
-    list_t* pointer = request->url->queryParameters;
+    char* isolatedQueryParameters = NULL;
+    char* quaryParameter = NULL;
 
-    while (pointer->next != NULL)
+    if(request->url->queryParameters->next == NULL)
     {
-       pointer = pointer->next;
-    }
-    
-    char* isolatedQuereParameters = NULL;
-
-    if(pointer->data == NULL)
-    {
-        isolatedQuereParameters = antiSound_http_isolateData(requestData, '?', ' ');
+        isolatedQueryParameters = antiSound_http_isolateData(requestData, '?', ' ');
     }
     else
     {
-        isolatedQuereParameters = requestData; //requestData = recurcive - char* alteradeIsolateQuareParameters (155)
+        isolatedQueryParameters = requestData;
     }
     
-    char* quaryParameter = antiSound_http_isolateData(isolatedQuereParameters, isolatedQuereParameters[0], '&');
+    char* alterateIsolatedQueryParameters = strchr(isolatedQueryParameters, '&');
     
-    size_t sizeOfQueryParameter = strlen(quaryParameter);
 
-    if(quaryParameter[0] != '\0')
+    quaryParameter = antiSound_http_isolateData(isolatedQueryParameters, isolatedQueryParameters[0], '&');
+    antiSound_list_add(request->url->queryParameters, quaryParameter);
+
+    printf("\n%s\n", quaryParameter);
+
+    if(alterateIsolatedQueryParameters != NULL)
     {
-        isParseQuareParametersSuccess = true;
-    }
-    
-    while(pointer->next != NULL)
-    {
-        pointer = pointer->next;
+        alterateIsolatedQueryParameters++;
     }
 
-    pointer->next = malloc(sizeof(list_t));
+    antiSound_http_parseQuaryParameters(request, alterateIsolatedQueryParameters);
 
-    pointer->next->data = realloc(quaryParameter, sizeOfQueryParameter);
-
-    pointer->next->id = pointer->id + 1;
-
-    pointer->next->next = NULL;
-
-    char* alteradeIsolateQuareParameters = strchr(isolatedQuereParameters, '&');
-    
-    if(alteradeIsolateQuareParameters != NULL)
-    {
-        alteradeIsolateQuareParameters++;
-        antiSound_http_parseQuaryParameters(request, alteradeIsolateQuareParameters);
-    }
-
-    return isParseQuareParametersSuccess;
+    return isParseQuareParametersExist;
 }
 
 bool antiSound_http_parseUrl(request_t* request, char* requestData)
@@ -208,14 +187,14 @@ bool antiSound_http_parseHeaders(request_t* request, char* requestData)
         alteratedRequestData = requestData;
     }
     
-    char* islatedParameter = antiSound_http_isolateData(alteratedRequestData,'\n', '\n');
+    char* isolatedParameter = antiSound_http_isolateData(alteratedRequestData,'\n', '\n');
 
  
-    if(islatedParameter[0] != '\0')
+    if(isolatedParameter[0] != '\0')
     {
         isParseHeadersExist = true;
 
-        antiSound_list_add(request->headers, islatedParameter);
+        antiSound_list_add(request->headers, isolatedParameter);
         antiSound_http_parseHeaders(request, alteratedRequestData);
     }
     

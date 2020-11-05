@@ -11,7 +11,7 @@ int main()
     antiSound_http_testInitializeRequest();
 
     char* requestData = 
-    "PUT /?id=0&name=Slava HTTP/1.1\n"
+    "PUT /?id=0&name=Dmitry&lastname=Ivanov&nickname=Poni117 HTTP/1.1\n"
     "Host: 127.0.0.1:8090\n"
     "User-Agent: curl/7.68.0\n"
     "Accept: */*\n"
@@ -103,7 +103,6 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
     bool isPrarametersCorrect = true;
     bool isParseQueryParametersExist = false;
 
-//--------------------------------------------------------------------------------------------------------------------------------
     char* arrayOfQueryParameters[] = 
     {
     "id=0",
@@ -111,7 +110,8 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
     "lastname=Ivanov",
     "nickname=Poni117"
     };
-
+//--------------------------------------------------------------------------------------------------------------------------------
+    isParseQueryParametersExist = antiSound_http_parseQuaryParameters(request, requestData);
 //--------------------------------------------------------------------------------------------------------------------------------
     list_t* pointer = request->url->queryParameters->next;
 
@@ -121,16 +121,16 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
         {
             isPrarametersCorrect = false;
         }
+        printf("[%s] - [%s]\n", (char*)pointer->data, arrayOfQueryParameters[pointer->id]);
         pointer = pointer->next;
     }
 //--------------------------------------------------------------------------------------------------------------------------------
-    isParseQueryParametersExist = antiSound_http_parseQuaryParameters(request, requestData);
     
     if(isParseQueryParametersExist == true && isPrarametersCorrect == true)
     {
         isParseQueryParametersSuccess = true;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+
     if(isParseQueryParametersSuccess == false)
     {
         printf("-------------------------\n");
@@ -148,28 +148,27 @@ void antiSound_http_testParseUrl(request_t* request, char* requestData)
     bool isParseUrlExist = false;
     bool isHostCorrect = false;
     bool isPortCorrect = false;
-//--------------------------------------------------------------------------------------------------------------------------------
+
     char* host = "127.0.0.1";
     char* port = "8090";
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseUrlExist = antiSound_http_parseUrl(request, requestData);
-
+//--------------------------------------------------------------------------------------------------------------------------------
     if(strcmp(request->url->host, host) == 0)
     {
         isHostCorrect = true;
     }
 
-
     if(strcmp(request->url->port, port) == 0)
     {
         isPortCorrect = true;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+
     if(isParseUrlExist == true && isHostCorrect == true && isPortCorrect == true)
     {
         isParseUrlSuccess = true;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+
     if (isParseUrlSuccess == false)
     {
         printf("-------------------------\n");
@@ -189,7 +188,7 @@ void antiSound_http_testIsolateData(char* requestData)
     bool isHttpIsolated = false;
     bool isUrlIsolated = false;
     bool isQueryParametersIsolated = false;
-//--------------------------------------------------------------------------------------------------------------------------------
+
     char* method = "PUT";
     char* http = "HTTP/1.1";
     char* queryParameters = "id=0&name=Slava";
@@ -240,7 +239,7 @@ void antiSound_http_testIsolateData(char* requestData)
     {
         isIsolatesSuccess = true;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+
     if (isIsolatesSuccess == false)
     {
         printf("-------------------------\n");
@@ -259,7 +258,6 @@ void antiSound_http_testParseHeaders(request_t* request, char* requestData)
     bool isParseHeadersExist = false;
     bool isHeadersListCorrect = true;
 
-//--------------------------------------------------------------------------------------------------------------------------------
     char* arrayOfHeaders[] = 
     {
     "User-Agent: curl/7.68.0",
@@ -268,6 +266,7 @@ void antiSound_http_testParseHeaders(request_t* request, char* requestData)
     };
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseHeadersExist = antiSound_http_parseHeaders(request, requestData);
+//--------------------------------------------------------------------------------------------------------------------------------
 
     list_t* pointer = request->headers->next;
 
@@ -284,7 +283,7 @@ void antiSound_http_testParseHeaders(request_t* request, char* requestData)
     {
         isParseHeadersSuccess = true;
     }
-//--------------------------------------------------------------------------------------------------------------------------------
+    
     if(isParseHeadersSuccess == false)
     {
         printf("-------------------------\n");
