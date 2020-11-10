@@ -23,10 +23,11 @@ int main()
     
     antiSound_http_testParseMethod(request, requestData);
     antiSound_http_testParseHttpVersion(request, requestData);
-    antiSound_http_testParseQueryParameters(request, requestData);
     antiSound_http_testParseUrl(request, requestData);
+    antiSound_http_testParseQueryParameters(request, requestData);
     antiSound_http_testParseHeaders(request, requestData);
     antiSound_http_testParseBody(request, requestData);
+    antiSound_http_testIsolateData(requestData);
 }
 
 //===============================================================================================================================
@@ -92,23 +93,50 @@ void antiSound_http_testParseMethod(request_t* request, char* requestData)
 
 void antiSound_http_testParseHttpVersion(request_t* request, char* requestData)
 {
-    bool isParseHttpVersionSuccess = false;
+    bool isParseHttpVersionExist = false;
 
     bool isMethodGetHttpParsed = false;
+
+    bool isMajorCorrect = false;
+    bool isMinorCorrect = false;
+    bool isVersionProtocolCorrect = false;
+
+    bool isParseHttpSuccess = false;
 //--------------------------------------------------------------------------------------------------------------------------------
     isMethodGetHttpParsed = antiSound_http_parseHttpVersion(request, requestData);
 //--------------------------------------------------------------------------------------------------------------------------------
 
     if(isMethodGetHttpParsed == true)
     {
-        isParseHttpVersionSuccess = true;
+        isParseHttpVersionExist = true;
     }
 
-    if(isParseHttpVersionSuccess != true)
+    if(request->http->major >= 0 && request->http->major <= 2)
+    {
+        isMajorCorrect = true;
+    }
+
+    if(request->http->minor >= 0 && request->http->minor <= 1)
+    {
+        isMinorCorrect = true;
+
+    }
+
+    if (isMajorCorrect == true &&  isMinorCorrect == true)
+    {
+        isVersionProtocolCorrect = true;
+    }
+
+    if(isParseHttpVersionExist ==  true && isVersionProtocolCorrect == true)
+    {
+        isParseHttpSuccess = true; 
+    }
+
+    if(isParseHttpSuccess == false)
     {
         printf("-------------------------\n");
         printf("< antiSound_http_testParseHttpVersion >\n\n");
-        printf("isParseHttpVersionSuccess[%d]\n", isParseHttpVersionSuccess);
+        printf("isParseHttpVersionSuccess[%d]\n", isParseHttpSuccess);
         printf("-------------------------\n");
     }
 }
@@ -122,24 +150,60 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
     bool isParseQueryParametersExist = false;
 
     bool isLengthCorrect = false;
+    
+    queryParameter_t* testListOfQueryParameter[4];
 
-    char* arrayOfQueryParameters[] = 
-    {
-    "id=0",
-    "name=Dmitry",
-    "lastname=Ivanov",
-    "nickname=Poni117"
-    };
+    testListOfQueryParameter[0] = malloc(sizeof(queryParameter_t));
+    testListOfQueryParameter[0]->name = "id";
+    testListOfQueryParameter[0]->value = "0";
+
+    testListOfQueryParameter[1] = malloc(sizeof(queryParameter_t));
+    testListOfQueryParameter[1]->name = "name";
+    testListOfQueryParameter[1]->value = "Dmitry";
+
+    testListOfQueryParameter[2] = malloc(sizeof(queryParameter_t));
+    testListOfQueryParameter[2]->name = "lastname";
+    testListOfQueryParameter[2]->value = "Ivanov";
+
+    testListOfQueryParameter[3] = malloc(sizeof(queryParameter_t));
+    testListOfQueryParameter[3]->name = "nickname";
+    testListOfQueryParameter[3]->value = "Poni117";
+
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseQueryParametersExist = antiSound_http_parseQuaryParameters(request, requestData);
 
     list_t* pointer = request->url->queryParameters;
 
-    while (pointer->next!= NULL)
+    if (pointer->id == -1)
     {
-        if(strcmp(pointer->next->data, arrayOfQueryParameters[pointer->next->id]) != 0)
+        pointer = pointer->next;
+    }
+    
+    while (true)
+    {
+        queryParameter_t* listOfQueryParameter = pointer->data;
+
+        char* actualName = listOfQueryParameter->name;
+   
+        char* expectedName = testListOfQueryParameter[pointer->id]->name;
+        if(strcmp(actualName, expectedName) != 0)
         {
             isListCorrect = false;
+            break;
+        }
+
+        char* actualValue = listOfQueryParameter->value;
+      
+        char* expectedValue = testListOfQueryParameter[pointer->id]->value;
+        if(strcmp(actualValue, expectedValue) != 0)
+        {
+            isListCorrect = false;
+            break;
+        }
+
+        if(pointer->next == NULL)
+        {
+            break;
         }
         pointer = pointer->next;
     }
@@ -216,29 +280,22 @@ void antiSound_http_testIsolateData(char* requestData)
 
     char* method = "PUT";
     char* http = "HTTP/1.1";
-    char* queryParameters = "id=0&name=Slava";
+    char* queryParameters = "id=0&name=Dmitry&lastname=Ivanov&nickname=Poni117";
     char* url = "Host: 127.0.0.1:8090";
     
 //--------------------------------------------------------------------------------------------------------------------------------
     char* isoltedMethod = antiSound_http_isolateData(requestData, requestData[0], ' ');
 
     char* isolatedQueryParameters = antiSound_http_isolateData(requestData, '?', ' ');
+    
+    char* alterateRequestData = strchr(requestData, '\n');
+    alterateRequestData++;
+    char* isolatedUrl = antiSound_http_isolateData(alterateRequestData, alterateRequestData[0], '\n');
 
-    char* isolatedUrl = antiSound_http_isolateData(requestData, '\n', '\r');
-
-    char* isolatedHttp = NULL;
-
-    if(strcmp(method, "POST") == 0 || strcmp(method, "GET") == 0)
-    {
-        char* alteradeIsolatedHttp = strchr(requestData, '/');
-        isolatedHttp = antiSound_http_isolateData(alteradeIsolatedHttp, ' ', '\n');
-    }
-
-    if(strcmp(method, "PUT") == 0 || strcmp(method, "DELETE") == 0)
-    {
-        isolatedHttp = antiSound_http_isolateData(requestData, '/', '\n');
-    }
-
+    char* alteradeRequest = strchr(requestData, '/');
+    char* isolatedHttp = antiSound_http_isolateData(alteradeRequest, ' ', '\n');
+    
+    
 //--------------------------------------------------------------------------------------------------------------------------------
     if(strcmp(http, isolatedHttp) == 0)
     {
@@ -276,29 +333,59 @@ void antiSound_http_testIsolateData(char* requestData)
 //===============================================================================================================================
 void antiSound_http_testParseBody(request_t* request, char* requestData)
 {
+
     bool isParseBodySuccess = false;
     bool isParsedBodyExist = false;
     
     bool isLengthCorrect = false;
     bool isListCorrect = true;
 
-    char* body[] = 
-    {
-    "\"id\":\"0\"",
-    "\"name\":\"Dmitry\"",
-    "\"lastname\":\"Ivanov\"",
-    "\"nickname\":\"Poni117\""
-    };
+    body_t* testListOfBodyParameter[4];
+    
+    testListOfBodyParameter[0] = malloc(sizeof(body_t));
+    testListOfBodyParameter[0]->name = "id";
+    testListOfBodyParameter[0]->value = "0";
+
+    testListOfBodyParameter[1] = malloc(sizeof(body_t));
+    testListOfBodyParameter[1]->name = "name";
+    testListOfBodyParameter[1]->value = "Dmitry";
+
+    testListOfBodyParameter[2] = malloc(sizeof(body_t));
+    testListOfBodyParameter[2]->name = "lastname";
+    testListOfBodyParameter[2]->value = "Ivanov";
+
+    testListOfBodyParameter[3] = malloc(sizeof(body_t));
+    testListOfBodyParameter[3]->name = "nickname";
+    testListOfBodyParameter[3]->value = "Poni117";
 //--------------------------------------------------------------------------------------------------------------------------------
     isParsedBodyExist = antiSound_http_parseBody(request, requestData);
 
     list_t* pointer = request->body;
 
-    while (pointer->next != NULL)
+    if (pointer->id == -1)
     {
-        if(strcmp(pointer->next->data, body[pointer->next->id]) != 0)
+        pointer = pointer->next;
+    }
+
+    while (true)
+    {   
+        body_t* listOfBodyParameter = pointer->data;
+ 
+        if(strcmp(listOfBodyParameter->name, testListOfBodyParameter[pointer->id]->name) != 0)
         {
             isListCorrect = false;
+            break;
+        }
+
+        if(strcmp(listOfBodyParameter->value, testListOfBodyParameter[pointer->id]->value) != 0)
+        {
+            isListCorrect = false;
+            break;
+        }
+
+        if(pointer->next == NULL)
+        {
+            break;
         }
         pointer = pointer->next;
     }
@@ -322,7 +409,6 @@ void antiSound_http_testParseBody(request_t* request, char* requestData)
         printf("isParseBodySuccess[%d]\n", isParseBodySuccess);
         printf("-------------------------\n");
     }
-
 }
 
 //===============================================================================================================================
@@ -335,22 +421,49 @@ void antiSound_http_testParseHeaders(request_t* request, char* requestData)
     bool isListCorrect = true;
     bool isLengthCorrect = false;
 
-    char* headers[] = 
-    {
-    "User-Agent: curl/7.68.0",
-    "Accept: */*",
-    "Content-Type: application/json",
-    };
+    headerParameter_t* testListOfHeadrerParameter[3];
+
+    testListOfHeadrerParameter[0] = malloc(sizeof(headerParameter_t));
+    testListOfHeadrerParameter[0]->name = "User-Agent";
+    testListOfHeadrerParameter[0]->value = "curl/7.68.0";
+
+    testListOfHeadrerParameter[1] = malloc(sizeof(headerParameter_t));
+    testListOfHeadrerParameter[1]->name = "Accept";
+    testListOfHeadrerParameter[1]->value = "*/*";
+
+    testListOfHeadrerParameter[2] = malloc(sizeof(headerParameter_t));
+    testListOfHeadrerParameter[2]->name = "Content-Type";
+    testListOfHeadrerParameter[2]->value = "application/json";
+
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseHeadersExist = antiSound_http_parseHeaders(request, requestData);
 
     list_t* pointer = request->headers;
+    
 
-    while (pointer->next != NULL)
+    if (pointer->id == -1)
     {
-        if(strcmp(pointer->next->data, headers[pointer->next->id]) != 0)
+        pointer = pointer->next;
+    }
+    
+    while(true)
+    {
+        headerParameter_t* listOfHeaderParameter = pointer->data;
+
+        if(strcmp(listOfHeaderParameter->name, testListOfHeadrerParameter[pointer->id]->name) != 0)
         {
             isListCorrect = false;
+            break;
+        }
+
+        if(strcmp(listOfHeaderParameter->value, testListOfHeadrerParameter[pointer->id]->value) != 0)
+        {
+            isListCorrect = false;
+        }
+
+        if(pointer->next == NULL)
+        {
+            break;
         }
         pointer = pointer->next;
     }

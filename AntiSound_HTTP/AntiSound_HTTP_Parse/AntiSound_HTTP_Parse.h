@@ -50,7 +50,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter);
 /*
  * isolates data from isolatedData and returns isolated data
  */
-char* antiSound_http_isolateData(char* isolatedData, int start, int end);
+char* antiSound_http_isolateData(char* isolatedData, char start, char end);
 
 
 //======================================================================================================================================
@@ -93,7 +93,7 @@ void antiSound_http_testParseBody(request_t* request, char* requestData);
 /*
  *  tests of antiSound_http_isolatedData
  */
-void antiSound_http_testIsolatedData(char* requestData);
+void antiSound_http_testIsolateData(char* requestData);
 
 
 

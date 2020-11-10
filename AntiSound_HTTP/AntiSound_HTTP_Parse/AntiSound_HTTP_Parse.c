@@ -53,20 +53,10 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
 {
     bool isParsedHttpVersionExist = false;
     
-    char* method = request->method;
-
     char* isolatedHttp = NULL;
 
-    if(strcmp(method, "POST") == 0 || strcmp(method, "GET") == 0)
-    {
-        char* alteradeIsolatedHttp = strchr(requestData, '/');
-        isolatedHttp = antiSound_http_isolateData(alteradeIsolatedHttp, ' ', '\n');
-    }
-
-    if(strcmp(method, "PUT") == 0 || strcmp(method, "DELETE") == 0)
-    {
-        isolatedHttp = antiSound_http_isolateData(requestData, '/', '\n');
-    }
+    char* alteradeIsolatedHttp = strchr(requestData, '/');
+    isolatedHttp = antiSound_http_isolateData(alteradeIsolatedHttp, ' ', '\n');
     
     char* minor = antiSound_http_isolateData(isolatedHttp, '/', '.');
 
@@ -101,7 +91,9 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
     bool isHostExist = false;
     bool isPortExist = false;
 
-    char* isolatedUrl = antiSound_http_isolateData(requestData, '\n', '\r');
+    char* alterateRequestData = strchr(requestData, '\n');
+    alterateRequestData++;
+    char* isolatedUrl = antiSound_http_isolateData(alterateRequestData, alterateRequestData[0], '\n');
 
     char* host = antiSound_http_isolateData(isolatedUrl, ' ', ':');
 
@@ -161,8 +153,25 @@ bool antiSound_http_parseBody(request_t* request, char* requestData)
 
     char* isolatedBodyParameters = antiSound_http_isolateData(requestData, '{', '}');
 
-    isParseBodyExist = antiSound_http_parseData(request->body, isolatedBodyParameters, ',');
+    int i = 0;
+    int j = 0;
+
+    char* alteratedIsolatedBodyParameters = calloc(j, sizeof(char));
+
+    while (i < strlen(isolatedBodyParameters))
+    {
+        if(isolatedBodyParameters[i] != '\"')
+        {
+            alteratedIsolatedBodyParameters = realloc(alteratedIsolatedBodyParameters, j + 1);
+            alteratedIsolatedBodyParameters[j] = isolatedBodyParameters[i];
+            j++;
+        }
+        i++;
+    }
+
+    isParseBodyExist = antiSound_http_parseData(request->body, alteratedIsolatedBodyParameters, ',');
     
+    free(isolatedBodyParameters);
     return isParseBodyExist;
 }
 
@@ -175,11 +184,47 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
         return isParseExist;
     }
 
-    char* quaryParameter = antiSound_http_isolateData(isolatedData, isolatedData[0], delimiter);
+    void* structure = NULL;
 
-    antiSound_list_add(list, quaryParameter);
+    char* parameter = antiSound_http_isolateData(isolatedData, isolatedData[0], delimiter);
 
-    if(quaryParameter[0] != '\0')
+    if(delimiter == '&')
+    {
+        queryParameter_t* queryParameter = malloc(sizeof(queryParameter_t));
+
+        queryParameter->name = antiSound_http_isolateData(parameter, parameter[0], '=');
+
+        queryParameter->value = antiSound_http_isolateData(parameter, '=', '\0');
+
+        structure = queryParameter;
+    }
+
+    if (delimiter == '\n')
+    {
+        headerParameter_t* headerParameter = malloc(sizeof(headerParameter_t));
+
+        headerParameter->name = antiSound_http_isolateData(parameter, parameter[0], ':');
+
+        headerParameter->value = antiSound_http_isolateData(parameter, ' ', '\0');
+
+        structure = headerParameter;
+    }
+
+    if(delimiter == ',')
+    {
+
+        body_t* body = malloc(sizeof(body_t));
+
+        body->name = antiSound_http_isolateData(parameter, parameter[0], ':');
+
+        body->value = antiSound_http_isolateData(parameter, ':', '\0');
+
+        structure = body;
+    }
+
+    antiSound_list_add(list, structure);
+
+    if(parameter[0] != '\0')
     {
         isParseExist = true;
     }
@@ -194,7 +239,8 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
 
     return isParseExist;
 }
-char* antiSound_http_isolateData(char* isolatedData, int start, int end)
+
+char* antiSound_http_isolateData(char* isolatedData, char start, char end)
 {
     size_t sizeOfRequestData = strlen(isolatedData);
 
@@ -217,6 +263,7 @@ char* antiSound_http_isolateData(char* isolatedData, int start, int end)
 
     char* parsedData = calloc(j, sizeof(char));
 
+
     while (i < sizeOfRequestData)
     {
         if(isolatedData[i] == end)
@@ -234,7 +281,7 @@ char* antiSound_http_isolateData(char* isolatedData, int start, int end)
     {
         while (i < sizeOfRequestData)
         {
-            if(isolatedData[i] == end && isolatedData[i + 1] == end)
+            if(isolatedData[i] == '\n' && isolatedData[i + 1] == '\n')
             {
                 break;
             }
@@ -245,6 +292,7 @@ char* antiSound_http_isolateData(char* isolatedData, int start, int end)
             i++;
         }
     }
+
     return parsedData;
 }
 
