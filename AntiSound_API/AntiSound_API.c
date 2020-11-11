@@ -4,22 +4,64 @@
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <stdbool.h>
+#include <string.h>
 
-void antiSound_api_start()
+
+
+server_t* antiSound_api_initializeServer()
 {
-    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    server_t* server = malloc(sizeof(server_t));
+    server->serverSocket = -1;
 
-    struct sockaddr_in setConnect;
-    setConnect.sin_family = AF_INET;
-    setConnect.sin_port = ntohl("8090");
-    setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
+    return server;
+}
 
-    bind(serverSocket, (const struct sockaddr*) &setConnect, sizeof(setConnect);
+bool antiSound_api_newServer(server_t* server)
+{
+    bool isServerSuccess = false;
 
-    listen(serverSocket, 1);
+    bool isBindExist = false;
+    bool isListenExist = false;
 
-    while (true)
+    server->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+    server->setConnect.sin_family = AF_INET;
+    server->setConnect.sin_port = ntohs(8090);
+    server->setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    int bindStatus = bind(server->serverSocket, (struct sockaddr *) &server->setConnect, sizeof(server->setConnect));
+
+    if(bindStatus != -1)
     {
-        int clientSocket = accept(serverSocket, NULL, NULL);
+        isBindExist = true;
     }
+
+    int listenStatus = listen(server->serverSocket, 1);
+
+    if(listenStatus != -1)
+    {
+        isListenExist = true;
+    }
+
+    if(isBindExist == true && isListenExist == true)
+    {
+        isServerSuccess = true;
+    }
+
+    return isServerSuccess;
+}
+
+bool antiSound_api_receive(server_t* server)
+{
+    bool isReceiveExist = false;
+
+    int connectionStatus = accept(server->serverSocket, NULL, NULL);
+
+    if(connectionStatus != -1)
+    {
+        isReceiveExist = true;
+    }
+
+    return isReceiveExist;
 }
