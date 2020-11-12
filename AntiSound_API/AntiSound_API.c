@@ -7,74 +7,36 @@
 #include <stdbool.h>
 #include <string.h>
 
-server_t* antiSound_api_initializeServer()
+bool antiSound_api_newServer()
 {
-    server_t* server = malloc(sizeof(server_t));
-    server->serverSocket = -1;
+    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-    return server;
-}
+    struct sockaddr_in setConnect;
+    setConnect.sin_family = AF_INET;
+    setConnect.sin_port = ntohs(8090);
+    setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-bool antiSound_api_newServer(server_t* server)
-{
-    bool isServerSuccess = false;
+    bind(serverSocket, (const struct sockaddr *) &setConnect, sizeof(setConnect));
 
-    bool isBindExist = false;
-    bool isListenExist = false;
+    listen(serverSocket, 1);
 
-    server->serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-
-    server->setConnect.sin_family = AF_INET;
-    server->setConnect.sin_port = ntohs(8090);
-    server->setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    int bindStatus = bind(server->serverSocket, (struct sockaddr *) &server->setConnect, sizeof(server->setConnect));
-
-    if(bindStatus != -1)
+    while (true)
     {
-        isBindExist = true;
+        int clientSocket = accept(serverSocket, NULL, NULL);
+
+        char buffer[256] = "\0";
+        recv(clientSocket, buffer, strlen(buffer), 0);
+        
+        char response[] = 
+        "HTTP/1.1 200 OK\n"
+        "Content-Length: 0\n"
+        "\n";
+
+        send(clientSocket, &response, strlen(response), 0);
+
+        printf("%s\n", buffer);
+
     }
 
-    int listenStatus = listen(server->serverSocket, 1);
-
-    if(listenStatus != -1)
-    {
-        isListenExist = true;
-    }
-
-    if(isBindExist == true && isListenExist == true)
-    {
-        isServerSuccess = true;
-    }
-
-    return isServerSuccess;
-}
-
-bool antiSound_api_receive(server_t* server)
-{
-    static int i = 0;
-
-    bool isRecieveSucsess = false;
-
-    bool isClientSocketExist = false;
-
-    int clientSocket = accept(server->serverSocket, NULL, NULL);
-
-    char buffer[256] = "\0";
-
-    recv(clientSocket, &buffer, strlen(buffer), 0);
-    printf("%s\n", buffer);
-
-    if(clientSocket != -1)
-    {
-        isClientSocketExist = true;
-    }
-
-    if(isClientSocketExist == true )
-    {
-        isRecieveSucsess = true;
-    }
-
-    i++;
-    return isRecieveSucsess;
+    return true;
 }

@@ -16,7 +16,7 @@ server_t* antiSound_api_initializeServer();
 /*
  * create new server and returns true if successful, otherwise returns false
  */
-bool antiSound_api_newServer(server_t* server);
+bool antiSound_api_newServer();
 
 /*
  * receives a request from the client Socket and returns true if successful, otherwise returns false
