@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-
-
 server_t* antiSound_api_initializeServer()
 {
     server_t* server = malloc(sizeof(server_t));
@@ -54,14 +52,29 @@ bool antiSound_api_newServer(server_t* server)
 
 bool antiSound_api_receive(server_t* server)
 {
-    bool isReceiveExist = false;
+    static int i = 0;
 
-    int connectionStatus = accept(server->serverSocket, NULL, NULL);
+    bool isRecieveSucsess = false;
 
-    if(connectionStatus != -1)
+    bool isClientSocketExist = false;
+
+    int clientSocket = accept(server->serverSocket, NULL, NULL);
+
+    char buffer[256] = "\0";
+
+    recv(clientSocket, &buffer, strlen(buffer), 0);
+    printf("%s\n", buffer);
+
+    if(clientSocket != -1)
     {
-        isReceiveExist = true;
+        isClientSocketExist = true;
     }
 
-    return isReceiveExist;
+    if(isClientSocketExist == true )
+    {
+        isRecieveSucsess = true;
+    }
+
+    i++;
+    return isRecieveSucsess;
 }

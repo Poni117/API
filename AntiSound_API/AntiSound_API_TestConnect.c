@@ -17,22 +17,25 @@ bool antiSound_api_testConnect()
 {
     bool isServerExist = false;
 
-    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in setConnect;
     setConnect.sin_family = AF_INET;
     setConnect.sin_port = ntohs(8090);
     setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-
-    int connectStatus = connect(serverSocket, (struct sockaddr*) &setConnect, sizeof(setConnect));
-
+    int connectStatus = connect(clientSocket, (struct sockaddr*) &setConnect, sizeof(setConnect));
+ 
     if(connectStatus != -1)
     {
         isServerExist = true;
     }
-   
-   return isServerExist;
+
+    char buffer[256] = "\0";
+
+    printf("%s\n", buffer);
+
+    return isServerExist;
 }
 
 void antiSound_api_testTestConnect()
