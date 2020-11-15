@@ -1,3 +1,6 @@
+#ifndef ANTISOUND_API_H
+#define ANTISOUND_API_H
+
 #include <stdbool.h>
 #include <arpa/inet.h>
 
@@ -55,3 +58,6 @@ void antiSound_api_testReceive(server_t* server);
  * test antiSound_api_createTestClientSocket
  */
 void antiSound_api_testTestConnect();
+
+
+#endif // ANTISOUND_API_H

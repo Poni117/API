@@ -1,4 +1,3 @@
-#include "AntiSound_API.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,17 +25,16 @@ bool antiSound_api_testConnect()
 
     connect(clientSocket, (const struct sockaddr*) &setConnect, sizeof(setConnect));
 
+
+    char buffer[256] = "\0";
+    recv(clientSocket, buffer, sizeof(buffer), 0);
+
     char request[256] =
     "GET / HTTP/1.1\n"
     "Content-Length: 0\n"
     "Content-Type: application/json\n"
     "\n";
-
     send(clientSocket, request, strlen(request), 0);
-
-    char buffer[256] = "\0";
-
-    recv(clientSocket, buffer, strlen(buffer), 0);
     printf("%s\n", buffer);
 
     return isServerExist;

@@ -1,7 +1,6 @@
 #ifndef ANTISOUND_HTTP_H
 #define ANTISOUND_HTTP_H
 
-#include "../AntiSound_List/AntiSound_List.h"
 #include <stdbool.h>
 
 
@@ -40,6 +39,12 @@ typedef struct BodyParameter
     char* name;
     char* value;
 }body_t;
+
+typedef struct HeaderParameter
+{
+    char* name;
+    char* value; 
+}headerParameter_t;
 
 typedef struct Response
 {

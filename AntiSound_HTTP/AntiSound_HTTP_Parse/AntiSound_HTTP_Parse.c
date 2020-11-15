@@ -1,6 +1,3 @@
-#include "AntiSound_HTTP_Parse.h"
-#include "../AntiSound_HTTP.h"
-#include "../../AntiSound_List/AntiSound_List.c"
 
 #include <stdbool.h>
 #include <string.h>
@@ -10,6 +7,7 @@
 request_t* antiSound_http_initializeRequest()
 {
     request_t* request = malloc(sizeof(request_t));
+
     request->method = NULL;
 
     request->body = antiSound_list_new();

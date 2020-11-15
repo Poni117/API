@@ -1,4 +1,3 @@
-#include "AntiSound_API.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,18 +23,19 @@ bool antiSound_api_newServer()
     {
         int clientSocket = accept(serverSocket, NULL, NULL);
 
-        char buffer[256] = "\0";
-        recv(clientSocket, buffer, strlen(buffer), 0);
+        char buffer[1000] = "\0";
+        recv(clientSocket, buffer, sizeof(buffer), 0);
+        size_t sizeOfBuffer = strlen(buffer);
+
+        char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
+        strncpy(requestData, buffer, sizeOfBuffer);
+
+
+        request_t* request = antiSound_http_parseRuqest(requestData);
+
+
+        printf("%s\n", request->method);
         
-        char response[] = 
-        "HTTP/1.1 200 OK\n"
-        "Content-Length: 0\n"
-        "\n";
-
-        send(clientSocket, &response, strlen(response), 0);
-
-        printf("%s\n", buffer);
-
     }
 
     return true;

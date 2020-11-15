@@ -1,6 +1,32 @@
 #include "AntiSound_HTTP.h"
+#include "AntiSound_HTTP_Parse/AntiSound_HTTP_Parse.h"
 
-request_t* antiSound_http_parseRuqest(char* request)
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+request_t* antiSound_http_parseRuqest(char* requestData)
 {
-   return NULL;
+   request_t* request = antiSound_http_initializeRequest();
+
+   antiSound_http_testParseMethod(request, requestData);
+   antiSound_http_testParseHttpVersion(request, requestData);
+   antiSound_http_testParseUrl(request, requestData);
+
+   if(strcmp(request->method, "PUT") == 0 || strcmp(request->method, "DELETE") == 0)
+   {
+      antiSound_http_testParseQueryParameters(request, requestData);
+   }
+   
+   antiSound_http_testParseHeaders(request, requestData);
+
+   if(strcmp(request->method, "POST") == 0)
+   {
+      antiSound_http_testParseBody(request, requestData);
+      
+   }
+
+   antiSound_http_testParseHeaders(request, requestData);
+
+   return request;
 }
