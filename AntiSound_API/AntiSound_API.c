@@ -8,6 +8,8 @@
 
 bool antiSound_api_newServer()
 {
+    bool isServerExist = false;
+
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in setConnect;
@@ -15,7 +17,13 @@ bool antiSound_api_newServer()
     setConnect.sin_port = ntohs(8090);
     setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
 
-    bind(serverSocket, (const struct sockaddr *) &setConnect, sizeof(setConnect));
+    int bindStatus = bind(serverSocket, (const struct sockaddr *) &setConnect, sizeof(setConnect));
+
+    if(bindStatus != -1)
+    {
+        isServerExist = true;
+    }
+    printf("isServerExist[%d]\n", isServerExist);
 
     listen(serverSocket, 1);
 
@@ -30,12 +38,6 @@ bool antiSound_api_newServer()
         char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
         strncpy(requestData, buffer, sizeOfBuffer);
 
-
-        request_t* request = antiSound_http_parseRuqest(requestData);
-
-
-        printf("%s\n", request->method);
-        
     }
 
     return true;
