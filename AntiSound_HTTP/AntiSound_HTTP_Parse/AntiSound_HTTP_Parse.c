@@ -1,3 +1,6 @@
+#include "AntiSound_HTTP_Parse.h"
+#include "../AntiSound_HTTP.h"
+#include "../../AntiSound_List/AntiSound_List.h"
 
 #include <stdbool.h>
 #include <string.h>

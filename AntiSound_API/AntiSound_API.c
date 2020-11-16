@@ -1,3 +1,5 @@
+#include "AntiSound_API.h"
+#include "../AntiSound_HTTP/AntiSound_HTTP.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,6 +40,22 @@ bool antiSound_api_newServer()
         char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
         strncpy(requestData, buffer, sizeOfBuffer);
 
+        int i = 0;
+        int j = 0;
+        char* alterateRequestData = calloc(j, sizeof(char));
+
+        while (i < strlen(requestData))
+        {
+            if (requestData[i] != '\r')
+            {
+                alterateRequestData = realloc(alterateRequestData, j + 1);
+                alterateRequestData[j] = requestData[i];
+                j++;
+            }
+            i++;
+        }
+
+        antiSound_http_parseRuqest(alterateRequestData);
     }
 
     return true;

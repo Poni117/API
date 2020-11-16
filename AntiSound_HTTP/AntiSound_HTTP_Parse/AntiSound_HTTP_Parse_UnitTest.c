@@ -1,32 +1,8 @@
+#include "AntiSound_HTTP_Parse.h"
 
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-
-int main()
-{
-    antiSound_http_testInitializeRequest();
-
-    char* requestData = 
-    "PUT /?id=0&name=Dmitry&lastname=Ivanov&nickname=Poni117 HTTP/1.1\n"
-    "Host: 127.0.0.1:8090\n"
-    "User-Agent: curl/7.68.0\n"
-    "Accept: */*\n"
-    "Content-Type: application/json\n"
-    "\n"
-    "{\"id\":\"0\",\"name\":\"Dmitry\",\"lastname\":\"Ivanov\",\"nickname\":\"Poni117\"}";
-
-    request_t* request = antiSound_http_initializeRequest();
-    
-    antiSound_http_testParseMethod(request, requestData);
-    antiSound_http_testParseHttpVersion(request, requestData);
-    antiSound_http_testParseUrl(request, requestData);
-    antiSound_http_testParseQueryParameters(request, requestData);
-    antiSound_http_testParseHeaders(request, requestData);
-    antiSound_http_testParseBody(request, requestData);
-    antiSound_http_testIsolateData(requestData);
-}
 
 //===============================================================================================================================
 void antiSound_http_testInitializeRequest()
@@ -144,65 +120,17 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
 {
     bool isParseQueryParametersSuccess = false;
 
-    bool isListCorrect = true;
     bool isParseQueryParametersExist = false;
 
     bool isLengthCorrect = false;
     
-    queryParameter_t* testListOfQueryParameter[4];
-
-    testListOfQueryParameter[0] = malloc(sizeof(queryParameter_t));
-    testListOfQueryParameter[0]->name = "id";
-    testListOfQueryParameter[0]->value = "0";
-
-    testListOfQueryParameter[1] = malloc(sizeof(queryParameter_t));
-    testListOfQueryParameter[1]->name = "name";
-    testListOfQueryParameter[1]->value = "Dmitry";
-
-    testListOfQueryParameter[2] = malloc(sizeof(queryParameter_t));
-    testListOfQueryParameter[2]->name = "lastname";
-    testListOfQueryParameter[2]->value = "Ivanov";
-
-    testListOfQueryParameter[3] = malloc(sizeof(queryParameter_t));
-    testListOfQueryParameter[3]->name = "nickname";
-    testListOfQueryParameter[3]->value = "Poni117";
-
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseQueryParametersExist = antiSound_http_parseQuaryParameters(request, requestData);
 
     list_t* pointer = request->url->queryParameters;
 
-    if (pointer->id == -1)
+    while(pointer->next != NULL)
     {
-        pointer = pointer->next;
-    }
-    
-    while (true)
-    {
-        queryParameter_t* listOfQueryParameter = pointer->data;
-
-        char* actualName = listOfQueryParameter->name;
-   
-        char* expectedName = testListOfQueryParameter[pointer->id]->name;
-        if(strcmp(actualName, expectedName) != 0)
-        {
-            isListCorrect = false;
-            break;
-        }
-
-        char* actualValue = listOfQueryParameter->value;
-      
-        char* expectedValue = testListOfQueryParameter[pointer->id]->value;
-        if(strcmp(actualValue, expectedValue) != 0)
-        {
-            isListCorrect = false;
-            break;
-        }
-
-        if(pointer->next == NULL)
-        {
-            break;
-        }
         pointer = pointer->next;
     }
 
@@ -213,7 +141,7 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
         isLengthCorrect = true;
     }
 
-    if(isParseQueryParametersExist == true && isListCorrect == true && isLengthCorrect == true)
+    if(isParseQueryParametersExist == true  && isLengthCorrect == true)
     {
         isParseQueryParametersSuccess = true;
     }
@@ -336,57 +264,17 @@ void antiSound_http_testParseBody(request_t* request, char* requestData)
     bool isParsedBodyExist = false;
     
     bool isLengthCorrect = false;
-    bool isListCorrect = true;
 
-    body_t* testListOfBodyParameter[4];
-    
-    testListOfBodyParameter[0] = malloc(sizeof(body_t));
-    testListOfBodyParameter[0]->name = "id";
-    testListOfBodyParameter[0]->value = "0";
-
-    testListOfBodyParameter[1] = malloc(sizeof(body_t));
-    testListOfBodyParameter[1]->name = "name";
-    testListOfBodyParameter[1]->value = "Dmitry";
-
-    testListOfBodyParameter[2] = malloc(sizeof(body_t));
-    testListOfBodyParameter[2]->name = "lastname";
-    testListOfBodyParameter[2]->value = "Ivanov";
-
-    testListOfBodyParameter[3] = malloc(sizeof(body_t));
-    testListOfBodyParameter[3]->name = "nickname";
-    testListOfBodyParameter[3]->value = "Poni117";
 //--------------------------------------------------------------------------------------------------------------------------------
     isParsedBodyExist = antiSound_http_parseBody(request, requestData);
 
     list_t* pointer = request->body;
 
-    if (pointer->id == -1)
+    while(pointer->next != NULL)
     {
         pointer = pointer->next;
     }
 
-    while (true)
-    {   
-        body_t* listOfBodyParameter = pointer->data;
- 
-        if(strcmp(listOfBodyParameter->name, testListOfBodyParameter[pointer->id]->name) != 0)
-        {
-            isListCorrect = false;
-            break;
-        }
-
-        if(strcmp(listOfBodyParameter->value, testListOfBodyParameter[pointer->id]->value) != 0)
-        {
-            isListCorrect = false;
-            break;
-        }
-
-        if(pointer->next == NULL)
-        {
-            break;
-        }
-        pointer = pointer->next;
-    }
 
     int length = antiSound_list_length(pointer);
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -395,7 +283,7 @@ void antiSound_http_testParseBody(request_t* request, char* requestData)
         isLengthCorrect = true;
     }
 
-    if(isParsedBodyExist == true && isLengthCorrect == true && isListCorrect == true)
+    if(isParsedBodyExist == true && isLengthCorrect == true)
     {
         isParseBodySuccess = true;
     }
@@ -416,53 +304,16 @@ void antiSound_http_testParseHeaders(request_t* request, char* requestData)
     bool isParseHeadersSuccess = false;
     bool isParseHeadersExist = false;
 
-    bool isListCorrect = true;
     bool isLengthCorrect = false;
-
-    headerParameter_t* testListOfHeadrerParameter[3];
-
-    testListOfHeadrerParameter[0] = malloc(sizeof(headerParameter_t));
-    testListOfHeadrerParameter[0]->name = "User-Agent";
-    testListOfHeadrerParameter[0]->value = "curl/7.68.0";
-
-    testListOfHeadrerParameter[1] = malloc(sizeof(headerParameter_t));
-    testListOfHeadrerParameter[1]->name = "Accept";
-    testListOfHeadrerParameter[1]->value = "*/*";
-
-    testListOfHeadrerParameter[2] = malloc(sizeof(headerParameter_t));
-    testListOfHeadrerParameter[2]->name = "Content-Type";
-    testListOfHeadrerParameter[2]->value = "application/json";
 
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseHeadersExist = antiSound_http_parseHeaders(request, requestData);
 
     list_t* pointer = request->headers;
     
-
-    if (pointer->id == -1)
-    {
-        pointer = pointer->next;
-    }
     
-    while(true)
+    while(pointer->next != NULL)
     {
-        headerParameter_t* listOfHeaderParameter = pointer->data;
-
-        if(strcmp(listOfHeaderParameter->name, testListOfHeadrerParameter[pointer->id]->name) != 0)
-        {
-            isListCorrect = false;
-            break;
-        }
-
-        if(strcmp(listOfHeaderParameter->value, testListOfHeadrerParameter[pointer->id]->value) != 0)
-        {
-            isListCorrect = false;
-        }
-
-        if(pointer->next == NULL)
-        {
-            break;
-        }
         pointer = pointer->next;
     }
 
@@ -473,7 +324,7 @@ void antiSound_http_testParseHeaders(request_t* request, char* requestData)
         isLengthCorrect = true;
     }
 
-    if(isParseHeadersExist == true && isListCorrect == true && isLengthCorrect == true)
+    if(isParseHeadersExist == true && isLengthCorrect == true)
     {
         isParseHeadersSuccess = true;
     }

@@ -1,8 +1,9 @@
+#include "AntiSound_List.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "AntiSound_List.h"
 
 list_t* antiSound_list_new()
 {
