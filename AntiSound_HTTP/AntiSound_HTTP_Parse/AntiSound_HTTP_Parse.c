@@ -13,6 +13,8 @@ request_t* antiSound_http_initializeRequest()
 
     request->method = NULL;
 
+    request->path = antiSound_list_new();
+
     request->body = antiSound_list_new();
 
     request->headers = antiSound_list_new();
@@ -127,6 +129,17 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
 
     return isParseUrlSuccess;
 }
+
+bool antiSound_http_parsePath(request_t* request, char* requestData)
+{
+    bool isParsePathExist = false;
+
+    char* isolatedPath = antiSound_http_isolateData(requestData, '/', ' ');
+    isParsePathExist = antiSound_http_parseData(request->path, isolatedPath, '/');
+
+    return isParsePathExist;
+}
+
 
 bool antiSound_http_parseHeaders(request_t* request, char* requestData)
 {

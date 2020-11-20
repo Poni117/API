@@ -10,6 +10,10 @@
 bool antiSound_api_newServer();
 
 /*
+ * removes correctors from requestData(for Linux)
+ */
+char* antiSound_api_removeCorrector(char* requestdata);
+/*
  * receives a request from the client Socket and returns true if successful, otherwise returns false
  */
 bool antiSound_api_receive();

@@ -62,7 +62,43 @@ void antiSound_http_testParseMethod(request_t* request, char* requestData)
         printf("-------------------------\n");
     }
 }
+//===============================================================================================================================
 
+void antiSound_http_testParsePath(request_t* request, char* requestData)
+{
+    bool isParsePathSuccess = false;
+    bool isLengthCorrect = false;
+    bool isParsePathExist = false;
+    
+    isParsePathExist = antiSound_http_parsePath(request, requestData);
+    
+    list_t* pointer = request->path;
+
+    while(pointer->next != NULL)
+    {
+        pointer = pointer->next;
+    }
+
+    int length = antiSound_list_length(pointer);
+//--------------------------------------------------------------------------------------------------------------------------------
+    if(pointer->id + 1 == length)
+    {
+        isLengthCorrect = true;
+    }
+
+    if(isLengthCorrect == true && isParsePathExist == true)
+    {
+        isParsePathSuccess = true;
+    }
+
+    if(isParsePathSuccess == false)
+    {
+        printf("-------------------------\n");
+        printf("< antiSound_http_testParsePath >\n\n");
+        printf("isParsePathSuccess[%d]\n", isParsePathSuccess);
+        printf("-------------------------\n");
+    }
+}
 //===============================================================================================================================
 
 void antiSound_http_testParseHttpVersion(request_t* request, char* requestData)
@@ -188,6 +224,9 @@ void antiSound_http_testParseUrl(request_t* request, char* requestData)
     {
         printf("-------------------------\n");
         printf("< antiSound_http_testParseUrl >\n\n");
+        printf("isHostCorrect[%d]\n", isHostCorrect);
+        printf("isPortCorrect[%d]\n", isPortCorrect);
+
         printf("isParseUrlSuccess[%d]\n", isParseUrlSuccess);
         printf("-------------------------\n");
     }

@@ -16,6 +16,7 @@ request_t* antiSound_http_parseRuqest(char* requestData)
 
    if(strcmp(request->method, "PUT") == 0 || strcmp(request->method, "DELETE") == 0)
    {
+      antiSound_http_parsePath(request, requestData);
       antiSound_http_testParseQueryParameters(request, requestData);
    }
 
