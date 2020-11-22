@@ -42,7 +42,8 @@ bool antiSound_api_newServer()
     request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
 
     list_t* taskList = antiSound_list_new();
-    antiSound_handler_taskManagement(request, taskList);
+
+    antiSound_handler_handler(request, taskList);
 
     return true;
 }

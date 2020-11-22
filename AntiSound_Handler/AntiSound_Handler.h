@@ -8,3 +8,5 @@
 task_t* antiSound_handler_initializeTask();
 
 bool antiSound_handler_taskManagement(request_t* request, list_t* list);
+
+response_t* antiSound_handler_handler(request_t* request, list_t* list);

@@ -17,6 +17,15 @@ task_t* antiSound_handler_initializeTask()
     return task;
 }
 
+response_t* antiSound_handler_handler(request_t* request, list_t* list)
+{
+    antiSound_handler_taskManagement(request, list);
+    
+    response_t* response = NULL;
+    
+    return response;
+}
+
 bool antiSound_handler_taskManagement(request_t* request, list_t* taskList)
 {
     list_t* pointer = NULL;
