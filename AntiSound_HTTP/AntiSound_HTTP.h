@@ -23,7 +23,7 @@ typedef struct Url
 typedef struct Request
 {
     char* method;
-    list_t* path;
+    char* path;
     httpVersion_t* http;
     url_t* url;
     list_t* headers;
@@ -36,11 +36,6 @@ typedef struct QueryParameter
     char* value;
 }queryParameter_t;
 
-typedef struct PathParameter
-{
-    char* path;
-}pathParameter_t;
-
 typedef struct BodyParameter
 {
     char* name;
@@ -52,6 +47,13 @@ typedef struct HeaderParameter
     char* name;
     char* value; 
 }headerParameter_t;
+
+typedef struct Task
+{
+    char* name;
+    char* value;
+    struct Task* next;
+}task_t;
 
 typedef struct Response
 {

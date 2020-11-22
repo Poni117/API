@@ -67,26 +67,12 @@ void antiSound_http_testParseMethod(request_t* request, char* requestData)
 void antiSound_http_testParsePath(request_t* request, char* requestData)
 {
     bool isParsePathSuccess = false;
-    bool isLengthCorrect = false;
     bool isParsePathExist = false;
     
     isParsePathExist = antiSound_http_parsePath(request, requestData);
     
-    list_t* pointer = request->path;
 
-    while(pointer->next != NULL)
-    {
-        pointer = pointer->next;
-    }
-
-    int length = antiSound_list_length(pointer);
-//--------------------------------------------------------------------------------------------------------------------------------
-    if(pointer->id + 1 == length)
-    {
-        isLengthCorrect = true;
-    }
-
-    if(isLengthCorrect == true && isParsePathExist == true)
+    if(isParsePathExist == true)
     {
         isParsePathSuccess = true;
     }

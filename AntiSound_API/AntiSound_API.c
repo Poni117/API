@@ -1,5 +1,6 @@
 #include "AntiSound_API.h"
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
+#include "../AntiSound_Handler/AntiSound_Handler.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,19 +30,19 @@ bool antiSound_api_newServer()
 
     listen(serverSocket, 1);
 
-    while (true)
-    {
-        int clientSocket = accept(serverSocket, NULL, NULL);
+    int clientSocket = accept(serverSocket, NULL, NULL);
 
-        char buffer[1000] = "\0";
-        recv(clientSocket, buffer, sizeof(buffer), 0);
-        size_t sizeOfBuffer = strlen(buffer);
+    char buffer[1000] = "\0";
+    recv(clientSocket, buffer, sizeof(buffer), 0);
+    size_t sizeOfBuffer = strlen(buffer);
 
-        char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
-        strncpy(requestData, buffer, sizeOfBuffer);
+    char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
+    strncpy(requestData, buffer, sizeOfBuffer);
 
-        antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
-    }
+    request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
+
+    list_t* taskList = antiSound_list_new();
+    antiSound_handler_taskManagement(request, taskList);
 
     return true;
 }

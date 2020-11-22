@@ -27,10 +27,8 @@ int antiSound_list_add(list_t* list, void* data)
     pointer->next = malloc(sizeof(list_t));
 
     pointer->next->id = pointer->id + 1;
-    size_t sizeOfData = strlen(data);
 
-    pointer->next->data = calloc(sizeOfData + 1, sizeof(char));
-    strncpy(pointer->next->data, data, sizeOfData);
+    pointer->next->data = data;
 
     pointer->next->next = NULL;
     
