@@ -32,14 +32,14 @@ typedef struct Request
 
 typedef struct QueryParameter
 {
+    char* id;
     char* name;
-    char* value;
 }queryParameter_t;
 
 typedef struct BodyParameter
 {
+    char* id;
     char* name;
-    char* value;
 }body_t;
 
 typedef struct HeaderParameter
@@ -50,14 +50,13 @@ typedef struct HeaderParameter
 
 typedef struct Task
 {
+    char* id;
     char* name;
-    char* value;
-    struct Task* next;
 }task_t;
 
 typedef struct Response
 {
-    
+   char* status; 
 }response_t;
 
 request_t* antiSound_http_parseRuqest(char* request);

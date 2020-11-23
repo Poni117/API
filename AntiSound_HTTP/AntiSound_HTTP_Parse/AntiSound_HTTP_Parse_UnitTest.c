@@ -186,12 +186,13 @@ void antiSound_http_testParseUrl(request_t* request, char* requestData)
     bool isHostCorrect = false;
     bool isPortCorrect = false;
 
+    char* alteranativeHost = "localhost";
     char* host = "127.0.0.1";
     char* port = "8090";
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseUrlExist = antiSound_http_parseUrl(request, requestData);
 //--------------------------------------------------------------------------------------------------------------------------------
-    if(strcmp(request->url->host, host) == 0)
+    if(strcmp(request->url->host, host) == 0 || strcmp(request->url->host, alteranativeHost) == 0)
     {
         isHostCorrect = true;
     }

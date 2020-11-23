@@ -30,20 +30,26 @@ bool antiSound_api_newServer()
 
     listen(serverSocket, 1);
 
-    int clientSocket = accept(serverSocket, NULL, NULL);
-
-    char buffer[1000] = "\0";
-    recv(clientSocket, buffer, sizeof(buffer), 0);
-    size_t sizeOfBuffer = strlen(buffer);
-
-    char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
-    strncpy(requestData, buffer, sizeOfBuffer);
-
-    request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
-
     list_t* taskList = antiSound_list_new();
 
-    antiSound_handler_handler(request, taskList);
+    while (true)
+    {
+        int clientSocket = accept(serverSocket, NULL, NULL);
+
+        char buffer[1000] = "\0";
+        recv(clientSocket, buffer, sizeof(buffer), 0);
+        size_t sizeOfBuffer = strlen(buffer);
+
+        char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
+        strncpy(requestData, buffer, sizeOfBuffer);
+
+        request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
+
+        response_t* response = antiSound_handler_handler(request, taskList);
+        printf("%s\n", response->status);
+
+        send(clientSocket, response->status, strlen(response->status), 0);
+    }
 
     return true;
 }
@@ -67,3 +73,4 @@ char* antiSound_api_removeCorrector(char* requestData)
 
     return alterateRequestData;
 }
+
