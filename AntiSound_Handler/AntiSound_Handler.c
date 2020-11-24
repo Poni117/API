@@ -22,12 +22,13 @@ response_t* antiSound_handler_handler(request_t* request, list_t* taskList)
     if(strcmp(request->method, "GET") == 0)
     {   
         response->status = antiSound_handler_collectResponse(taskList);
-        return response;
     }
-
-    antiSound_handler_taskManagement(request, taskList);
-    
-    response->status = "HTTP/1.1 200 OK\n";
+    else
+    {
+        antiSound_handler_taskManagement(request, taskList);
+        
+        response->status = "HTTP/1.1 200 OK\n";
+    }
 
     return response;
 }
@@ -36,7 +37,7 @@ bool antiSound_handler_taskManagement(request_t* request, list_t* taskList)
 {
     list_t* pointer = NULL;
     
-    if(strcmp(request->method, "POST") == 0 && strcmp(request->path, "AntiSound_API_Handler") == 0)
+    if(strcmp(request->method, "POST") == 0)
     {
         pointer = request->body;
 
@@ -60,7 +61,7 @@ bool antiSound_handler_taskManagement(request_t* request, list_t* taskList)
         }
     }
 
-    if(strcmp(request->method, "PUT") == 0 && strcmp(request->path, "AntiSound_API_Handler") == 0)
+    if(strcmp(request->method, "PUT") == 0)
     {
         pointer = request->body;
 
@@ -85,7 +86,7 @@ bool antiSound_handler_taskManagement(request_t* request, list_t* taskList)
         }
     }
 
-    if(strcmp(request->method, "DELETE") == 0 && strcmp(request->path, "AntiSound_API_Handler") == 0)
+    if(strcmp(request->method, "DELETE") == 0)
     {
         pointer = request->url->queryParameters;
 
