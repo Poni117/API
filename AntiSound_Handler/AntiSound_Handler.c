@@ -1,7 +1,6 @@
 #include "AntiSound_Handler.h"
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 
-
 #include <stdio.h>
 #include <stdlib.h> 
 #include <string.h> 
@@ -199,7 +198,6 @@ char* antiSound_handler_collectResponse(list_t* taskList)
     
     char* fullCollectedTasks = antiSound_handler_collector(quotes, openBracket);
 
-    fullCollectedTasks = antiSound_handler_collector(fullCollectedTasks, quotes);
     fullCollectedTasks = antiSound_handler_collector(fullCollectedTasks, tasks);
     fullCollectedTasks = antiSound_handler_collector(fullCollectedTasks, quotes);
     fullCollectedTasks = antiSound_handler_collector(fullCollectedTasks, сolon);

@@ -68,11 +68,19 @@ void antiSound_http_testParsePath(request_t* request, char* requestData)
 {
     bool isParsePathSuccess = false;
     bool isParsePathExist = false;
+    bool isPathExist = false;
     
+    char* path = "AntiSound_API_Handler";
+
+
     isParsePathExist = antiSound_http_parsePath(request, requestData);
     
+    if(strcmp(request->path, path) == 0)
+    {
+        isPathExist = true;
+    }
 
-    if(isParsePathExist == true)
+    if(isParsePathExist == true && isPathExist == true)
     {
         isParsePathSuccess = true;
     }
