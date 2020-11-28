@@ -134,7 +134,6 @@ char* antiSound_handler_convertToJson(char* id, char* name)
     + sizeOfQuots + sizeOfColon + sizeOfQuots + strlen(name)
     + sizeOfQuots + sizeOfCloseBraket + 1, sizeof(char));
 
-    strncat(data, openBracket, sizeOfOpenBraket);
     strncat(data, quotes, sizeOfQuots);
     strncat(data, id, strlen(id));
     strncat(data, quotes, sizeOfQuots);
@@ -142,7 +141,6 @@ char* antiSound_handler_convertToJson(char* id, char* name)
     strncat(data, quotes, sizeOfQuots);
     strncat(data, name, strlen(name));
     strncat(data, quotes, sizeOfQuots);
-    strncat(data, closeBracket, sizeOfCloseBraket);
 
     return data;
 }
@@ -197,7 +195,7 @@ char* antiSound_handler_collectResponse(list_t* taskList)
         pointer = pointer->next;
     }
     
-    char* fullCollectedTasks = antiSound_handler_collector(quotes, openBracket);
+    char* fullCollectedTasks = antiSound_handler_collector(openBracket, quotes);
 
     fullCollectedTasks = antiSound_handler_collector(fullCollectedTasks, tasks);
     fullCollectedTasks = antiSound_handler_collector(fullCollectedTasks, quotes);
