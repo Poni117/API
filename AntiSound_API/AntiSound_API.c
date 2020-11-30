@@ -45,12 +45,12 @@ bool antiSound_api_newServer()
 
         request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
 
-        if(strcmp(request->path, "AntiSound_API_Handler") == 0)
+        if(strcmp(request->path, "tasks") == 0)
         {
-            response_t* response = antiSound_handler_handler(request, taskList);
-            printf("%s\n", response->status);
 
-            send(clientSocket, response->status, strlen(response->status), 0);
+            response_t* response = antiSound_handler_handler(request, taskList);
+          
+            send(clientSocket, response->response, strlen(response->response), 0);
         }
     }
 

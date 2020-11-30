@@ -56,7 +56,7 @@ typedef struct Task
 
 typedef struct Response
 {
-   char* status; 
+   char* response;
 }response_t;
 
 request_t* antiSound_http_parseRuqest(char* request);

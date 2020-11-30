@@ -19,13 +19,12 @@ request_t* antiSound_http_parseRuqest(char* requestData)
    {
       antiSound_http_testParseBody(request, requestData);
    }
-
+   
    if(strcmp(request->method, "DELETE") == 0)
    {
       antiSound_http_testParseQueryParameters(request, requestData);
    }
 
- 
-
    return request;
 }
+
