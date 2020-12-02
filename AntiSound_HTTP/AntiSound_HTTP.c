@@ -15,8 +15,14 @@ request_t* antiSound_http_parseRuqest(char* requestData)
    antiSound_http_testParseHeaders(request, requestData);
    antiSound_http_parsePath(request, requestData);
 
-   if(strcmp(request->method, "POST") == 0 || strcmp(request->method, "PUT") == 0)
+   if(strcmp(request->method, "POST") == 0)
    {
+      antiSound_http_testParseBody(request, requestData);
+   }
+   
+   if(strcmp(request->method, "PUT") == 0)
+   {
+      antiSound_http_testParseQueryParameters(request, requestData);
       antiSound_http_testParseBody(request, requestData);
    }
    

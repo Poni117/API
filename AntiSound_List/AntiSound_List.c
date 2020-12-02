@@ -43,8 +43,7 @@ bool antiSound_list_update(list_t* list, int id, void* newData)
     size_t sizeOfNewData = strlen(newData);
 
     free(item->data);
-    item->data = calloc(sizeOfNewData, sizeof(char));
-    strncpy(item->data ,newData, sizeOfNewData);
+    item->data = realloc(newData, sizeOfNewData);
 
     isUpdateSuccess = true;
 
@@ -117,10 +116,11 @@ int antiSound_list_length(list_t* list)
 void antiSound_list_redefineId(list_t* list)
 {
     list_t* pointer = list;
-
-    while (pointer->next != NULL)
+    int i = -1;
+    while(pointer != NULL)
     {
-        pointer->next->id = pointer->id + 2;
+        pointer->id = i;
         pointer = pointer->next;
+        i++;
     }
 }

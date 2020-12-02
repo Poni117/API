@@ -136,12 +136,12 @@ bool antiSound_http_parsePath(request_t* request, char* requestData)
     char start = '/';
     char end = '\0';
 
-    if(strcmp(request->method, "POST") == 0 || strcmp(request->method, "PUT") == 0 || strcmp(request->method, "GET") == 0)
+    if(strcmp(request->method, "POST") == 0 || strcmp(request->method, "GET") == 0)
     {
         end = ' ';
     }
 
-    if(strcmp(request->method, "DELETE") == 0)
+    if(strcmp(request->method, "DELETE") == 0 || strcmp(request->method, "PUT") == 0)
     {
         end = '?';
     }
@@ -226,7 +226,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
         structure = queryParameter;
     }
 
-    if (delimiter == '\n')
+    if(delimiter == '\n')
     {
         headerParameter_t* headerParameter = malloc(sizeof(headerParameter_t));
 

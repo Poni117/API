@@ -31,7 +31,7 @@ bool antiSound_api_newServer()
     listen(serverSocket, 1);
 
     list_t* taskList = antiSound_list_new();
-
+    
     while (true)
     {
         int clientSocket = accept(serverSocket, NULL, NULL);
