@@ -233,9 +233,9 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
     {
         headerParameter_t* headerParameter = malloc(sizeof(headerParameter_t));
 
-        headerParameter->name = antiSound_http_isolateData(parameter, parameter[0], ':');
+        headerParameter->id = antiSound_http_isolateData(parameter, parameter[0], ':');
 
-        headerParameter->value = antiSound_http_isolateData(parameter, ' ', '\0');
+        headerParameter->name = antiSound_http_isolateData(parameter, ' ', '\0');
 
         structure = headerParameter;
     }

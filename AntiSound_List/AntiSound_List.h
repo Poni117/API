@@ -72,7 +72,7 @@ void antiSound_list_testUpdate(list_t* list);
 /*
  * test of antiSound_list_getItem
  */
-void antiSound_list_testGetItem(list_t* list);
+bool antiSound_list_testGetItem(list_t* list);
 
 /*
  * test of antiSound_list_getData

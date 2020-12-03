@@ -19,6 +19,11 @@ int antiSound_list_add(list_t* list, void* data)
 {
     list_t* pointer = list;
 
+    if(data == NULL)
+    {
+        return -1;
+    }
+    
     while(pointer->next != NULL)
     {   
         pointer = pointer->next;
@@ -40,14 +45,18 @@ bool antiSound_list_update(list_t* list, int id, void* newData)
     bool isUpdateSuccess = false;
 
     list_t* item = antiSound_list_getItem(list, id);
+
+    if(item != NULL)
+    {
+        return isUpdateSuccess;
+    }
+
     size_t sizeOfNewData = strlen(newData);
 
     free(item->data);
     item->data = realloc(newData, sizeOfNewData);
 
-    isUpdateSuccess = true;
-
-    return isUpdateSuccess;
+    return isUpdateSuccess = true;
 }
 
 
@@ -80,9 +89,9 @@ bool antiSound_list_remove(list_t* list, int id)
 
     list_t* deleteItem = antiSound_list_getItem(list, id);
 
-    if(deleteItem != NULL)
+    if(deleteItem == NULL)
     {
-        isRemoveSuccess = true;
+        return isRemoveSuccess;
     }
 
     list_t* pointer = list;
@@ -96,7 +105,8 @@ bool antiSound_list_remove(list_t* list, int id)
     free(deleteItem);
 
     antiSound_list_redefineId(list);
-    return isRemoveSuccess;
+    
+    return isRemoveSuccess = true;
 }
 
 int antiSound_list_length(list_t* list)

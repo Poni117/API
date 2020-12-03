@@ -42,15 +42,15 @@ bool antiSound_api_newServer()
 
         char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
         strncpy(requestData, buffer, sizeOfBuffer);
-
+        
         request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
 
         if(strcmp(request->path, "tasks") == 0)
         {
+            antiSound_handler_handler(request, taskList);
+            char* message = "HTTP/1.1 200 OK";
 
-            response_t* response = antiSound_handler_handler(request, taskList);
-          
-            send(clientSocket, response->response, strlen(response->response), 0);
+            send(clientSocket, message, strlen(message), 0);
         }
     }
 

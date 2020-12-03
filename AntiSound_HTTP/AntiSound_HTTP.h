@@ -44,8 +44,8 @@ typedef struct BodyParameter
 
 typedef struct HeaderParameter
 {
-    char* name;
-    char* value; 
+    char* id;
+    char* name; 
 }headerParameter_t;
 
 typedef struct Task
@@ -56,7 +56,12 @@ typedef struct Task
 
 typedef struct Response
 {
-   char* response;
+    char* httpVersion;
+    char* status;
+    char* contentType;
+    char* contentLength;
+    char* body;
+    char* response;
 }response_t;
 
 request_t* antiSound_http_parseRuqest(char* request);
