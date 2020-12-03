@@ -65,12 +65,12 @@ char* antiSound_constructor_decodeItemToJson(char* id, char* name)
     return collectJson;
 }
 
-char* antiSound_constructor_decodeTaskToJson(list_t* list)
+char* antiSound_constructor_decodeTaskToJson(list_t* task)
 {
     char* commaLayout = "%s, ";
     char* bracketLayout = "{%s}";
 
-    list_t* pointer = list;
+    list_t* pointer = task;
 
     if(pointer->id == -1)
     {

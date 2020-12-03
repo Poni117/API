@@ -7,16 +7,6 @@
 #include <stdlib.h> 
 #include <string.h> 
 
-task_t* antiSound_handler_initializeTask()
-{
-    task_t* task = malloc(sizeof(task_t));
-    
-    task->id = NULL;
-    task->name = NULL;
-
-    return task;
-}
-
 response_t* antiSound_handler_handler(request_t* request, list_t* taskList)
 {
     response_t* response = malloc(sizeof(response_t));
