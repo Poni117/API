@@ -134,17 +134,20 @@ bool antiSound_http_parsePath(request_t* request, char* requestData)
     char* isolatedPath = NULL;
 
     char start = '/';
-    char end = '\0';
 
-    if(strcmp(request->method, "POST") == 0 || strcmp(request->method, "GET") == 0)
+    char* alteratedRequest = strchr(requestData, start);
+
+    int i = 0;
+    while(i < strlen(requestData))
     {
-        end = ' ';
+        if(alteratedRequest[i] == ' ' || alteratedRequest[i] == '?')
+        {
+            break;
+        }
+        i++;
     }
 
-    if(strcmp(request->method, "DELETE") == 0 || strcmp(request->method, "PUT") == 0)
-    {
-        end = '?';
-    }
+    char end = alteratedRequest[i];
 
     isolatedPath = antiSound_http_isolateData(requestData, start, end);
 

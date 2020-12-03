@@ -61,6 +61,7 @@ char* antiSound_api_removeCorrector(char* requestData)
 {
     int i = 0;
     int j = 0;
+    
     char* alterateRequestData = calloc(j, sizeof(char));
 
     while (i < strlen(requestData))
