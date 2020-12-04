@@ -47,8 +47,9 @@ bool antiSound_api_newServer()
 
         if(strcmp(request->path, "tasks") == 0)
         {
-            antiSound_handler_handler(request, taskList);
-            char* message = "HTTP/1.1 200 OK";
+            response_t* response = antiSound_handler_handler(request, taskList);
+            
+            char* message = antiSound_handler_collectResponse(response);
 
             send(clientSocket, message, strlen(message), 0);
         }

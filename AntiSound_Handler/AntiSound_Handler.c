@@ -65,7 +65,6 @@ response_t* antiSound_handler_handler(request_t* request, list_t* taskList)
         antiSound_handler_defineStatus(response, isDeleteSuccess);
     }
 
-    antiSound_handler_collectResponse(response);
     return response;
 }
 
