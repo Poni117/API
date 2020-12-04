@@ -67,17 +67,17 @@ void antiSound_list_testAdd(list_t* list);
 /*
  * test of antiSound_list_update
  */
-void antiSound_list_testUpdate(list_t* list);
+void antiSound_list_testUpdate(list_t* list, int id, void* newData);
 
 /*
  * test of antiSound_list_getItem
  */
-bool antiSound_list_testGetItem(list_t* list);
+bool antiSound_list_testGetItem(list_t* list, int id);
 
 /*
  * test of antiSound_list_getData
  */
-void antiSound_list_testGetData(list_t* list);
+bool antiSound_list_testGetData(list_t* list, int id);
 
 /*
  * test of antiSound_list_remove

@@ -44,12 +44,16 @@ bool antiSound_list_update(list_t* list, int id, void* newData)
 {
     bool isUpdateSuccess = false;
 
-    list_t* item = antiSound_list_getItem(list, id);
+    bool isItemExist = antiSound_list_testGetItem(list, id);
 
-    if(item != NULL)
+    printf("isItemExist[%d]", isItemExist);
+
+    if(isItemExist == false)
     {
-        return isUpdateSuccess;
+        return isItemExist;
     }
+
+    list_t* item = antiSound_list_getItem(list, id);
 
     size_t sizeOfNewData = strlen(newData);
 
@@ -87,12 +91,14 @@ bool antiSound_list_remove(list_t* list, int id)
 {
     bool isRemoveSuccess = false;
 
-    list_t* deleteItem = antiSound_list_getItem(list, id);
+    bool isItemExist = antiSound_list_testGetItem(list, id);
 
-    if(deleteItem == NULL)
+    if(isItemExist == false)
     {
-        return isRemoveSuccess;
+        return isItemExist;
     }
+
+    list_t* deleteItem = antiSound_list_getItem(list, id);
 
     list_t* pointer = list;
 

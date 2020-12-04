@@ -6,26 +6,6 @@
 
 void antiSound_list_message(int id);
 
-int main()
-{
-    antiSound_list_message(0);
-
-    list_t* list = antiSound_list_testNew();
-
-    antiSound_list_testAdd(list);
-
-    antiSound_list_testUpdate(list); 
-
-    antiSound_list_testGetItem(list);
-
-    antiSound_list_testGetData(list);
-
-    antiSound_list_testRemove(list);
-
-    antiSound_list_testLength(list);
-
-}
-
 list_t* antiSound_list_testNew()
 {
     bool status = false;
@@ -84,14 +64,11 @@ void antiSound_list_testAdd(list_t* list)
     }
 }
 
-void antiSound_list_testUpdate(list_t* list)
+void antiSound_list_testUpdate(list_t* list, int id, void* newData)
 {
     bool status = false;
     bool isUpdateSuccess = false;
     bool isItemDataCorrect = false;
-
-    void* newData = "name=Roma";
-    int id = 0;
 
     isUpdateSuccess = antiSound_list_update(list, id, newData);
 
@@ -115,11 +92,17 @@ void antiSound_list_testUpdate(list_t* list)
     }
 }
 
-bool antiSound_list_testGetItem(list_t* list)
+bool antiSound_list_testGetItem(list_t* list, int id)
 {
     bool status = false;
 
-    int id = 0;
+    bool isIdExist = true;
+
+    if(id > antiSound_list_length(list) || id < 0)
+    {
+        return isIdExist = false;
+    }
+
     list_t* item = antiSound_list_getItem(list, id);
 
     if(item->id == id)
@@ -133,13 +116,21 @@ bool antiSound_list_testGetItem(list_t* list)
         printf("status[%d]\n", status);
         antiSound_list_message(0);
     }
+
+    return status;
 }
 
-void antiSound_list_testGetData(list_t* list)
+bool antiSound_list_testGetData(list_t* list, int id)
 {
     bool status = false;
 
-    int id = 0;
+    bool isItemExist = antiSound_list_testGetItem(list, id);
+
+    if(isItemExist == false)
+    {
+        return isItemExist;
+    }
+
     list_t* item = antiSound_list_getItem(list, id);
 
     void* data = antiSound_list_getData(list, id);
@@ -155,6 +146,9 @@ void antiSound_list_testGetData(list_t* list)
         printf("status[%d]\n", status);
         antiSound_list_message(0);
     }
+
+    return status;
+
 }
 
 void antiSound_list_testRemove(list_t* list)

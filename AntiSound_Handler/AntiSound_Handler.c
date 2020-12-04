@@ -60,7 +60,7 @@ response_t* antiSound_handler_handler(request_t* request, list_t* taskList)
     {
         bool isDeleteSuccess = false;
 
-        antiSound_list_remove(taskList, atoi(antiSound_handler_getQueryParamter(request, "id")->name));
+        isDeleteSuccess = antiSound_list_remove(taskList, atoi(antiSound_handler_getQueryParamter(request, "id")->name));
 
         antiSound_handler_defineStatus(response, isDeleteSuccess);
     }
@@ -99,25 +99,25 @@ char* antiSound_handler_collectResponse(response_t* response)
     return collectedResponse;
 }
 
-queryParameter_t* antiSound_handler_getQueryParamter(request_t* request, char* id)
+queryParameter_t* antiSound_handler_getQueryParamter(request_t* request, char* soughtItem)
 {
-    list_t* pointerByQueryParameter = request->url->queryParameters;
+    list_t* pointer = request->url->queryParameters;
 
-    if(pointerByQueryParameter->id == -1)
+    if(pointer->id == -1)
     {
-        pointerByQueryParameter = pointerByQueryParameter->next;
+        pointer = pointer->next;
     }
 
-    while (pointerByQueryParameter != NULL)
+    while (pointer != NULL)
     {
-        queryParameter_t* queryParameter = pointerByQueryParameter->data;
+        queryParameter_t* queryParameter = pointer->data;
 
-        if(strcmp(queryParameter->id, id) == 0)
+        if(strcmp(queryParameter->id, soughtItem) == 0)
         {
             return queryParameter;
         }
 
-        pointerByQueryParameter = pointerByQueryParameter->next;
+        pointer = pointer->next;
     }
     
     return NULL;
@@ -148,7 +148,7 @@ void antiSound_handler_defineStatus(response_t* response, bool isMethodSuccess)
     }
     else
     {
-        response->status = "HTTP/1.1 404\n";
+        response->status = "HTTP/1.1 404 - Not Found\n";
     }
 }
 
