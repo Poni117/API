@@ -29,7 +29,7 @@ int antiSound_list_add(list_t* list, void* data)
         pointer = pointer->next;
     }
     
-    pointer->next = malloc(sizeof(list_t));
+    pointer->next = antiSound_list_new();
 
     pointer->next->id = pointer->id + 1;
 

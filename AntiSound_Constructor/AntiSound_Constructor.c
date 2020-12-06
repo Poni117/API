@@ -32,7 +32,7 @@ char* antiSound_constructor_decodeListToJson(list_t* taskList)
 
     char* commaLayout = "%s, ";
 
-    list_t* pointer = taskList->next;
+    list_t* pointer = taskList;
     
     if(pointer->id == -1)
     {
@@ -41,7 +41,9 @@ char* antiSound_constructor_decodeListToJson(list_t* taskList)
     
     while(pointer != NULL)
     {
-        jsonTasks = antiSound_constructor_collector(jsonTasks, antiSound_constructor_decodeTaskToJson(pointer->data));
+        item_t* item = pointer->data;
+
+        jsonTasks = antiSound_constructor_collector(jsonTasks, antiSound_constructor_decodeTaskToJson(item->data));
 
         if(pointer->next != NULL)
         {
@@ -65,12 +67,12 @@ char* antiSound_constructor_decodeItemToJson(char* id, char* name)
     return collectJson;
 }
 
-char* antiSound_constructor_decodeTaskToJson(list_t* task)
+char* antiSound_constructor_decodeTaskToJson(list_t* list)
 {
     char* commaLayout = "%s, ";
     char* bracketLayout = "{%s}";
 
-    list_t* pointer = task;
+    list_t* pointer = list;
 
     if(pointer->id == -1)
     {

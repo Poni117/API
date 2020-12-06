@@ -48,11 +48,11 @@ typedef struct HeaderParameter
     char* name; 
 }headerParameter_t;
 
-typedef struct Task
+typedef struct Item
 {
-    char* id;
-    char* name;
-}task_t;
+    int id;
+    void* data;
+}item_t;
 
 typedef struct Response
 {
@@ -64,6 +64,35 @@ typedef struct Response
     char* response;
 }response_t;
 
+item_t* antiSound_http_initializeItem();
+
 request_t* antiSound_http_parseRuqest(char* request);
+
+headerParameter_t* antiSound_http_getHeaderParamter(request_t* request, char* soughtItem);
+
+body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem);
+
+queryParameter_t* antiSound_http_getQueryParamter(request_t* request, char* soughtItem);
+
+item_t* antiSound_http_getItem(list_t* list, int id);
+
+bool antiSound_http_setItemId(item_t* item);
+
+//==============================================================================================
+
+bool antiSound_http_testInitializeItem();
+
+bool antiSound_http_testGetQueryParamter(request_t* request, char* soughtItem);
+
+bool antiSound_http_testGetItem(list_t* list, int id);
+
+bool antiSound_http_testGetHeaderParamter(request_t* request, char* id);
+
+bool antiSound_http_testGetBodyParamter(request_t* request, char* soughtItem);
+
+
+
+
+
 
 #endif // ANTISOUND_HTTP_H
