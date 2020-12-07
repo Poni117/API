@@ -2,6 +2,7 @@
 
 #include "../AntiSound_List/AntiSound_List.h"
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
+#include "../AntiSound_Item/AntiSound_Item.h"
  
 #include <stdio.h>
 #include <stdlib.h>
@@ -100,5 +101,24 @@ char* antiSound_constructor_decodeTaskToJson(list_t* list)
     return antiSound_constructor_addLayout(buffer, bracketLayout);;
 }
 
+char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList)
+{
+    queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
+
+    char* body = NULL;
+
+    if(queryParameter == NULL)
+    {
+        body = antiSound_constructor_decodeListToJson(taskList);
+    }
+
+    if(queryParameter != NULL)
+    {
+        item_t* item = antiSound_item_getItem(taskList, atoi(queryParameter->name));
+        body = antiSound_constructor_decodeTaskToJson(item->data);   
+    }
+
+    return body;
+}
 
 

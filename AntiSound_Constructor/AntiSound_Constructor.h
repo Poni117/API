@@ -1,4 +1,6 @@
 #include "../AntiSound_List/AntiSound_List.h"
+#include "../AntiSound_HTTP/AntiSound_HTTP.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,3 +29,8 @@ char* antiSound_constructor_decodeItemToJson(char* id, char* name);
  *  decodes task to json format, returns json task
  */
 char* antiSound_constructor_decodeTaskToJson(list_t* task);
+
+/*
+ *  decodes task to json format, returns json task
+ */
+char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList);

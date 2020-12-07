@@ -1,5 +1,6 @@
 #include "AntiSound_HTTP.h"
 #include "AntiSound_HTTP_Parse/AntiSound_HTTP_Parse.h"
+#include "../AntiSound_Item/AntiSound_Item.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -34,15 +35,6 @@ request_t* antiSound_http_parseRuqest(char* requestData)
    return request;
 }
 
-item_t* antiSound_http_initializeItem()
-{
-   item_t* item = malloc(sizeof(item_t));
-   item->id = -1;
-   item->data = NULL;
-
-   return item;
-}
-
 queryParameter_t* antiSound_http_getQueryParamter(request_t* request, char* soughtItem)
 {
    list_t* pointer = request->url->queryParameters;
@@ -65,28 +57,6 @@ queryParameter_t* antiSound_http_getQueryParamter(request_t* request, char* soug
    }
    
    return NULL;
-}
-item_t* antiSound_http_getItem(list_t* list, int id)
-{
-   list_t* pointer = list;
-
-   if(pointer->id == -1)
-   {
-      pointer = pointer->next;
-   }
-
-   while(pointer != NULL)
-   {
-      item_t* item = pointer->data;
-
-      if(item->id == id)
-      {
-         break;
-      }
-      pointer = pointer->next;
-   }
-   
-   return pointer->data;
 }
 
 headerParameter_t* antiSound_http_getHeaderParamter(request_t* request, char* id)
@@ -135,4 +105,89 @@ body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
    }
    
    return NULL;
+}
+
+bool antiSound_http_checkParameters(request_t* request, list_t* taskList, response_t* response)
+{
+   bool isParameterExist = false;
+
+   char* ok = "HTTP/1.1 200 OK\n";
+   char* noContent = "HTTP/1.1 204 No Content\n";
+
+   char* conflict = "HTTP/1.1 409 Conflict\n";
+   char* badRequest = "HTTP/1.1 400 Bad Request\n";
+   char* notFound =  "HTTP/1.1 404 Not Found\n";
+
+   if(strcmp(request->method, "GET") == 0)
+   {
+      if(taskList->next == NULL)
+      {
+         response->status = noContent;
+         return isParameterExist;
+      }
+   }
+
+   if(strcmp(request->method, "POST") == 0)
+   {
+      if(antiSound_http_checkExistingId(request, taskList))
+      {
+         response->status = conflict;
+         return isParameterExist;
+      }
+   }
+
+   if(strcmp(request->method, "PUT") == 0)
+   {
+      if(taskList->next == NULL)
+      {
+         response->status = noContent;
+         return isParameterExist;
+      }
+      
+      if(antiSound_http_testGetQueryParamter(request, "id") == false)
+      {
+         response->status = badRequest;
+         return isParameterExist;
+      }
+
+      queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
+
+      if(antiSound_item_testGetItem(taskList, atoi(queryParameter->name)) == false)
+      {
+         response->status = notFound;
+         return isParameterExist;
+      }
+
+      if(antiSound_http_testGetBodyParamter(request, "id") == false)
+      {
+         response->status = notFound;
+         return isParameterExist;
+      }
+   }
+
+   if(strcmp(request->method, "DELETE") == 0)
+   {
+      if(taskList->next == NULL)
+      {
+         response->status = noContent;
+         return isParameterExist;
+      }
+
+      if(antiSound_http_testGetQueryParamter(request, "id") == false)
+      {
+         response->status = badRequest;
+         return isParameterExist;
+      }
+
+      queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
+
+      if(antiSound_item_getItem(taskList, atoi(queryParameter->name)) == false)
+      {
+         response->status = notFound;
+         return isParameterExist;
+      }
+   }
+
+   response->status = ok;
+   return isParameterExist = true;
 }

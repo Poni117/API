@@ -2,6 +2,7 @@
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 #include "../AntiSound_List/AntiSound_List.h"
 #include "../AntiSound_Constructor/AntiSound_Constructor.h"
+#include "../AntiSound_Item/AntiSound_Item.h"
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -24,38 +25,29 @@ response_t* antiSound_handler_handler(request_t* request, list_t* taskList)
 {
     response_t* response = antiSound_handler_initializeResponse();
     
+    if(antiSound_http_checkParameters(request, taskList, response) == false)
+    {
+        return response;
+    }
+
     if(strcmp(request->method, "GET") == 0)
     {   
-        bool isGetSuccess = false;
-
-        isGetSuccess = antiSound_handler_readTask(request, taskList, response);
-
-        antiSound_handler_defineStatus(response, isGetSuccess);
+        antiSound_item_read(request, taskList, response);
     }
     
     if(strcmp(request->method, "POST") == 0)
     {
-        bool isAddSuccess = antiSound_handler_createTask(request, taskList);
-
-        antiSound_handler_defineStatus(response, isAddSuccess);
+        antiSound_item_create(request, taskList, response);
     }
 
     if(strcmp(request->method, "PUT") == 0)
     {
-        bool isUpdateSuccess = false;
-
-        isUpdateSuccess = antiSound_handler_updateTask(request, taskList );
-
-        antiSound_handler_defineStatus(response, isUpdateSuccess);
+        antiSound_item_update(request, taskList, response);
     }
 
     if(strcmp(request->method, "DELETE") == 0)
     {
-        bool isDeleteSuccess = false;
-
-        isDeleteSuccess = antiSound_list_remove(taskList, atoi(antiSound_http_getQueryParamter(request, "id")->name));
-
-        antiSound_handler_defineStatus(response, isDeleteSuccess);
+        antiSound_item_remove(request, taskList, response);
     }
 
     return response;
@@ -92,162 +84,24 @@ char* antiSound_handler_collectResponse(response_t* response)
     return collectedResponse;
 }
 
-
-bool antiSound_handler_readTask(request_t* request, list_t* taskList, response_t* response)
+void antiSound_handler_defineStatus(response_t* response, char* status)
 {
-    bool isGetSuccess = false;
-    
-    response->contentType = "Content-Type: application/json\n";
-
-    char* tasks = antiSound_handler_decodeToJson(request, taskList);
-
-    if(tasks != NULL)
-    {
-        isGetSuccess = true;
-        response->body = tasks;
-    }
-
-    return isGetSuccess;
+    response->status = status;
 }
 
-void antiSound_handler_defineStatus(response_t* response, bool isMethodSuccess)
+bool antiSound_http_checkExistingId(request_t* request, list_t* taskList)
 {
-    if(isMethodSuccess == true)
-    {
-        response->status = "HTTP/1.1 200 OK\n";
-    }
-    else
-    {
-        response->status = "HTTP/1.1 404 - Not Found\n";
-    }
-}
+    bool isTaskExist = false;
 
-char* antiSound_handler_decodeToJson(request_t* request, list_t* taskList)
-{
-    queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
-
-    char* body = NULL;
-
-    if(queryParameter == NULL)
-    {
-        body = antiSound_constructor_decodeListToJson(taskList);
-    }
-
-    if(queryParameter != NULL)
-    {
-        item_t* item = antiSound_http_getItem(taskList, atoi(queryParameter->name));
-        body = antiSound_constructor_decodeTaskToJson(item->data);   
-    }
-
-    return body;
-}
-
-bool antiSound_handler_createTask(request_t* request, list_t* taskList)
-{
-    bool isPostTaskSuccess = false;
-
-    if(antiSound_http_testInitializeItem() == false)
-    {
-        return isPostTaskSuccess;
-    }
-
-    item_t* item = antiSound_http_initializeItem();
-
-    item->data = request->body;
-
-    bool isDefineTaskSuccess = antiSound_http_setItemId(item);
-
-    list_t* pointer = item->data;
-
-    if(pointer->id == -1)
-    {
-        pointer = pointer->next;
-    }
-
-    while (pointer != NULL)
-    {
-        body_t* body = pointer->data;
-        
-        printf("%s\n", body->id);
-        printf("%s\n", body->name);
-
-        pointer = pointer->next;
-    }
-
-    int id = antiSound_list_add(taskList, item);
-    
-    if(id != -1 && isDefineTaskSuccess == true)
-    {
-        isPostTaskSuccess = true;
-    }
-
-    return isPostTaskSuccess;
-}
-
-bool antiSound_http_setItemId(item_t* item)
-{
-    bool isDefineIdSuccess = false;
-
-    list_t* pointer = item->data;
-
-    if(pointer->id == -1)
-    {
-        pointer = pointer->next;
-    }
-
-    while(pointer != NULL)
-    {
-        body_t* body = pointer->data;
-
-        if(strcmp(body->id, "id") == 0)
-        {
-            item->id = atoi(body->name);
-            isDefineIdSuccess = true;
-            break;
-        }
-        
-        pointer = pointer->next;
-    }
-
-    return isDefineIdSuccess;
-}
-
-bool antiSound_handler_updateTask(request_t* request, list_t* taskList)
-{
-    bool isUpdateItemSuccess = false;
-    
-    if(antiSound_http_testGetQueryParamter(request, "id") == false)
-    {
-        return isUpdateItemSuccess;
-    }
-
-    queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
-
-    if(antiSound_http_testGetItem(taskList, atoi(queryParameter->name)) == false)
-    {
-        return isUpdateItemSuccess;
-    }
-
-    item_t* item = antiSound_http_getItem(taskList, atoi(queryParameter->name));
-
-    if (item != NULL)
-    {
-        isUpdateItemSuccess = true;
-    }
-
-    free(item->data);
-
-    item->data = request->body;
-    
-    if(antiSound_http_testGetBodyParamter(request, "id") == false)
-    {
-        return isUpdateItemSuccess;
-    }
     body_t* body = antiSound_http_getBodyParamter(request, "id");
 
-    free(body->name);
-    body->name = calloc(sizeof(char), item->id);
-    sprintf(body->name, "%d", item->id);
+    item_t* item = antiSound_item_getItem(taskList, atoi(body->name));
 
-    return isUpdateItemSuccess;
+    if(item != NULL)
+    {
+        isTaskExist = true;
+    }
+
+    return isTaskExist;
 }
+
