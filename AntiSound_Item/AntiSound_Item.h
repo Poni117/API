@@ -19,13 +19,13 @@ item_t* antiSound_item_getItem(list_t* list, int id);
 
 bool antiSound_item_setItemId(item_t* item);
 
-bool antiSound_item_update(request_t* request, list_t* taskList, response_t* response);
+bool antiSound_item_update(request_t* request, list_t* taskList);
 
 bool antiSound_item_read(request_t* request, list_t* taskList, response_t* response);
 
-bool antiSound_item_create(request_t* request, list_t* taskList, response_t* response);
+bool antiSound_item_create(request_t* request, list_t* taskList);
 
-bool antiSound_item_remove(request_t* request, list_t* taskList, response_t* response);
+bool antiSound_item_remove(request_t* request, list_t* taskList);
 
 //=====================================================================================================
 

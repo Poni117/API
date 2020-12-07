@@ -37,17 +37,17 @@ response_t* antiSound_handler_handler(request_t* request, list_t* taskList)
     
     if(strcmp(request->method, "POST") == 0)
     {
-        antiSound_item_create(request, taskList, response);
+        antiSound_item_create(request, taskList);
     }
 
     if(strcmp(request->method, "PUT") == 0)
     {
-        antiSound_item_update(request, taskList, response);
+        antiSound_item_update(request, taskList);
     }
 
     if(strcmp(request->method, "DELETE") == 0)
     {
-        antiSound_item_remove(request, taskList, response);
+        antiSound_item_remove(request, taskList);
     }
 
     return response;

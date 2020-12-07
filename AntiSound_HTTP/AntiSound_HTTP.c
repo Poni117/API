@@ -120,6 +120,8 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
    if(strcmp(request->method, "GET") == 0)
    {
+      response->contentType = "Content-Type: application/json\n";
+      
       if(taskList->next == NULL)
       {
          response->status = noContent;
@@ -143,7 +145,7 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
          response->status = noContent;
          return isParameterExist;
       }
-      
+
       if(antiSound_http_testGetQueryParamter(request, "id") == false)
       {
          response->status = badRequest;

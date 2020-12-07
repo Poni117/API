@@ -98,7 +98,7 @@ char* antiSound_constructor_decodeTaskToJson(list_t* list)
         pointer = pointer->next;
     }
 
-    return antiSound_constructor_addLayout(buffer, bracketLayout);;
+    return antiSound_constructor_addLayout(buffer, bracketLayout);
 }
 
 char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList)

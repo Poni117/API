@@ -21,30 +21,18 @@ item_t* antiSound_item_initializeItem()
 bool antiSound_item_read(request_t* request, list_t* taskList, response_t* response)
 {
     bool isGetSuccess = false;
-    
-    response->contentType = "Content-Type: application/json\n";
 
-    char* tasks = antiSound_constructor_decodeToJson(request, taskList);
+    response->body = antiSound_constructor_decodeToJson(request, taskList);
 
-    if(tasks != NULL)
+    if(response->body != NULL)
     {
         isGetSuccess = true;
-        response->body = tasks;
-    }
-
-    if(isGetSuccess == true)
-    {
-        response->status = "HTTP/1.1 200 OK\n";
-    }
-    else
-    {
-        response->status = "HTTP/1.1 404 Not Found\n";
     }
 
     return isGetSuccess;
 }
 
-bool antiSound_item_create(request_t* request, list_t* taskList, response_t* response)
+bool antiSound_item_create(request_t* request, list_t* taskList)
 {
     bool isPostTaskSuccess = false;
 
@@ -97,7 +85,7 @@ bool antiSound_item_setItemId(item_t* item)
     return isDefineIdSuccess;
 }
 
-bool antiSound_item_update(request_t* request, list_t* taskList, response_t* response)
+bool antiSound_item_update(request_t* request, list_t* taskList)
 {
     bool isUpdateItemSuccess = false;
     
@@ -118,7 +106,7 @@ bool antiSound_item_update(request_t* request, list_t* taskList, response_t* res
     return isUpdateItemSuccess = true;
 }
 
-bool antiSound_item_remove(request_t* request, list_t* taskList, response_t* response)
+bool antiSound_item_remove(request_t* request, list_t* taskList)
 {
     bool isDeleteSuccess = false;
 
