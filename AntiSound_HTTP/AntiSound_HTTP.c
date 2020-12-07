@@ -83,7 +83,7 @@ headerParameter_t* antiSound_http_getHeaderParamter(request_t* request, char* id
    return NULL;
 }
 
-body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
+bodyParameter_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
 {
    list_t* pointer = request->body;
 
@@ -94,7 +94,7 @@ body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
 
    while (pointer != NULL)
    {
-      body_t* body = pointer->data;
+      bodyParameter_t* body = pointer->data;
 
       if(strcmp(body->id, soughtItem) == 0)
       {
@@ -118,10 +118,18 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
    char* badRequest = "HTTP/1.1 400 Bad Request\n";
    char* notFound =  "HTTP/1.1 404 Not Found\n";
 
+   char* internalServerError = "HTTP/1.1 500 Internal Server Error\n";
+
    if(strcmp(request->method, "GET") == 0)
    {
       response->contentType = "Content-Type: application/json\n";
-      
+
+      if(antiSound_item_testRead(request, taskList, response) == false)
+      {
+         response->status = internalServerError;
+         return isParameterExist;
+      }
+
       if(taskList->next == NULL)
       {
          response->status = noContent;

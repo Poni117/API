@@ -243,7 +243,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
     if(delimiter == ',')
     {
 
-        body_t* body = malloc(sizeof(body_t));
+        bodyParameter_t* body = malloc(sizeof(bodyParameter_t));
 
         body->id = antiSound_http_isolateData(parameter, parameter[0], ':');
 

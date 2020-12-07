@@ -31,7 +31,7 @@ bool antiSound_http_testGetBodyParamter(request_t* request, char* soughtItem)
 {
     bool isGetBodyParamterSuccess = false;
 
-    body_t* body = antiSound_http_getBodyParamter(request, soughtItem);
+    bodyParameter_t* body = antiSound_http_getBodyParamter(request, soughtItem);
 
     if(body != NULL)
     {

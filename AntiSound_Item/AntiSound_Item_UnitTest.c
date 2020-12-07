@@ -58,3 +58,17 @@ bool antiSound_item_testInitializeItem()
 
     return isInitializeItemSuccess;
 }
+
+bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* response)
+{
+    bool isReadSuccess = false;
+
+    char* tasks = antiSound_item_read(request, taskList, response);
+
+    if(tasks != NULL)
+    {
+        isReadSuccess = true;
+    }
+
+    return isReadSuccess;
+}
