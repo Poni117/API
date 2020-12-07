@@ -17,19 +17,9 @@ request_t* antiSound_http_parseRuqest(char* requestData)
    antiSound_http_parsePath(request, requestData);
    antiSound_http_testParseQueryParameters(request, requestData);
 
-   if(strcmp(request->method, "POST") == 0)
+   if(strcmp(request->method, "POST") == 0 || strcmp(request->method, "PUT") == 0)
    {
       antiSound_http_testParseBody(request, requestData);
-   }
-   
-   if(strcmp(request->method, "PUT") == 0)
-   {
-      antiSound_http_testParseBody(request, requestData);
-   }
-   
-   if(strcmp(request->method, "DELETE") == 0)
-   {
-      antiSound_http_testParseQueryParameters(request, requestData);
    }
 
    return request;
@@ -124,6 +114,12 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
    {
       response->contentType = "Content-Type: application/json\n";
 
+      if(antiSound_http_testGetQueryParamter(request, "id") == false)
+      {
+         response->status = badRequest;
+         return isParameterExist;
+      }
+      
       if(antiSound_item_testRead(request, taskList, response) == false)
       {
          response->status = internalServerError;

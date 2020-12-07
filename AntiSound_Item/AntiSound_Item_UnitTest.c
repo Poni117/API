@@ -67,5 +67,11 @@ bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* r
 
     isReadSuccess = antiSound_item_read(request, taskList, response);
 
+    if(isReadSuccess == false)
+    {
+        printf("---------------------------------\n");
+        printf("antiSound_item_testRead\n");
+        printf("isReadSuccess[%d]\n", isReadSuccess);
+    }
     return isReadSuccess;
 }
