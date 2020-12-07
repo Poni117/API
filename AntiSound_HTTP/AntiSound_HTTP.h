@@ -40,7 +40,7 @@ typedef struct BodyParameter
 {
     char* id;
     char* name;
-}bodyParameter_t;
+}body_t;
 
 typedef struct HeaderParameter
 {
@@ -69,9 +69,9 @@ request_t* antiSound_http_parseRuqest(char* request);
 headerParameter_t* antiSound_http_getHeaderParamter(request_t* request, char* soughtItem);
 
 /*
- * finds body parameter from request and returns pointer to bodyParameter_t
+ * finds body parameter from request and returns pointer to body_t
  */
-bodyParameter_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem);
+body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem);
 
 /*
  * finds query parameter from request and returns pointer to queryParameter_t

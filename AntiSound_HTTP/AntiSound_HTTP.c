@@ -83,7 +83,7 @@ headerParameter_t* antiSound_http_getHeaderParamter(request_t* request, char* id
    return NULL;
 }
 
-bodyParameter_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
+body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
 {
    list_t* pointer = request->body;
 
@@ -94,7 +94,7 @@ bodyParameter_t* antiSound_http_getBodyParamter(request_t* request, char* sought
 
    while (pointer != NULL)
    {
-      bodyParameter_t* body = pointer->data;
+      body_t* body = pointer->data;
 
       if(strcmp(body->id, soughtItem) == 0)
       {

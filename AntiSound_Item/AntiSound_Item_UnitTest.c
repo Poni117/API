@@ -3,6 +3,8 @@
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 #include "../AntiSound_List/AntiSound_List.h"
 
+#include "stdbool.h"
+
 
 bool antiSound_item_testGetItem(list_t* list, int id)
 {
@@ -63,12 +65,7 @@ bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* r
 {
     bool isReadSuccess = false;
 
-    char* tasks = antiSound_item_read(request, taskList, response);
-
-    if(tasks != NULL)
-    {
-        isReadSuccess = true;
-    }
+    isReadSuccess = antiSound_item_read(request, taskList, response);
 
     return isReadSuccess;
 }
