@@ -25,7 +25,6 @@ bool antiSound_api_testConnect()
 
     connect(clientSocket, (const struct sockaddr*) &setConnect, sizeof(setConnect));
 
-
     char buffer[256] = "\0";
     recv(clientSocket, buffer, sizeof(buffer), 0);
 
