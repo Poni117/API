@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <stdbool.h>
 #include <string.h>
+#include <unistd.h>
 
 bool antiSound_api_newServer()
 {
@@ -53,6 +54,7 @@ bool antiSound_api_newServer()
 
             send(clientSocket, message, strlen(message), 0);
         }
+        close(clientSocket);
     }
 
     return true;
