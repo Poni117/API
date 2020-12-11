@@ -1,6 +1,8 @@
 #include "AntiSound_HTTP_Parse.h"
 #include "../AntiSound_HTTP.h"
 #include "../../AntiSound_List/AntiSound_List.h"
+#include "../../AntiSound_Item/AntiSound_Item.h"
+
 
 #include <stdbool.h>
 #include <string.h>
@@ -92,33 +94,25 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
     bool isHostExist = false;
     bool isPortExist = false;
 
-    char* alterateRequestData = strchr(requestData, '\n');
-    alterateRequestData++;
-    char* isolatedUrl = antiSound_http_isolateData(alterateRequestData, alterateRequestData[0], '\n');
+    headerParameter_t* headerParameter = antiSound_http_getHeaderParamter(request, "Host");
 
-    char* host = antiSound_http_isolateData(isolatedUrl, ' ', ':');
+    char* host = antiSound_http_isolateData(headerParameter->name, headerParameter->name[0], ':');
 
     if(host[0] != '\0')
     {
         isHostExist = true;
     }
 
-    char* alteradeIsolatedUrl = strchr(isolatedUrl, ':');
-    alteradeIsolatedUrl++;
+    request->url->host = host;
 
-    size_t sizeOfHost = strlen(host);
-    request->url->host = realloc(host, sizeOfHost);
-
-    char* port = antiSound_http_isolateData(alteradeIsolatedUrl, ':', '\n');
+    char* port = antiSound_http_isolateData(headerParameter->name, ':', '\n');
 
     if(port[0] != '\0')
     {
         isPortExist = true;
     }
 
-    size_t sizeOfPort = strlen(port);
-
-    request->url->port = realloc(port, sizeOfPort);
+    request->url->port = port;
 
     if(isHostExist == true && isPortExist == true)
     {

@@ -83,25 +83,3 @@ char* antiSound_handler_collectResponse(response_t* response)
     printf("%s\n", collectedResponse);
     return collectedResponse;
 }
-
-void antiSound_handler_defineStatus(response_t* response, char* status)
-{
-    response->status = status;
-}
-
-bool antiSound_http_checkExistingId(request_t* request, list_t* taskList)
-{
-    bool isTaskExist = false;
-
-    body_t* body = antiSound_http_getBodyParamter(request, "id");
-
-    item_t* item = antiSound_item_getItem(taskList, atoi(body->name));
-
-    if(item != NULL)
-    {
-        isTaskExist = true;
-    }
-
-    return isTaskExist;
-}
-

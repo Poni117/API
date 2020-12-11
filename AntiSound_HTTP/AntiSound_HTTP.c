@@ -12,8 +12,8 @@ request_t* antiSound_http_parseRuqest(char* requestData)
 
    antiSound_http_testParseMethod(request, requestData);
    antiSound_http_testParseHttpVersion(request, requestData);
-   antiSound_http_testParseUrl(request, requestData);
    antiSound_http_testParseHeaders(request, requestData);
+   antiSound_http_testParseUrl(request, requestData);
    antiSound_http_parsePath(request, requestData);
    antiSound_http_testParseQueryParameters(request, requestData);
 
@@ -129,7 +129,7 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
    if(strcmp(request->method, "POST") == 0)
    {
-      if(antiSound_http_checkExistingId(request, taskList))
+      if(antiSound_http_checkExistingItem(request, taskList))
       {
          response->status = conflict;
          return isParameterExist;
@@ -190,4 +190,20 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
    response->status = ok;
    return isParameterExist = true;
+}
+
+bool antiSound_http_checkExistingItem(request_t* request, list_t* taskList)
+{
+   bool isTaskExist = false;
+
+   body_t* body = antiSound_http_getBodyParamter(request, "id");
+
+   item_t* item = antiSound_item_getItem(taskList, atoi(body->name));
+
+   if(item != NULL)
+   {
+      isTaskExist = true;
+   }
+
+   return isTaskExist;
 }
