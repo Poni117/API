@@ -85,6 +85,7 @@ char* antiSound_constructor_decodeTaskToJson(list_t* list)
     while(pointer != NULL)
     {
         body_t* body = pointer->data;
+        
 
         char* jsonValue = antiSound_constructor_decodeItemToJson(body->id, body->name);
 
@@ -115,6 +116,7 @@ char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList)
     if(queryParameter != NULL)
     {
         item_t* item = antiSound_item_getItem(taskList, atoi(queryParameter->name));
+        
         body = antiSound_constructor_decodeTaskToJson(item->data);   
     }
 

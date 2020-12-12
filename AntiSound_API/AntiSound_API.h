@@ -1,6 +1,7 @@
 #ifndef ANTISOUND_API_H
 #define ANTISOUND_API_H
 
+#include "../AntiSound_HTTP/AntiSound_HTTP.h"
 #include <stdbool.h>
 #include <arpa/inet.h>
 
@@ -27,6 +28,8 @@ bool antiSound_api_testConnect();
  * receives a request from the client Socket and returns true if successful, otherwise returns false
  */
 void antiSound_api_response(int serverSocket);
+
+void antiSound_api_freeDatas(request_t* request, response_t* response);
 
 
 //=============================================================================================================================

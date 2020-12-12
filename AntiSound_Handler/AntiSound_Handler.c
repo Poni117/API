@@ -69,7 +69,7 @@ char* antiSound_handler_collectResponse(response_t* response)
 
     if(response->body != NULL)
     {
-        char* charLength = calloc(strlen(response->body), sizeof(char));
+        char* charLength = calloc(strlen(response->body) + 1, sizeof(char));
         sprintf(charLength, "%ld", strlen(response->body));
 
         char* fullContentLength = antiSound_constructor_collector(contentLength, charLength);
@@ -80,6 +80,5 @@ char* antiSound_handler_collectResponse(response_t* response)
         collectedResponse = antiSound_constructor_collector(collectedResponse, response->body);
     }
 
-    printf("%s\n", collectedResponse);
     return collectedResponse;
 }

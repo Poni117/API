@@ -114,9 +114,20 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
    {
       response->contentType = "Content-Type: application/json\n";
 
-      if(taskList->next == NULL)
+      int length = antiSound_list_length(taskList);
+
+
+      if(length == 0)
       {
          response->status = noContent;
+         return isParameterExist;
+      }
+
+      queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
+
+      if(antiSound_item_getItem(taskList, atoi(queryParameter->name)) == NULL)
+      {
+         response->status = badRequest;
          return isParameterExist;
       }
 

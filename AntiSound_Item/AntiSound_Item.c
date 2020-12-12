@@ -100,7 +100,7 @@ bool antiSound_item_update(request_t* request, list_t* taskList)
     body_t* body = antiSound_http_getBodyParamter(request, "id");
 
     free(body->name);
-    body->name = calloc(sizeof(char), item->id);
+    body->name = calloc(item->id + 1, sizeof(int));
     sprintf(body->name, "%d", item->id);
 
     return isUpdateItemSuccess = true;

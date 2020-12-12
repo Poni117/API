@@ -33,10 +33,10 @@ void antiSound_http_testParseMethod(request_t* request, char* requestData)
     
     char* methods[] = 
     {
-    "POST",
-    "GET",
-    "PUT",
-    "DELETE"
+        "POST",
+        "GET",
+        "PUT",
+        "DELETE"
     };
 //--------------------------------------------------------------------------------------------------------------------------------
     isParseMethodSuccess = antiSound_http_parseMethod(request, requestData);
@@ -150,12 +150,10 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
 {
     bool isParseQueryParametersSuccess = false;
 
-    bool isParseQueryParametersExist = false;
-
     bool isLengthCorrect = false;
     
 //--------------------------------------------------------------------------------------------------------------------------------
-    isParseQueryParametersExist = antiSound_http_parseQuaryParameters(request, requestData);
+    antiSound_http_parseQuaryParameters(request, requestData);
 
     list_t* pointer = request->url->queryParameters;
 
@@ -171,7 +169,7 @@ void antiSound_http_testParseQueryParameters(request_t* request, char* requestDa
         isLengthCorrect = true;
     }
 
-    if(isParseQueryParametersExist == true  && isLengthCorrect == true)
+    if(isLengthCorrect == true)
     {
         isParseQueryParametersSuccess = true;
     }

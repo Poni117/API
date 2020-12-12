@@ -53,8 +53,11 @@ bool antiSound_api_newServer()
             char* message = antiSound_handler_collectResponse(response);
 
             send(clientSocket, message, strlen(message), 0);
+
+            free(response);
         }
-        close(clientSocket);
+
+        shutdown(clientSocket, 2);
     }
 
     return true;
@@ -65,19 +68,20 @@ char* antiSound_api_removeCorrector(char* requestData)
     int i = 0;
     int j = 0;
     
-    char* alterateRequestData = calloc(j, sizeof(char));
+    char buffer[1000] = "\0";
 
     while (i < strlen(requestData))
     {
         if (requestData[i] != '\r')
         {
-            alterateRequestData = realloc(alterateRequestData, j + 1);
-            alterateRequestData[j] = requestData[i];
+            buffer[j] = requestData[i];
             j++;
         }
         i++;
     }
+    
+    char* alteratedRequest = calloc(strlen(buffer) + 1, sizeof(char));
+    strncpy(alteratedRequest, buffer, strlen(buffer));
 
-    return alterateRequestData;
+    return alteratedRequest;
 }
-

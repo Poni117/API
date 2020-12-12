@@ -42,7 +42,8 @@ bool antiSound_http_parseMethod(request_t* request, char* requestData)
 
     size_t sizeOfMethod = strlen(method);
 
-    request->method = realloc(method, sizeOfMethod);
+    request->method = calloc(sizeOfMethod + 1, sizeof(char));
+    strncpy(request->method, method, strlen(method));
 
     if(request->method[0] != '\0')
     {
@@ -155,12 +156,7 @@ bool antiSound_http_parseHeaders(request_t* request, char* requestData)
 {
     bool isParseHeadersExist = false;
 
-    char* alteratedRequestData = NULL;
-
-    alteratedRequestData = strchr(requestData, '\n');
-    alteratedRequestData++;
-    
-    char* isolatedHeaders = antiSound_http_isolateData(alteratedRequestData, '\n', '\n');
+    char* isolatedHeaders = antiSound_http_isolateData(requestData, '\n', '\n');
     
     isParseHeadersExist = antiSound_http_parseData(request->headers, isolatedHeaders, '\n');
     
@@ -180,20 +176,22 @@ bool antiSound_http_parseBody(request_t* request, char* requestData)
     int i = 0;
     int j = 0;
 
-    char* alteratedIsolatedBodyParameters = calloc(j, sizeof(char));
+    char buffer[1000] = "\0";
 
     while (i < strlen(isolatedBodyParameters))
     {
         if(isolatedBodyParameters[i] != '\"' && isolatedBodyParameters[i] != '{' && isolatedBodyParameters[i] != '}' && isolatedBodyParameters[i] != ' ')
         {
-            alteratedIsolatedBodyParameters = realloc(alteratedIsolatedBodyParameters, j + 1);
-            alteratedIsolatedBodyParameters[j] = isolatedBodyParameters[i];
+            buffer[j] = isolatedBodyParameters[i];
             j++;
         }
         i++;
     }
 
-    isParseBodyExist = antiSound_http_parseData(request->body, alteratedIsolatedBodyParameters, ',');
+    char* alteratedBodyParameter = calloc(strlen(buffer) + 1, sizeof(char));
+    strncpy(alteratedBodyParameter, buffer, strlen(buffer));
+
+    isParseBodyExist = antiSound_http_parseData(request->body, alteratedBodyParameter, ',');
     
     free(isolatedBodyParameters);
     return isParseBodyExist;
@@ -203,7 +201,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
 {
     bool isParseExist = false;
 
-    if(isolatedData == NULL)
+    if(isolatedData == NULL || isolatedData[0] == '\0')
     {
         return isParseExist;
     }
@@ -226,7 +224,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
     if(delimiter == '\n')
     {
         headerParameter_t* headerParameter = malloc(sizeof(headerParameter_t));
-
+   
         headerParameter->id = antiSound_http_isolateData(parameter, parameter[0], ':');
 
         headerParameter->name = antiSound_http_isolateData(parameter, ' ', '\0');
@@ -245,6 +243,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
 
         structure = body;
     }
+
     antiSound_list_add(list, structure);
 
     if(parameter[0] != '\0')
@@ -265,13 +264,13 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
 
 char* antiSound_http_isolateData(char* isolatedData, char start, char end)
 {
-    size_t sizeOfRequestData = strlen(isolatedData);
+    size_t sizeOfIsolatedData = strlen(isolatedData);
 
     int i = 0;
 
     if(isolatedData[0] != start)
     {
-        while (i < sizeOfRequestData)
+        while (i < sizeOfIsolatedData)
         {
             if(isolatedData[i] == start)
             {
@@ -284,38 +283,43 @@ char* antiSound_http_isolateData(char* isolatedData, char start, char end)
     
     int j = 0;
 
-    char* parsedData = calloc(j, sizeof(char));
+    char buffer[1000] = "\0";
 
-
-    while (i < sizeOfRequestData)
+    while (i < sizeOfIsolatedData)
     {
         if(isolatedData[i] == end)
         {
             break;
         }
 
-        parsedData = realloc(parsedData, j + 1);
-        parsedData[j] = isolatedData[i];
+        buffer[j] = isolatedData[i];
         j++;
         i++;
     }
 
     if(start == end)
     {
-        while (i < sizeOfRequestData)
+        while (i < sizeOfIsolatedData)
         {
             if(isolatedData[i] == '\n' && isolatedData[i + 1] == '\n')
             {
                 break;
             }
 
-            parsedData = realloc(parsedData, j + 1);
-            parsedData[j] = isolatedData[i];
+            buffer[j] = isolatedData[i];
             j++;
             i++;
         }
     }
 
-    return parsedData;
+    char* data = calloc(strlen(buffer) + 1, sizeof(char));
+    strncpy(data, buffer, strlen(buffer));
+
+    if(data[0] == '\0')
+    {
+        return NULL;
+    }
+
+    return data;
 }
 
