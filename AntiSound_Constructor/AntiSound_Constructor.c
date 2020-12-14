@@ -96,18 +96,17 @@ char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList)
 
     char* body = NULL;
 
-    if(queryParameter == NULL)
+    if(strcmp(queryParameter->name, "/") == 0)
     {
         body = antiSound_constructor_decodeListToJson(taskList);
     }
-
-    if(queryParameter != NULL)
+    else
     {
-        item_t* item = antiSound_item_getItem(taskList, atoi(queryParameter->name));
+       item_t* item = antiSound_item_getItem(taskList, atoi(queryParameter->name));
         
         body = antiSound_constructor_decodeTaskToJson(item->data);   
     }
-
+    
     return body;
 }
 

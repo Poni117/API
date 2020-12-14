@@ -132,7 +132,21 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
          response->status = noContent;
          return isParameterExist;
       }
-     
+
+      if(antiSound_http_testGetQueryParamter(request, "id") == false)
+      {
+         response->status = badRequest;
+         return isParameterExist;
+      }
+
+      queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
+
+      if(antiSound_item_testGetItem(taskList, atoi(queryParameter->name)) == false && strcmp(queryParameter->name, "/") != 0)
+      {
+         response->status = notFound;
+         return isParameterExist;
+      }
+
       if(antiSound_item_testRead(request, taskList, response) == false)
       {
          response->status = internalServerError;

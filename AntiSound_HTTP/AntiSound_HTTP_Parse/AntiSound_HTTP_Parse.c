@@ -83,9 +83,14 @@ bool antiSound_http_parseQuaryParameters(request_t* request, char* requestData)
     bool isParseQuareParametersExist = false;
 
     char* isolatedQueryParameters = antiSound_http_isolateData(requestData, '?', ' ');
+    
+    if(isolatedQueryParameters == NULL)
+    {
+        isolatedQueryParameters = "id=/";
+    }
 
     isParseQuareParametersExist = antiSound_http_parseData(request->url->queryParameters, isolatedQueryParameters, '&');
-
+    
     return isParseQuareParametersExist;
 }
 
@@ -217,7 +222,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
         queryParameter->id = antiSound_http_isolateData(parameter, parameter[0], '=');
 
         queryParameter->name = antiSound_http_isolateData(parameter, '=', '\0');
-
+        
         structure = queryParameter;
     }
 
