@@ -9,6 +9,7 @@ typedef struct List
     int id;
     void* data;
     struct List* next;
+    struct List* lastItem;
 }list_t;
 
 /* 

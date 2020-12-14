@@ -147,6 +147,18 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
          response->status = conflict;
          return isParameterExist;
       }
+
+      body_t* id = antiSound_http_getBodyParamter(request, "id");
+      body_t* name = antiSound_http_getBodyParamter(request, "name");
+      body_t* lastName = antiSound_http_getBodyParamter(request, "lastname");
+
+      printf("id\n%s\n", id->id);
+      printf("id\n%s\n", id->name);
+      if(id == NULL || name == NULL || lastName == NULL)
+      {
+         response->status = badRequest;
+         return isParameterExist;
+      }
    }
 
    if(strcmp(request->method, "PUT") == 0)
@@ -163,6 +175,16 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
          return isParameterExist;
       }
 
+      body_t* id = antiSound_http_getBodyParamter(request, "id");
+      body_t* name = antiSound_http_getBodyParamter(request, "name");
+      body_t* lastName = antiSound_http_getBodyParamter(request, "lastname");
+
+      if(id == NULL || name == NULL || lastName == NULL)
+      {
+         response->status = badRequest;
+         return isParameterExist;
+      }
+      
       queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
       if(antiSound_item_testGetItem(taskList, atoi(queryParameter->name)) == false)

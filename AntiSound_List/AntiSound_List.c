@@ -17,8 +17,17 @@ list_t* antiSound_list_new()
 
 int antiSound_list_add(list_t* list, void* data)
 {
-    list_t* pointer = list;
+    list_t* pointer = NULL;
 
+    if(list->lastItem != NULL)
+    {
+        pointer = list->lastItem;
+    }
+    else
+    {
+        pointer = list;
+    }
+    
     if(data == NULL)
     {
         return -1;
@@ -36,6 +45,8 @@ int antiSound_list_add(list_t* list, void* data)
     pointer->next->data = data;
 
     pointer->next->next = NULL;
+
+    list->lastItem = pointer->next;
     
     return pointer->next->id;
 }
@@ -62,7 +73,6 @@ bool antiSound_list_update(list_t* list, int id, void* newData)
 
     return isUpdateSuccess = true;
 }
-
 
 void* antiSound_list_getData(list_t* list, int id)
 {
