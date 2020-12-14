@@ -6,6 +6,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+task_t* antiSound_http_initializeTask()
+{
+   task_t* task = malloc(sizeof(task_t));
+
+   task->id = NULL;
+   task->name = NULL;
+   task->lastname = NULL;
+
+   return task;
+}
+
 request_t* antiSound_http_parseRuqest(char* requestData)
 {
    request_t* request = antiSound_http_initializeRequest();
@@ -116,21 +127,12 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
       int length = antiSound_list_length(taskList);
 
-
       if(length == 0)
       {
          response->status = noContent;
          return isParameterExist;
       }
-
-      queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
-
-      if(antiSound_item_getItem(taskList, atoi(queryParameter->name)) == NULL)
-      {
-         response->status = badRequest;
-         return isParameterExist;
-      }
-
+     
       if(antiSound_item_testRead(request, taskList, response) == false)
       {
          response->status = internalServerError;

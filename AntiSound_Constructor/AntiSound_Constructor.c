@@ -68,37 +68,25 @@ char* antiSound_constructor_decodeItemToJson(char* id, char* name)
     return collectJson;
 }
 
-char* antiSound_constructor_decodeTaskToJson(list_t* list)
+char* antiSound_constructor_decodeTaskToJson(task_t* task)
 {
     char* commaLayout = "%s, ";
     char* bracketLayout = "{%s}";
 
-    list_t* pointer = list;
-
-    if(pointer->id == -1)
-    {
-        pointer = pointer->next;
-    }
-
     char* buffer = "\0";
     
-    while(pointer != NULL)
-    {
-        body_t* body = pointer->data;
-        
+    body_t* id = task->id;
+    body_t* name = task->name;
+    body_t* lastName = task->lastname;
 
-        char* jsonValue = antiSound_constructor_decodeItemToJson(body->id, body->name);
+    buffer = antiSound_constructor_collector(buffer, antiSound_constructor_decodeItemToJson(id->id, id->name));
+    buffer = antiSound_constructor_addLayout(buffer, commaLayout);
 
-        buffer = antiSound_constructor_collector(buffer, jsonValue);
-        
-        if(pointer->next != NULL)
-        {
-            buffer = antiSound_constructor_addLayout(buffer, commaLayout);
-        }
-
-        pointer = pointer->next;
-    }
-
+    buffer = antiSound_constructor_collector(buffer, antiSound_constructor_decodeItemToJson(name->id, name->name));
+    buffer = antiSound_constructor_addLayout(buffer, commaLayout);
+    
+    buffer = antiSound_constructor_collector(buffer, antiSound_constructor_decodeItemToJson(lastName->id, lastName->name));
+    
     return antiSound_constructor_addLayout(buffer, bracketLayout);
 }
 

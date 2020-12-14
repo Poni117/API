@@ -48,6 +48,13 @@ typedef struct HeaderParameter
     char* name; 
 }headerParameter_t;
 
+typedef struct Task
+{
+    void* id;
+    void* name;
+    void* lastname;
+}task_t;
+
 typedef struct Response
 {
     char* httpVersion;
@@ -57,6 +64,12 @@ typedef struct Response
     char* body;
     char* response;
 }response_t;
+
+/*
+ * initializes struct of task
+ * returns pointer to task_t
+ */
+task_t* antiSound_http_initializeTask();
 
 /*
  * parses request to struct and returns pointer to request_t

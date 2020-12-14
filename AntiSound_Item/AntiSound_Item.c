@@ -41,48 +41,27 @@ bool antiSound_item_create(request_t* request, list_t* taskList)
         return isPostTaskSuccess;
     }
 
+    body_t* id = antiSound_http_getBodyParamter(request, "id");
+    body_t* name = antiSound_http_getBodyParamter(request, "name");
+    body_t* lastname = antiSound_http_getBodyParamter(request, "lastname");
+
+    task_t* task = antiSound_http_initializeTask();
+    task->id = id;
+    task->name = name;
+    task->lastname = lastname;
+
     item_t* item = antiSound_item_initializeItem();
+    item->id = atoi(id->name);
+    item->data = task;
 
-    item->data = request->body;
-
-    bool isDefineTaskSuccess = antiSound_item_setItemId(item);
-
-    int id = antiSound_list_add(taskList, item);
+    int addedId = antiSound_list_add(taskList, item);
     
-    if(id != -1 && isDefineTaskSuccess == true)
+    if(addedId != -1)
     {
         isPostTaskSuccess = true;
     }
 
     return isPostTaskSuccess;
-}
-
-bool antiSound_item_setItemId(item_t* item)
-{
-    bool isDefineIdSuccess = false;
-
-    list_t* pointer = item->data;
-
-    if(pointer->id == -1)
-    {
-        pointer = pointer->next;
-    }
-
-    while(pointer != NULL)
-    {
-        body_t* body = pointer->data;
-
-        if(strcmp(body->id, "id") == 0)
-        {
-            item->id = atoi(body->name);
-            isDefineIdSuccess = true;
-            break;
-        }
-        
-        pointer = pointer->next;
-    }
-
-    return isDefineIdSuccess;
 }
 
 bool antiSound_item_update(request_t* request, list_t* taskList)
@@ -93,15 +72,11 @@ bool antiSound_item_update(request_t* request, list_t* taskList)
 
     item_t* item = antiSound_item_getItem(taskList, atoi(queryParameter->name));
 
-    free(item->data);
+    task_t* task = item->data;
 
-    item->data = request->body;
+    task->name = antiSound_http_getBodyParamter(request, "name");
     
-    body_t* body = antiSound_http_getBodyParamter(request, "id");
-
-    free(body->name);
-    body->name = calloc(item->id + 1, sizeof(int));
-    sprintf(body->name, "%d", item->id);
+    task->lastname =  antiSound_http_getBodyParamter(request, "lastname");
 
     return isUpdateItemSuccess = true;
 }

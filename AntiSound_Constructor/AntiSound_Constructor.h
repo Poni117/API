@@ -28,7 +28,7 @@ char* antiSound_constructor_decodeItemToJson(char* id, char* name);
 /*
  *  decodes task to json format, returns json task
  */
-char* antiSound_constructor_decodeTaskToJson(list_t* task);
+char* antiSound_constructor_decodeTaskToJson(task_t* item);
 
 /*
  *  decodes task to json format, returns json task

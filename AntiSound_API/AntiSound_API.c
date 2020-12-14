@@ -43,7 +43,9 @@ bool antiSound_api_newServer()
 
         char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
         strncpy(requestData, buffer, sizeOfBuffer);
-        
+
+        printf("\nrequestData\n%s\n\n", requestData);
+
         request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
 
         if(strcmp(request->path, "tasks") == 0)
@@ -54,10 +56,12 @@ bool antiSound_api_newServer()
 
             send(clientSocket, message, strlen(message), 0);
 
+            free(request);
             free(response);
+            free(requestData);
         }
 
-        shutdown(clientSocket, 2);
+        close(clientSocket);
     }
 
     return true;
