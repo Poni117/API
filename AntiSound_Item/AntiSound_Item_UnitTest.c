@@ -2,17 +2,18 @@
 
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 #include "../AntiSound_List/AntiSound_List.h"
+#include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
 
 #include "stdbool.h"
 
 
-bool antiSound_item_testGetItem(list_t* list, int id)
+bool antiSound_item_testGetItem(list_t* list, int id, binaryTree_t* root)
 {
     bool isGetItemSuccess = false;
 
-    item_t* item = antiSound_item_getItem(list, id);
+    item_t* item = antiSound_item_getItem(list, id, root);
 
-    if(item != NULL)
+    if(item != NULL && item->id == id)
     {
         isGetItemSuccess = true;
     }
@@ -61,11 +62,11 @@ bool antiSound_item_testInitializeItem()
     return isInitializeItemSuccess;
 }
 
-bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* response)
+bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root)
 {
     bool isReadSuccess = false;
 
-    isReadSuccess = antiSound_item_read(request, taskList, response);
+    isReadSuccess = antiSound_item_read(request, taskList, response, root);
 
     if(isReadSuccess == false)
     {

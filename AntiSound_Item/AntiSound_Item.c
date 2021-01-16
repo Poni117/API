@@ -1,8 +1,10 @@
 #include "AntiSound_Item.h"
+
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
+
 #include "../AntiSound_List/AntiSound_List.h"
 #include "../AntiSound_Constructor/AntiSound_Constructor.h"
-
+#include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -18,11 +20,11 @@ item_t* antiSound_item_initializeItem()
    return item;
 }
 
-bool antiSound_item_read(request_t* request, list_t* taskList, response_t* response)
+bool antiSound_item_read(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root)
 {
     bool isGetSuccess = false;
 
-    response->body = antiSound_constructor_decodeToJson(request, taskList);
+    response->body = antiSound_constructor_decodeToJson(request, taskList, root);
 
     if(response->body != NULL)
     {
@@ -32,7 +34,7 @@ bool antiSound_item_read(request_t* request, list_t* taskList, response_t* respo
     return isGetSuccess;
 }
 
-bool antiSound_item_create(request_t* request, list_t* taskList)
+bool antiSound_item_create(request_t* request, list_t* taskList, binaryTree_t* root)
 {
     bool isPostTaskSuccess = false;
 
@@ -54,23 +56,18 @@ bool antiSound_item_create(request_t* request, list_t* taskList)
     item->id = atoi(id->name);
     item->data = task;
 
-    int addedId = antiSound_list_add(taskList, item);
-    
-    if(addedId != -1)
-    {
-        isPostTaskSuccess = true;
-    }
+    antiSound_binaryTree_addNewNode(root, item);
 
     return isPostTaskSuccess;
 }
 
-bool antiSound_item_update(request_t* request, list_t* taskList)
+bool antiSound_item_update(request_t* request, list_t* taskList, binaryTree_t* root)
 {
     bool isUpdateItemSuccess = false;
-    
+
     queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
-    item_t* item = antiSound_item_getItem(taskList, atoi(queryParameter->name));
+    item_t* item = antiSound_bynaryTree_getData(root, atoi(queryParameter->name));
 
     task_t* task = item->data;
 
@@ -81,40 +78,20 @@ bool antiSound_item_update(request_t* request, list_t* taskList)
     return isUpdateItemSuccess = true;
 }
 
-bool antiSound_item_remove(request_t* request, list_t* taskList)
+bool antiSound_item_remove(request_t* request, list_t* taskList, binaryTree_t* root)
 {
     bool isDeleteSuccess = false;
 
     queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
-    list_t* pointer = antiSound_item_findItem(taskList, atoi(queryParameter->name));
-
-    isDeleteSuccess = antiSound_list_remove(taskList, pointer->id);
+    isDeleteSuccess = antiSound_bynaryTree_removeNode(root, atoi(queryParameter->name));
 
     return isDeleteSuccess;
 }
 
-item_t* antiSound_item_getItem(list_t* list, int id)
+item_t* antiSound_item_getItem(list_t* list, int id, binaryTree_t* root)
 {
-    list_t* pointer = list;
-
-    if(pointer->id == -1)
-    {
-        pointer = pointer->next;
-    }
-
-    while(pointer != NULL)
-    {
-        item_t* item = pointer->data;
-
-        if(item->id == id)
-        {
-            return item;
-        }
-        pointer = pointer->next;
-    }
-
-    return NULL;
+    return antiSound_bynaryTree_getData(root, id);
 }
 
 list_t* antiSound_item_findItem(list_t* list, int id)

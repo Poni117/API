@@ -1,5 +1,6 @@
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 #include "../AntiSound_List/AntiSound_List.h"
+#include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -20,25 +21,25 @@ item_t* antiSound_item_initializeItem();
  *  updates existing item
  *  returns true in case of success, otherwise false
  */
-bool antiSound_item_update(request_t* request, list_t* taskList);
+bool antiSound_item_update(request_t* request, list_t* taskList, binaryTree_t* root);
 
 /*
  *  reads taskList
  *  returns true in case of success, otherwise false 
  */
-bool antiSound_item_read(request_t* request, list_t* taskList, response_t* response);
+bool antiSound_item_read(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root);
 
 /*
  *  adds new item to the list with specified data  
  *  returns id of newly created item
  */
-bool antiSound_item_create(request_t* request, list_t* taskList);
+bool antiSound_item_create(request_t* request, list_t* taskList, binaryTree_t* root);
 
 /*
  *  removes item by id
  *  returns true in case of success, otherwise false
  */
-bool antiSound_item_remove(request_t* request, list_t* taskList);
+bool antiSound_item_remove(request_t* request, list_t* taskList, binaryTree_t* root);
 
 /*
  *  finds id by taskList
@@ -50,7 +51,7 @@ list_t* antiSound_item_findItem(list_t* list, int id);
  *  find item by taskList
  *  returns item_t
  */
-item_t* antiSound_item_getItem(list_t* list, int id);
+item_t* antiSound_item_getItem(list_t* list, int id, binaryTree_t* root);
 
 /*
  *  set id of item from request
@@ -68,12 +69,9 @@ bool antiSound_item_testInitializeItem();
 /*
  *  test of antiSound_item_getItem
  */
-bool antiSound_item_testGetItem(list_t* list, int id);
+bool antiSound_item_testGetItem(list_t* list, int id, binaryTree_t* root);
 
 /*
  *  test of antiSound_item_read
  */
-bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* response);
-
-
-
+bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root);

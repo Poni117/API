@@ -1,6 +1,7 @@
 #include "AntiSound_API.h"
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 #include "../AntiSound_Handler/AntiSound_Handler.h"
+#include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +33,9 @@ bool antiSound_api_newServer()
     listen(serverSocket, 1);
 
     list_t* taskList = antiSound_list_new();
-    
+
+    binaryTree_t* root = antiSound_binaryTree_initializeNode();
+
     while (true)
     {
         int clientSocket = accept(serverSocket, NULL, NULL);
@@ -50,7 +53,7 @@ bool antiSound_api_newServer()
 
         if(strcmp(request->path, "tasks") == 0)
         {
-            response_t* response = antiSound_handler_handler(request, taskList);
+            response_t* response = antiSound_handler_handler(request, taskList, root);
             
             char* message = antiSound_handler_collectResponse(response);
 

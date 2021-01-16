@@ -1,3 +1,5 @@
+#include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
+
 #include "../AntiSound_List/AntiSound_List.h"
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 
@@ -18,7 +20,7 @@ char* antiSound_constructor_collector(char* dataA, char* dataB);
 /*
  *  decodes data from list to json format, returns json data
  */
-char* antiSound_constructor_decodeListToJson(list_t* list);
+char* antiSound_constructor_decodeListToJson(list_t* list, binaryTree_t* root);
 
 /*
  *  decodes item to json format, returns json item
@@ -33,4 +35,4 @@ char* antiSound_constructor_decodeTaskToJson(task_t* item);
 /*
  *  decodes task to json format, returns json task
  */
-char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList);
+char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList, binaryTree_t* root);

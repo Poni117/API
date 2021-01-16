@@ -3,6 +3,7 @@
 #include "../AntiSound_List/AntiSound_List.h"
 #include "../AntiSound_Constructor/AntiSound_Constructor.h"
 #include "../AntiSound_Item/AntiSound_Item.h"
+#include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -21,33 +22,33 @@ response_t* antiSound_handler_initializeResponse()
     return response;
 }
 
-response_t* antiSound_handler_handler(request_t* request, list_t* taskList)
+response_t* antiSound_handler_handler(request_t* request, list_t* taskList, binaryTree_t* root)
 {
     response_t* response = antiSound_handler_initializeResponse();
     
-    if(antiSound_http_checkParameters(request, taskList, response) == false)
+    if(antiSound_http_checkParameters(request, taskList, response, root) == false)
     {
         return response;
     }
 
     if(strcmp(request->method, "GET") == 0)
     {   
-        antiSound_item_read(request, taskList, response);
+        antiSound_item_read(request, taskList, response, root);
     }
     
     if(strcmp(request->method, "POST") == 0)
     {
-        antiSound_item_create(request, taskList);
+        antiSound_item_create(request, taskList, root);
     }
 
     if(strcmp(request->method, "PUT") == 0)
     {
-        antiSound_item_update(request, taskList);
+        antiSound_item_update(request, taskList, root);
     }
 
     if(strcmp(request->method, "DELETE") == 0)
     {
-        antiSound_item_remove(request, taskList);
+        antiSound_item_remove(request, taskList, root);
     }
 
     return response;

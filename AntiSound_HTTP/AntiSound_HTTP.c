@@ -1,6 +1,8 @@
 #include "AntiSound_HTTP.h"
 #include "AntiSound_HTTP_Parse/AntiSound_HTTP_Parse.h"
 #include "../AntiSound_Item/AntiSound_Item.h"
+#include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
+
 
 #include <string.h>
 #include <stdio.h>
@@ -108,7 +110,7 @@ body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
    return NULL;
 }
 
-bool antiSound_http_checkParameters(request_t* request, list_t* taskList, response_t* response)
+bool antiSound_http_checkParameters(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root)
 {
    bool isParameterExist = false;
 
@@ -125,9 +127,7 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
    {
       response->contentType = "Content-Type: application/json\n";
 
-      int length = antiSound_list_length(taskList);
-
-      if(length == 0)
+      if(root->data == NULL)
       {
          response->status = noContent;
          return isParameterExist;
@@ -141,13 +141,13 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
       queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
-      if(antiSound_item_testGetItem(taskList, atoi(queryParameter->name)) == false && strcmp(queryParameter->name, "/") != 0)
+      if(antiSound_item_testGetItem(taskList, atoi(queryParameter->name), root) == false && strcmp(queryParameter->name, "/") != 0)
       {
          response->status = notFound;
          return isParameterExist;
       }
 
-      if(antiSound_item_testRead(request, taskList, response) == false)
+      if(antiSound_item_testRead(request, taskList, response, root) == false)
       {
          response->status = internalServerError;
          return isParameterExist;
@@ -156,7 +156,7 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
    if(strcmp(request->method, "POST") == 0)
    {
-      if(antiSound_http_checkExistingItem(request, taskList))
+      if(antiSound_http_checkExistingItem(request, taskList, root))
       {
          response->status = conflict;
          return isParameterExist;
@@ -177,7 +177,7 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
    if(strcmp(request->method, "PUT") == 0)
    {
-      if(taskList->next == NULL)
+      if(root->data == NULL)
       {
          response->status = noContent;
          return isParameterExist;
@@ -201,7 +201,7 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
       
       queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
-      if(antiSound_item_testGetItem(taskList, atoi(queryParameter->name)) == false)
+      if(antiSound_item_testGetItem(taskList, atoi(queryParameter->name), root) == false)
       {
          response->status = notFound;
          return isParameterExist;
@@ -216,7 +216,8 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
    if(strcmp(request->method, "DELETE") == 0)
    {
-      if(taskList->next == NULL)
+     
+      if(root->data == NULL)
       {
          response->status = noContent;
          return isParameterExist;
@@ -230,7 +231,7 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
 
       queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
-      if(antiSound_item_getItem(taskList, atoi(queryParameter->name)) == false)
+      if(antiSound_item_testGetItem(taskList, atoi(queryParameter->name), root) == false)
       {
          response->status = notFound;
          return isParameterExist;
@@ -241,16 +242,17 @@ bool antiSound_http_checkParameters(request_t* request, list_t* taskList, respon
    return isParameterExist = true;
 }
 
-bool antiSound_http_checkExistingItem(request_t* request, list_t* taskList)
+bool antiSound_http_checkExistingItem(request_t* request, list_t* taskList, binaryTree_t* root)
 {
    bool isTaskExist = false;
 
    body_t* body = antiSound_http_getBodyParamter(request, "id");
 
-   item_t* item = antiSound_item_getItem(taskList, atoi(body->name));
-
-   if(item != NULL)
+   item_t* item = antiSound_item_getItem(taskList, atoi(body->name), root);
+   
+   if(item != NULL && item->id == atoi(body->name))
    {
+      printf("item[%d]\n", item->id);
       isTaskExist = true;
    }
 
