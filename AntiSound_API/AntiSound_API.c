@@ -59,8 +59,28 @@ bool antiSound_api_newServer()
 
             if(antiSound_binaryTree_isBalanced(root) == false)
             {
+                
                 antiSound_binaryTree_balancingSubRoots(root);
                 root = balancingRoot(root);
+
+                binaryTree_t* pointer = root;
+
+                while(pointer != NULL)
+                {
+                    pointer = pointer->left;
+                    printf("==============================\n");
+                    printf("pointer->left\n");
+                    printf("==============================\n");
+
+                }
+                pointer = root;
+                while(pointer != NULL)
+                {
+                    pointer = pointer->right;
+                    printf("==============================\n");
+                    printf("pointer->right\n");
+                    printf("==============================\n");
+                }
             }
 
             free(request);

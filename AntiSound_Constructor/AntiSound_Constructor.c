@@ -38,19 +38,19 @@ char* antiSound_constructor_decodeListToJson(binaryTree_t* root)
     char* jsonTasks = "\0";
     char* commaLayout = "%s, ";
     
-
+    item_t* item = root->data;
     if(root->left != NULL)
     {
         jsonTasks = antiSound_constructor_decodeListToJson(root->left);
     }
-
+    
     if(root->right != NULL)
     {
+
         jsonTasks = antiSound_constructor_decodeListToJson(root->right);
         jsonTasks = antiSound_constructor_addLayout(jsonTasks, commaLayout);
     }
 
-    item_t* item = root->data;
 
     jsonTasks = antiSound_constructor_collector(jsonTasks, antiSound_constructor_decodeTaskToJson(item->data));
 
