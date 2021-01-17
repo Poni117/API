@@ -7,6 +7,6 @@
 
 response_t* antiSound_handler_initializeResponse();
 
-response_t* antiSound_handler_handler(request_t* request, list_t* list, binaryTree_t* root);
+response_t* antiSound_handler_handler(request_t* request, binaryTree_t* root);
 
 char* antiSound_handler_collectResponse(response_t* response);

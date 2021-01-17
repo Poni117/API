@@ -32,8 +32,6 @@ bool antiSound_api_newServer()
 
     listen(serverSocket, 1);
 
-    list_t* taskList = antiSound_list_new();
-
     binaryTree_t* root = antiSound_binaryTree_initializeNode();
 
     while (true)
@@ -53,11 +51,17 @@ bool antiSound_api_newServer()
 
         if(strcmp(request->path, "tasks") == 0)
         {
-            response_t* response = antiSound_handler_handler(request, taskList, root);
+            response_t* response = antiSound_handler_handler(request, root);
             
             char* message = antiSound_handler_collectResponse(response);
 
             send(clientSocket, message, strlen(message), 0);
+
+            if(antiSound_binaryTree_isBalanced(root) == false)
+            {
+                antiSound_binaryTree_balancingSubRoots(root);
+                root = balancingRoot(root);
+            }
 
             free(request);
             free(response);

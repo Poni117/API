@@ -20,11 +20,11 @@ item_t* antiSound_item_initializeItem()
    return item;
 }
 
-bool antiSound_item_read(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root)
+bool antiSound_item_read(request_t* request, response_t* response, binaryTree_t* root)
 {
     bool isGetSuccess = false;
 
-    response->body = antiSound_constructor_decodeToJson(request, taskList, root);
+    response->body = antiSound_constructor_decodeToJson(request, root);
 
     if(response->body != NULL)
     {
@@ -34,7 +34,7 @@ bool antiSound_item_read(request_t* request, list_t* taskList, response_t* respo
     return isGetSuccess;
 }
 
-bool antiSound_item_create(request_t* request, list_t* taskList, binaryTree_t* root)
+bool antiSound_item_create(request_t* request, binaryTree_t* root)
 {
     bool isPostTaskSuccess = false;
 
@@ -58,16 +58,18 @@ bool antiSound_item_create(request_t* request, list_t* taskList, binaryTree_t* r
 
     antiSound_binaryTree_addNewNode(root, item);
 
+ 
+
     return isPostTaskSuccess;
 }
 
-bool antiSound_item_update(request_t* request, list_t* taskList, binaryTree_t* root)
+bool antiSound_item_update(request_t* request,binaryTree_t* root)
 {
     bool isUpdateItemSuccess = false;
 
     queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
-    item_t* item = antiSound_bynaryTree_getData(root, atoi(queryParameter->name));
+    item_t* item = antiSound_binaryTree_getData(root, atoi(queryParameter->name));
 
     task_t* task = item->data;
 
@@ -78,41 +80,19 @@ bool antiSound_item_update(request_t* request, list_t* taskList, binaryTree_t* r
     return isUpdateItemSuccess = true;
 }
 
-bool antiSound_item_remove(request_t* request, list_t* taskList, binaryTree_t* root)
+bool antiSound_item_remove(request_t* request, binaryTree_t* root)
 {
     bool isDeleteSuccess = false;
 
     queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
-    isDeleteSuccess = antiSound_bynaryTree_removeNode(root, atoi(queryParameter->name));
+    isDeleteSuccess = antiSound_binaryTree_removeNode(root, atoi(queryParameter->name));
 
     return isDeleteSuccess;
 }
 
-item_t* antiSound_item_getItem(list_t* list, int id, binaryTree_t* root)
+item_t* antiSound_item_getItem(int id, binaryTree_t* root)
 {
-    return antiSound_bynaryTree_getData(root, id);
+    return antiSound_binaryTree_getData(root, id);
 }
 
-list_t* antiSound_item_findItem(list_t* list, int id)
-{
-    list_t* pointer = list;
-
-    if(pointer->id == -1)
-    {
-        pointer = pointer->next;
-    }
-
-    while(pointer != NULL)
-    {
-        item_t* item = pointer->data;
-
-        if(item->id == id)
-        {
-            return pointer;
-        }
-        pointer = pointer->next;
-    }
-
-    return NULL;
-}

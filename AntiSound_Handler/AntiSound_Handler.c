@@ -22,33 +22,33 @@ response_t* antiSound_handler_initializeResponse()
     return response;
 }
 
-response_t* antiSound_handler_handler(request_t* request, list_t* taskList, binaryTree_t* root)
+response_t* antiSound_handler_handler(request_t* request, binaryTree_t* root)
 {
     response_t* response = antiSound_handler_initializeResponse();
     
-    if(antiSound_http_checkParameters(request, taskList, response, root) == false)
+    if(antiSound_http_checkParameters(request, response, root) == false)
     {
         return response;
     }
 
     if(strcmp(request->method, "GET") == 0)
     {   
-        antiSound_item_read(request, taskList, response, root);
+        antiSound_item_read(request, response, root);
     }
     
     if(strcmp(request->method, "POST") == 0)
     {
-        antiSound_item_create(request, taskList, root);
+        antiSound_item_create(request, root);
     }
 
     if(strcmp(request->method, "PUT") == 0)
     {
-        antiSound_item_update(request, taskList, root);
+        antiSound_item_update(request, root);
     }
 
     if(strcmp(request->method, "DELETE") == 0)
     {
-        antiSound_item_remove(request, taskList, root);
+        antiSound_item_remove(request, root);
     }
 
     return response;

@@ -28,7 +28,7 @@ char* antiSound_constructor_collector(char* dataA, char* dataB)
     return collectedData;
 }
 
-char* antiSound_constructor_decodeListToJson(list_t* taskList, binaryTree_t* root)
+char* antiSound_constructor_decodeListToJson(binaryTree_t* root)
 {
     if(root == NULL)
     {
@@ -41,12 +41,12 @@ char* antiSound_constructor_decodeListToJson(list_t* taskList, binaryTree_t* roo
 
     if(root->left != NULL)
     {
-        jsonTasks = antiSound_constructor_decodeListToJson(taskList, root->left);
+        jsonTasks = antiSound_constructor_decodeListToJson(root->left);
     }
 
     if(root->right != NULL)
     {
-        jsonTasks = antiSound_constructor_decodeListToJson(taskList, root->right);
+        jsonTasks = antiSound_constructor_decodeListToJson(root->right);
         jsonTasks = antiSound_constructor_addLayout(jsonTasks, commaLayout);
     }
 
@@ -90,7 +90,7 @@ char* antiSound_constructor_decodeTaskToJson(task_t* task)
     return antiSound_constructor_addLayout(buffer, bracketLayout);
 }
 
-char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList, binaryTree_t* root)
+char* antiSound_constructor_decodeToJson(request_t* request, binaryTree_t* root)
 {
     queryParameter_t* queryParameter = antiSound_http_getQueryParamter(request, "id");
 
@@ -98,11 +98,11 @@ char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList, b
 
     if(strcmp(queryParameter->name, "/") == 0)
     {
-        body = antiSound_constructor_decodeListToJson(taskList, root);
+        body = antiSound_constructor_decodeListToJson(root);
     }
     else
     {
-       item_t* item = antiSound_item_getItem(taskList, atoi(queryParameter->name), root);
+       item_t* item = antiSound_item_getItem(atoi(queryParameter->name), root);
         
         body = antiSound_constructor_decodeTaskToJson(item->data);   
     }

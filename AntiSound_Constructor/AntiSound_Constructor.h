@@ -20,7 +20,7 @@ char* antiSound_constructor_collector(char* dataA, char* dataB);
 /*
  *  decodes data from list to json format, returns json data
  */
-char* antiSound_constructor_decodeListToJson(list_t* list, binaryTree_t* root);
+char* antiSound_constructor_decodeListToJson(binaryTree_t* root);
 
 /*
  *  decodes item to json format, returns json item
@@ -35,4 +35,4 @@ char* antiSound_constructor_decodeTaskToJson(task_t* item);
 /*
  *  decodes task to json format, returns json task
  */
-char* antiSound_constructor_decodeToJson(request_t* request, list_t* taskList, binaryTree_t* root);
+char* antiSound_constructor_decodeToJson(request_t* request, binaryTree_t* root);

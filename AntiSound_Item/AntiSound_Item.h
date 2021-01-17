@@ -21,37 +21,32 @@ item_t* antiSound_item_initializeItem();
  *  updates existing item
  *  returns true in case of success, otherwise false
  */
-bool antiSound_item_update(request_t* request, list_t* taskList, binaryTree_t* root);
+bool antiSound_item_update(request_t* request, binaryTree_t* root);
 
 /*
- *  reads taskList
+ *  reads BynaryTree
  *  returns true in case of success, otherwise false 
  */
-bool antiSound_item_read(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root);
+bool antiSound_item_read(request_t* request, response_t* response, binaryTree_t* root);
 
 /*
  *  adds new item to the list with specified data  
  *  returns id of newly created item
  */
-bool antiSound_item_create(request_t* request, list_t* taskList, binaryTree_t* root);
+bool antiSound_item_create(request_t* request, binaryTree_t* root);
 
 /*
  *  removes item by id
  *  returns true in case of success, otherwise false
  */
-bool antiSound_item_remove(request_t* request, list_t* taskList, binaryTree_t* root);
+bool antiSound_item_remove(request_t* request, binaryTree_t* root);
+
 
 /*
- *  finds id by taskList
- *  returns list_t
- */
-list_t* antiSound_item_findItem(list_t* list, int id);
-
-/*
- *  find item by taskList
+ *  find item by BynaryTree
  *  returns item_t
  */
-item_t* antiSound_item_getItem(list_t* list, int id, binaryTree_t* root);
+item_t* antiSound_item_getItem(int id, binaryTree_t* root);
 
 /*
  *  set id of item from request
@@ -69,9 +64,9 @@ bool antiSound_item_testInitializeItem();
 /*
  *  test of antiSound_item_getItem
  */
-bool antiSound_item_testGetItem(list_t* list, int id, binaryTree_t* root);
+bool antiSound_item_testGetItem(int id, binaryTree_t* root);
 
 /*
  *  test of antiSound_item_read
  */
-bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root);
+bool antiSound_item_testRead(request_t* request, response_t* response, binaryTree_t* root);

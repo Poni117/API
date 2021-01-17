@@ -98,13 +98,13 @@ queryParameter_t* antiSound_http_getQueryParamter(request_t* request, char* soug
  * check exisiting id in taskList from request
  * returns true in case if id exist, otherwise false
  */
-bool antiSound_http_checkExistingItem(request_t* request, list_t* taskList, binaryTree_t* root);
+bool antiSound_http_checkExistingItem(request_t* request, binaryTree_t* root);
 
 /*
  * check parameters for correctness
  * returns true in case parameters correct, otherwise false
  */
-bool antiSound_http_checkParameters(request_t* request,  list_t* taskList, response_t* response, binaryTree_t* root);
+bool antiSound_http_checkParameters(request_t* request, response_t* response, binaryTree_t* root);
 
 //==============================================================================================
 

@@ -7,11 +7,11 @@
 #include "stdbool.h"
 
 
-bool antiSound_item_testGetItem(list_t* list, int id, binaryTree_t* root)
+bool antiSound_item_testGetItem(int id, binaryTree_t* root)
 {
     bool isGetItemSuccess = false;
 
-    item_t* item = antiSound_item_getItem(list, id, root);
+    item_t* item = antiSound_item_getItem(id, root);
 
     if(item != NULL && item->id == id)
     {
@@ -62,11 +62,11 @@ bool antiSound_item_testInitializeItem()
     return isInitializeItemSuccess;
 }
 
-bool antiSound_item_testRead(request_t* request, list_t* taskList, response_t* response, binaryTree_t* root)
+bool antiSound_item_testRead(request_t* request, response_t* response, binaryTree_t* root)
 {
     bool isReadSuccess = false;
 
-    isReadSuccess = antiSound_item_read(request, taskList, response, root);
+    isReadSuccess = antiSound_item_read(request, response, root);
 
     if(isReadSuccess == false)
     {
