@@ -21,6 +21,16 @@ char* antiSound_constructor_addLayout(char* data, char* layout)
 
 char* antiSound_constructor_collector(char* dataA, char* dataB)
 {
+    if(dataA == NULL)
+    {
+        return dataB;
+    }
+
+    if(dataB == NULL)
+    {
+        return dataA;
+    }
+    
     char* collectedData = calloc(strlen(dataA) + strlen(dataB) + 1, sizeof(char));
     strncat(collectedData, dataA, strlen(dataA));
     strncat(collectedData, dataB, strlen(dataB));
@@ -39,20 +49,13 @@ char* antiSound_constructor_decodeListToJson(binaryTree_t* root)
     char* commaLayout = "%s, ";
     
     item_t* item = root->data;
-    if(root->left != NULL)
-    {
-        jsonTasks = antiSound_constructor_decodeListToJson(root->left);
-    }
     
-    if(root->right != NULL)
-    {
+    jsonTasks = antiSound_constructor_collector(antiSound_constructor_decodeListToJson(root->right),antiSound_constructor_collector(antiSound_constructor_decodeListToJson(root->left), antiSound_constructor_decodeTaskToJson(item->data)));
 
-        jsonTasks = antiSound_constructor_decodeListToJson(root->right);
+    if(root->parent != NULL)
+    {
         jsonTasks = antiSound_constructor_addLayout(jsonTasks, commaLayout);
     }
-
-
-    jsonTasks = antiSound_constructor_collector(jsonTasks, antiSound_constructor_decodeTaskToJson(item->data));
 
     return jsonTasks;
 }

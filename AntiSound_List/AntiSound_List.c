@@ -57,8 +57,6 @@ bool antiSound_list_update(list_t* list, int id, void* newData)
 
     bool isItemExist = antiSound_list_testGetItem(list, id);
 
-    printf("isItemExist[%d]", isItemExist);
-
     if(isItemExist == false)
     {
         return isItemExist;

@@ -2,6 +2,7 @@
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 #include "../AntiSound_Handler/AntiSound_Handler.h"
 #include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
+#include "../AntiSound_Item/AntiSound_Item.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,8 +46,6 @@ bool antiSound_api_newServer()
         char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
         strncpy(requestData, buffer, sizeOfBuffer);
 
-        printf("\nrequestData\n%s\n\n", requestData);
-
         request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
 
         if(strcmp(request->path, "tasks") == 0)
@@ -59,28 +58,8 @@ bool antiSound_api_newServer()
 
             if(antiSound_binaryTree_isBalanced(root) == false)
             {
-                
                 antiSound_binaryTree_balancingSubRoots(root);
                 root = balancingRoot(root);
-
-                binaryTree_t* pointer = root;
-
-                while(pointer != NULL)
-                {
-                    pointer = pointer->left;
-                    printf("==============================\n");
-                    printf("pointer->left\n");
-                    printf("==============================\n");
-
-                }
-                pointer = root;
-                while(pointer != NULL)
-                {
-                    pointer = pointer->right;
-                    printf("==============================\n");
-                    printf("pointer->right\n");
-                    printf("==============================\n");
-                }
             }
 
             free(request);

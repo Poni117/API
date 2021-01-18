@@ -86,7 +86,5 @@ char* antiSound_handler_collectResponse(response_t* response)
         collectedResponse = antiSound_constructor_collector(collectedResponse, response->body);
     }
 
-    printf("%s\n", collectedResponse);
-
     return collectedResponse;
 }
