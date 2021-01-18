@@ -58,8 +58,8 @@ bool antiSound_api_newServer()
 
             if(antiSound_binaryTree_isBalanced(root) == false)
             {
-                antiSound_binaryTree_balancingSubRoots(root);
-                root = balancingRoot(root);
+                antiSound_binaryTree_balancingSubNodes(root);
+                root = balancingNode(root);
             }
 
             free(request);
