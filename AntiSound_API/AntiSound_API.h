@@ -31,6 +31,7 @@ void antiSound_api_response(int serverSocket);
 
 void antiSound_api_freeDatas(request_t* request, response_t* response);
 
+int antiSound_api_copySocket();
 
 //=============================================================================================================================
 

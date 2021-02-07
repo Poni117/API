@@ -3,6 +3,7 @@
 #include "../AntiSound_Handler/AntiSound_Handler.h"
 #include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
 #include "../AntiSound_Item/AntiSound_Item.h"
+#include "../AntiSound_Constructor/AntiSound_Constructor.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,24 +15,9 @@
 
 bool antiSound_api_newServer()
 {
-    bool isServerExist = false;
+    printf("%s\n",antiSound_constructor_generateKey());
 
-    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-
-    struct sockaddr_in setConnect;
-    setConnect.sin_family = AF_INET;
-    setConnect.sin_port = ntohs(8090);
-    setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    int bindStatus = bind(serverSocket, (const struct sockaddr *) &setConnect, sizeof(setConnect));
-
-    if(bindStatus != -1)
-    {
-        isServerExist = true;
-    }
-    printf("isServerExist[%d]\n", isServerExist);
-
-    listen(serverSocket, 1);
+    int serverSocket = antiSound_api_copySocket();
 
     binaryTree_t* root = antiSound_binaryTree_initializeNode();
 
@@ -94,4 +80,29 @@ char* antiSound_api_removeCorrector(char* requestData)
     strncpy(alteratedRequest, buffer, strlen(buffer));
 
     return alteratedRequest;
+}
+
+int antiSound_api_copySocket()
+{
+    bool isServerExist = false;
+
+    int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+
+    struct sockaddr_in setConnect;
+    setConnect.sin_family = AF_INET;
+    setConnect.sin_port = ntohs(8090);
+    setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    int bindStatus = bind(serverSocket, (const struct sockaddr *) &setConnect, sizeof(setConnect));
+
+    if(bindStatus != -1)
+    {
+        isServerExist = true;
+    }
+    
+    printf("isServerExist[%d]\n", isServerExist);
+
+    listen(serverSocket, 1);
+
+    return serverSocket;
 }

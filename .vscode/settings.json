@@ -4,6 +4,8 @@
         "type_traits": "cpp",
         "cmath": "cpp",
         "limits": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "stdbool.h": "c",
+        "string.h": "c"
     }
 }

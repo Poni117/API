@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 char* antiSound_constructor_addLayout(char* data, char* layout)
 {
@@ -113,4 +114,36 @@ char* antiSound_constructor_decodeToJson(request_t* request, binaryTree_t* root)
     return body;
 }
 
+char* antiSound_constructor_generateKey()
+{
+    int keys[5];
 
+    int i = 0;
+
+    while (i != 5)
+    {   
+        srandom(keys[i]);
+        keys[i] = random();
+        i++;
+    }
+    
+    char* key = calloc(0, sizeof(char));
+    i = 0;
+
+    while (i != 5)
+    {
+        char* buffer = calloc(100, sizeof(char));
+
+        sprintf(buffer, "%d", keys[i]);
+        key = antiSound_constructor_collector(key, buffer);
+
+        if(i < 4)
+        {
+            key = antiSound_constructor_collector(key, "-");
+        }
+        free(buffer);
+        i++;
+    }
+
+    return key;
+}

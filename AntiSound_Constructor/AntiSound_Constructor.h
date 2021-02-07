@@ -36,3 +36,8 @@ char* antiSound_constructor_decodeTaskToJson(task_t* item);
  *  decodes task to json format, returns json task
  */
 char* antiSound_constructor_decodeToJson(request_t* request, binaryTree_t* root);
+
+/*
+ *  generates random key
+ */
+char* antiSound_constructor_generateKey();
