@@ -72,7 +72,7 @@ typedef struct Response
 typedef struct Messeges
 {
     int key;
-    char* messege;
+    char* message;
 }messege_t;
 
 typedef struct Datas
@@ -80,7 +80,7 @@ typedef struct Datas
     int clientSocket;
     request_t* request;
     binaryTree_t* root;
-    binaryTree_t* messeges;
+    binaryTree_t* messages;
     char* key;
 }datas_t;
 

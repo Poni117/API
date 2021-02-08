@@ -19,7 +19,7 @@ bool antiSound_api_newServer()
     int serverSocket = antiSound_api_copySocket();
 
     binaryTree_t* root = antiSound_binaryTree_initializeNode();
-    binaryTree_t* messeges = antiSound_binaryTree_initializeNode();
+    binaryTree_t* messages = antiSound_binaryTree_initializeNode();
 
     while (true)
     {
@@ -34,39 +34,44 @@ bool antiSound_api_newServer()
 
         request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
 
+        datas_t* datas = antiSound_http_initializeDatas();
+
+        datas->clientSocket = clientSocket;
+        datas->request = request;
+        datas->root = root;
+        datas->messages = messages;
+
         if(strcmp(request->path, "tasks") == 0)
         {
             char* key = antiSound_constructor_generateKey();
+            datas->key = key;
 
             antiSound_api_sendKey(clientSocket, key);
-
-            datas_t* datas = antiSound_http_initializeDatas();
-            datas->clientSocket = clientSocket;
-            datas->request = request;
-            datas->root = root;
-            datas->messeges = messeges;
-            datas->key = key;
 
             pthread_t thread;
             pthread_create(&thread, NULL, antiSound_api_processRequest, datas);
 
             pthread_join(thread, NULL);
 
+            if(antiSound_binaryTree_isBalanced(root) == false)
+            {
+                antiSound_binaryTree_balancingSubNodes(root);
+                root = balancingNode(root);
+            }
+
+            if(antiSound_binaryTree_isBalanced(messages) == false)
+            {
+                antiSound_binaryTree_balancingSubNodes(messages);
+                messages = balancingNode(messages);
+            }
         }
 
-        if(strcmp(request->path, "getMessege") == 0)
+        if(strcmp(request->path, "message") == 0)
         {
-            body_t* body = antiSound_http_getBodyParamter(request, "id");
+            pthread_t thread;
+            pthread_create(&thread, NULL, antiSound_handler_messageHandler, datas);
 
-            binaryTree_t* node = antiSound_binaryTree_getResponse(messeges, body->name);
-            messege_t* response = node->data;
-
-            char* messege = response->messege;
-
-            printf("messege [%s]\n", messege);
-            send(clientSocket, messege, strlen(messege), 0);
-
-            antiSound_binaryTree_removeNode(node, atoi(body->name));
+            pthread_join(thread, NULL);
         }
 
         free(request);
@@ -130,23 +135,11 @@ void* antiSound_api_processRequest(void* data)
 {
     datas_t* datas = data;
 
-    response_t* response = antiSound_handler_handler(datas->request, datas->root);
+    response_t* response = antiSound_handler_tasksHandler(datas->request, datas->root);
         
     char* message = antiSound_handler_collectResponse(response);
     
-    antiSound_api_addtask(datas->messeges, message, datas->key);
-
-    if(antiSound_binaryTree_isBalanced(datas->root) == false)
-    {
-        antiSound_binaryTree_balancingSubNodes(datas->root);
-        datas->root = balancingNode(datas->root);
-    }
-
-    if(antiSound_binaryTree_isBalanced(datas->messeges) == false)
-    {
-        antiSound_binaryTree_balancingSubNodes(datas->messeges);
-        datas->messeges = balancingNode(datas->messeges);
-    }
+    antiSound_api_addtask(datas->messages, message, datas->key);
 
     free(response);
 
@@ -157,7 +150,8 @@ bool antiSound_api_sendKey(int clientSocket, char* key)
 {
     response_t* response = antiSound_handler_initializeResponse();
     response->status = "HTTP/1.1 200 OK\n";
-    response->body = key;
+
+    response->body = antiSound_constructor_addLayout(antiSound_constructor_decodeItemToJson("id", key), "{%s}");
 
     char* message = antiSound_handler_collectResponse(response);
 
@@ -166,11 +160,28 @@ bool antiSound_api_sendKey(int clientSocket, char* key)
     return true;
 }
 
-void antiSound_api_addtask(binaryTree_t* responses, char* messege, char* key)
+void antiSound_api_addtask(binaryTree_t* responses, char* message, char* key)
 {
-    messege_t* messeges = antiSound_http_initializeMesseges();
-    messeges->key = atoi(key);
-    messeges->messege = messege;
+    messege_t* messages = antiSound_http_initializeMesseges();
+    messages->key = atoi(key);
+    messages->message = message;
 
-    antiSound_binaryTree_addNewNode(responses, messeges);
+    antiSound_binaryTree_addNewNode(responses, messages);
+}
+
+void* antiSound_handler_messageHandler(void* data)
+{
+    datas_t* datas = data;
+    body_t* body = antiSound_http_getBodyParamter(datas->request, "id");
+
+    binaryTree_t* node = antiSound_binaryTree_getResponse(datas->messages, body->name);
+    messege_t* response = node->data;
+
+    char* message = response->message;
+    
+    send(datas->clientSocket, message, strlen(message), 0);
+
+    antiSound_binaryTree_removeNode(node, atoi(body->name));
+
+    return NULL;
 }

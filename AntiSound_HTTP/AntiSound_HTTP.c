@@ -161,8 +161,6 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
       body_t* name = antiSound_http_getBodyParamter(request, "name");
       body_t* lastName = antiSound_http_getBodyParamter(request, "lastname");
 
-      printf("id\n%s\n", id->id);
-      printf("id\n%s\n", id->name);
       if(id == NULL || name == NULL || lastName == NULL)
       {
          response->status = badRequest;
@@ -247,7 +245,6 @@ bool antiSound_http_checkExistingItem(request_t* request, binaryTree_t* root)
    
    if(item != NULL && item->id == atoi(body->name))
    {
-      printf("item[%d]\n", item->id);
       isTaskExist = true;
    }
 
@@ -269,7 +266,7 @@ messege_t* antiSound_http_initializeMesseges()
 {
    messege_t* messege = malloc(sizeof(messege_t));
    messege->key = -1;
-   messege->messege = NULL;
+   messege->message = NULL;
 
    return messege;
 }

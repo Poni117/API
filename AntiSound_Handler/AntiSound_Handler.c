@@ -22,7 +22,7 @@ response_t* antiSound_handler_initializeResponse()
     return response;
 }
 
-response_t* antiSound_handler_handler(request_t* request, binaryTree_t* root)
+response_t* antiSound_handler_tasksHandler(request_t* request, binaryTree_t* root)
 {
     response_t* response = antiSound_handler_initializeResponse();
     
