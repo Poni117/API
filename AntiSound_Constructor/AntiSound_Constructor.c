@@ -116,13 +116,13 @@ char* antiSound_constructor_decodeToJson(request_t* request, binaryTree_t* root)
 
 char* antiSound_constructor_generateKey()
 {
-    int keys[5];
+    int keys[5] = {0, 0, 0, 0, 0};
 
     int i = 0;
 
     while (i != 5)
     {   
-        srandom(keys[i]);
+        srandom(clock());
         keys[i] = random();
         i++;
     }

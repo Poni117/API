@@ -171,12 +171,18 @@ bool antiSound_http_parseHeaders(request_t* request, char* requestData)
 bool antiSound_http_parseBody(request_t* request, char* requestData)
 {
     bool isParseBodyExist = false;
+
     if(requestData == NULL)
     {
         return isParseBodyExist;
     }
-
+    
     char* isolatedBodyParameters = antiSound_http_isolateData(requestData, '{', '\0');
+    
+    if(isolatedBodyParameters == NULL)
+    {
+        return isParseBodyExist;
+    }
     
     int i = 0;
     int j = 0;

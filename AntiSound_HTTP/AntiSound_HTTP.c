@@ -29,11 +29,7 @@ request_t* antiSound_http_parseRuqest(char* requestData)
    antiSound_http_testParseUrl(request, requestData);
    antiSound_http_parsePath(request, requestData);
    antiSound_http_testParseQueryParameters(request, requestData);
-
-   if(strcmp(request->method, "POST") == 0 || strcmp(request->method, "PUT") == 0)
-   {
-      antiSound_http_testParseBody(request, requestData);
-   }
+   antiSound_http_testParseBody(request, requestData);
 
    return request;
 }
@@ -89,7 +85,6 @@ headerParameter_t* antiSound_http_getHeaderParamter(request_t* request, char* id
 body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
 {
    list_t* pointer = request->body;
-
    if(pointer->id == -1)
    {
       pointer = pointer->next;
@@ -258,3 +253,24 @@ bool antiSound_http_checkExistingItem(request_t* request, binaryTree_t* root)
 
    return isTaskExist;
 }
+
+datas_t* antiSound_http_initializeDatas()
+{
+   datas_t* datas = malloc(sizeof(datas_t));
+   datas->clientSocket = -1;
+   datas->request = NULL;
+   datas->root = NULL;
+   datas->key = NULL;
+
+   return datas;
+}
+
+messege_t* antiSound_http_initializeMesseges()
+{
+   messege_t* messege = malloc(sizeof(messege_t));
+   messege->key = -1;
+   messege->messege = NULL;
+
+   return messege;
+}
+

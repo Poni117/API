@@ -69,7 +69,7 @@ char* antiSound_handler_collectResponse(response_t* response)
     }
     else
     {
-        collectedResponse =  antiSound_constructor_collector(collectedResponse, "Content-Type: application/json\n");
+        collectedResponse = antiSound_constructor_collector(collectedResponse, "Content-Type: application/json\n");
         collectedResponse = antiSound_constructor_collector(collectedResponse, lineBreak);
     }
 
@@ -84,6 +84,7 @@ char* antiSound_handler_collectResponse(response_t* response)
         collectedResponse = antiSound_constructor_collector(collectedResponse, lineBreak);
         collectedResponse = antiSound_constructor_collector(collectedResponse, lineBreak);
         collectedResponse = antiSound_constructor_collector(collectedResponse, response->body);
+        collectedResponse = antiSound_constructor_collector(collectedResponse, lineBreak);
     }
 
     return collectedResponse;

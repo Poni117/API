@@ -31,7 +31,13 @@ void antiSound_api_response(int serverSocket);
 
 void antiSound_api_freeDatas(request_t* request, response_t* response);
 
+void* antiSound_api_processRequest(void* data);
+
 int antiSound_api_copySocket();
+
+bool antiSound_api_sendKey(int clientSocket, char* key);
+
+void antiSound_api_addtask(binaryTree_t* responses, char* messege, char* key);
 
 //=============================================================================================================================
 

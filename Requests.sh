@@ -6,3 +6,4 @@ curl -v -X DELETE -H 'Content-Type: application/json' 127.0.0.1:8090/tasks?id=0
 
 curl -v -X PUT -H 'Content-Type: application/json' 127.0.0.1:8090/tasks?id=0 -d '{"name":"Vasiliy", "id":"90", "lastname":"Petrov"}'
 
+curl -v -X GET -H 'Content-Type: application/json' 127.0.0.1:8090/getMessege -d '{"id":"1804289383-1804289383-1804289383-1804289383-1804289383"}'

@@ -68,11 +68,35 @@ typedef struct Response
     char* response;
 }response_t;
 
+
+typedef struct Messeges
+{
+    int key;
+    char* messege;
+}messege_t;
+
+typedef struct Datas
+{
+    int clientSocket;
+    request_t* request;
+    binaryTree_t* root;
+    binaryTree_t* messeges;
+    char* key;
+}datas_t;
+
 /*
  * initializes struct of task
  * returns pointer to task_t
  */
 task_t* antiSound_http_initializeTask();
+
+/*
+ * initializes struct of Datas
+ * returns pointer to datas_t
+ */
+datas_t* antiSound_http_initializeDatas();
+
+messege_t* antiSound_http_initializeMesseges();
 
 /*
  * parses request to struct and returns pointer to request_t

@@ -11,6 +11,7 @@ list_t* antiSound_list_new()
     list->data = NULL;
     list->next = NULL;
     list->id = -1;
+    list->lastItem = NULL;
 
     return list;
 }
