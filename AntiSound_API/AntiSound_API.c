@@ -48,11 +48,6 @@ bool antiSound_api_newServer()
 
             antiSound_api_sendKey(clientSocket, key);
 
-            pthread_t thread;
-            pthread_create(&thread, NULL, antiSound_api_processRequest, datas);
-
-            pthread_join(thread, NULL);
-
             if(antiSound_binaryTree_isBalanced(root) == false)
             {
                 antiSound_binaryTree_balancingSubNodes(root);
