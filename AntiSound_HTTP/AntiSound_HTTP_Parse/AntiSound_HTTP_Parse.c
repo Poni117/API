@@ -13,7 +13,7 @@ request_t* antiSound_http_initializeRequest()
 {
     request_t* request = malloc(sizeof(request_t));
 
-    request->method = NULL;
+    request->method = "\0";
 
     request->body = antiSound_list_new();
 
@@ -24,10 +24,10 @@ request_t* antiSound_http_initializeRequest()
     request->http->minor = -1;
 
     request->url = malloc(sizeof(url_t));
-    request->url->host = NULL;
-    request->url->port = NULL;
-    request->url->path = NULL;
-    request->url->anchor = NULL;
+    request->url->host = "\0";
+    request->url->port = "\0";
+    request->url->path = "\0";
+    request->url->anchor = "\0";
 
     request->url->queryParameters = antiSound_list_new();
 
@@ -38,12 +38,7 @@ bool antiSound_http_parseMethod(request_t* request, char* requestData)
 {
     bool isParsedMethodExist = false;
 
-    char* method = antiSound_http_isolateData(requestData, requestData[0], ' ');
-
-    size_t sizeOfMethod = strlen(method);
-
-    request->method = calloc(sizeOfMethod + 1, sizeof(char));
-    strncpy(request->method, method, strlen(method));
+    request->method = antiSound_http_isolateData(requestData, requestData[0], ' ');
 
     if(request->method[0] != '\0')
     {
@@ -75,6 +70,9 @@ bool antiSound_http_parseHttpVersion(request_t* request, char* requestData)
         isParsedHttpVersionExist = true;
     }
 
+    free(minor);
+    free(major);
+    free(isolatedHttp);
     return isParsedHttpVersionExist;
 }
 
@@ -131,7 +129,6 @@ bool antiSound_http_parseUrl(request_t* request, char* requestData)
 bool antiSound_http_parsePath(request_t* request, char* requestData)
 {
     bool isParsePathExist = false;
-    char* isolatedPath = NULL;
 
     char start = '/';
 
@@ -149,9 +146,7 @@ bool antiSound_http_parsePath(request_t* request, char* requestData)
 
     char end = alteratedRequest[i];
 
-    isolatedPath = antiSound_http_isolateData(requestData, start, end);
-
-    request->path = isolatedPath;
+    request->path = antiSound_http_isolateData(requestData, start, end);;
 
     return isParsePathExist;
 }
@@ -165,6 +160,8 @@ bool antiSound_http_parseHeaders(request_t* request, char* requestData)
     
     isParseHeadersExist = antiSound_http_parseData(request->headers, isolatedHeaders, '\n');
     
+    free(isolatedHeaders);
+
     return isParseHeadersExist;
 }
 
@@ -204,7 +201,9 @@ bool antiSound_http_parseBody(request_t* request, char* requestData)
 
     isParseBodyExist = antiSound_http_parseData(request->body, alteratedBodyParameter, ',');
     
+    free(alteratedBodyParameter);
     free(isolatedBodyParameters);
+
     return isParseBodyExist;
 }
 
@@ -223,7 +222,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
 
     if(delimiter == '&')
     {
-        queryParameter_t* queryParameter = malloc(sizeof(queryParameter_t));
+        queryParameter_t* queryParameter = antiSound_http_initializeQueryParameter();
 
         queryParameter->id = antiSound_http_isolateData(parameter, parameter[0], '=');
 
@@ -234,7 +233,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
 
     if(delimiter == '\n')
     {
-        headerParameter_t* headerParameter = malloc(sizeof(headerParameter_t));
+        headerParameter_t* headerParameter = antiSound_http_initializeHeaderParameter();
    
         headerParameter->id = antiSound_http_isolateData(parameter, parameter[0], ':');
 
@@ -245,7 +244,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
 
     if(delimiter == ',')
     {
-        body_t* body = malloc(sizeof(body_t));
+        body_t* body = antiSound_http_initializeBody();
 
         body->id = antiSound_http_isolateData(parameter, parameter[0], ':');
 
@@ -269,6 +268,7 @@ bool antiSound_http_parseData(list_t* list, char* isolatedData, char delimiter)
         antiSound_http_parseData(list, alterateIsolatedData, delimiter);
     }
 
+    free(parameter);
     return isParseExist;
 }
 
@@ -322,7 +322,7 @@ char* antiSound_http_isolateData(char* isolatedData, char start, char end)
         }
     }
 
-    char* data = calloc(strlen(buffer) + 1, sizeof(char));
+    char* data = calloc(strlen(buffer) + 10, sizeof(char));
     strncpy(data, buffer, strlen(buffer));
 
     if(data[0] == '\0')

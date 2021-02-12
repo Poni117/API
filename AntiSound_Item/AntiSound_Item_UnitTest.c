@@ -74,5 +74,41 @@ bool antiSound_item_testRead(request_t* request, response_t* response, binaryTre
         printf("antiSound_item_testRead\n");
         printf("isReadSuccess[%d]\n", isReadSuccess);
     }
+
     return isReadSuccess;
+}
+
+bool antiSound_item_testCreate(request_t* request, binaryTree_t* root)
+{
+    bool isCreateExist = false;
+    bool isParameterExist = antiSound_http_testGetBodyParameters(request);
+
+    if(isParameterExist == true)
+    {
+       isCreateExist = antiSound_item_create(request, root);
+    }
+    else
+    {
+        printf("---------------------------------\n");
+        printf("antiSound_item_testCreate\n");
+        printf("isParameterExist[%d]\n", isParameterExist);
+    }
+    
+    return isCreateExist;
+}
+
+bool antiSound_http_testGetBodyParameters(request_t* request)
+{
+    bool isCreateSuccess = false;
+
+    bool isIdExist = antiSound_http_testGetBodyParamter(request, "id");
+    bool isNameExist = antiSound_http_testGetBodyParamter(request, "name");
+    bool isLastNameExist = antiSound_http_getBodyParamter(request, "lastname");
+
+    if(isIdExist == true && isNameExist == true && isLastNameExist == true)
+    {
+        isCreateSuccess = true;
+    }
+
+    return isCreateSuccess;
 }

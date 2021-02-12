@@ -70,3 +70,9 @@ bool antiSound_item_testGetItem(int id, binaryTree_t* root);
  *  test of antiSound_item_read
  */
 bool antiSound_item_testRead(request_t* request, response_t* response, binaryTree_t* root);
+
+
+/*
+ *  test of antiSound_item_create
+ */
+bool antiSound_item_testCreate(request_t* request, binaryTree_t* root);

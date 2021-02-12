@@ -3,7 +3,7 @@
 
 #include "../AntiSound_List/AntiSound_List.h"
 #include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
-
+#include "../AntiSound_FIFO/AntiSound_FIFO.h"
 
 #include <stdbool.h>
 
@@ -68,7 +68,6 @@ typedef struct Response
     char* response;
 }response_t;
 
-
 typedef struct Messeges
 {
     int key;
@@ -77,11 +76,9 @@ typedef struct Messeges
 
 typedef struct Datas
 {
-    int clientSocket;
     request_t* request;
     binaryTree_t* root;
-    binaryTree_t* messages;
-    char* key;
+    response_t* response;
 }datas_t;
 
 /*
@@ -96,7 +93,29 @@ task_t* antiSound_http_initializeTask();
  */
 datas_t* antiSound_http_initializeDatas();
 
+/*
+ * initializes struct of Message
+ * returns pointer to messege_t
+ */
 messege_t* antiSound_http_initializeMesseges();
+
+/*
+ * initializes struct of QueryParameter
+ * returns pointer to queryParameter_t
+ */
+queryParameter_t* antiSound_http_initializeQueryParameter();
+
+/*
+ * initializes struct of HeaderParameter
+ * returns pointer to headerParameter_t
+ */
+headerParameter_t* antiSound_http_initializeHeaderParameter();
+
+/*
+ * initializes struct of body
+ * returns pointer to body_t
+ */
+body_t* antiSound_http_initializeBody();
 
 /*
  * parses request to struct and returns pointer to request_t
@@ -150,5 +169,11 @@ bool antiSound_http_testGetHeaderParamter(request_t* request, char* id);
  */
 bool antiSound_http_testGetBodyParamter(request_t* request, char* soughtItem);
 
+
+/*
+ * test of antiSound_http_getBodyParamters
+ * returns true in case test true, otherwise false
+ */
+bool antiSound_http_testGetBodyParameters(request_t* request);
 
 #endif // ANTISOUND_HTTP_H

@@ -24,6 +24,7 @@ bool antiSound_item_read(request_t* request, response_t* response, binaryTree_t*
 {
     bool isGetSuccess = false;
 
+
     response->body = antiSound_constructor_decodeToJson(request, root);
 
     if(response->body != NULL)
@@ -56,9 +57,7 @@ bool antiSound_item_create(request_t* request, binaryTree_t* root)
     item->id = atoi(id->name);
     item->data = task;
 
-    antiSound_binaryTree_addNewNode(root, item);
-
- 
+    isPostTaskSuccess = antiSound_binaryTree_addNewNode(root, item);
 
     return isPostTaskSuccess;
 }

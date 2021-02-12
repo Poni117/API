@@ -4,6 +4,8 @@
 #include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
 #include "../AntiSound_Item/AntiSound_Item.h"
 #include "../AntiSound_Constructor/AntiSound_Constructor.h"
+#include "../AntiSound_FIFO/AntiSound_FIFO.h"
+#include "../AntiSound_Threads/AntiSound_Threads.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,34 +21,40 @@ bool antiSound_api_newServer()
     int serverSocket = antiSound_api_copySocket();
 
     binaryTree_t* root = antiSound_binaryTree_initializeNode();
+
     binaryTree_t* messages = antiSound_binaryTree_initializeNode();
 
-    while (true)
+    fifo_t* fifo = antiSound_fifo_initializeFifo();
+
+    pthread_t thread;
+    pthread_create(&thread, NULL, antiSound_threads_checkFifo, fifo);
+    
+    while(true)
     {
         int clientSocket = accept(serverSocket, NULL, NULL);
 
         char buffer[1000] = "\0";
         recv(clientSocket, buffer, sizeof(buffer), 0);
-        size_t sizeOfBuffer = strlen(buffer);
-
-        char* requestData = calloc(sizeOfBuffer + 1, sizeof(char));
-        strncpy(requestData, buffer, sizeOfBuffer);
-
-        request_t* request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(requestData));
 
         datas_t* datas = antiSound_http_initializeDatas();
+        datas->request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(buffer));
+        printf("api method [%p]\n", datas->request->method);
 
-        datas->clientSocket = clientSocket;
-        datas->request = request;
         datas->root = root;
-        datas->messages = messages;
+        datas->response = antiSound_handler_initializeResponse();
 
-        if(strcmp(request->path, "tasks") == 0)
+        if(strcmp(datas->request->path, "tasks") == 0)
         {
             char* key = antiSound_constructor_generateKey();
-            datas->key = key;
 
             antiSound_api_sendKey(clientSocket, key);
+
+
+            printf("antiSound_fifo_push[%d]\n", antiSound_fifo_push(fifo, datas));
+
+            char* message = antiSound_handler_collectResponse(datas->response);
+    
+            antiSound_api_addtask(messages, message, key);
 
             if(antiSound_binaryTree_isBalanced(root) == false)
             {
@@ -61,17 +69,14 @@ bool antiSound_api_newServer()
             }
         }
 
-        if(strcmp(request->path, "message") == 0)
+        if(strcmp(datas->request->path, "message") == 0)
         {
-            pthread_t thread;
-            pthread_create(&thread, NULL, antiSound_handler_messageHandler, datas);
-
-            pthread_join(thread, NULL);
+            antiSound_handler_messageHandler(clientSocket, datas->request, messages);
         }
 
-        free(request);
-        free(requestData);
+        antiSound_api_freeDatas(datas);
 
+        sleep(15);
         close(clientSocket);
     }
 
@@ -95,7 +100,7 @@ char* antiSound_api_removeCorrector(char* requestData)
         i++;
     }
     
-    char* alteratedRequest = calloc(strlen(buffer) + 1, sizeof(char));
+    char* alteratedRequest = calloc(strlen(buffer) + 10, sizeof(char));
     strncpy(alteratedRequest, buffer, strlen(buffer));
 
     return alteratedRequest;
@@ -126,31 +131,31 @@ int antiSound_api_copySocket()
     return serverSocket;
 }
 
-void* antiSound_api_processRequest(void* data)
+void* antiSound_api_processRequest(request_t* request, response_t* response, binaryTree_t* root)
 {
-    datas_t* datas = data;
 
-    response_t* response = antiSound_handler_tasksHandler(datas->request, datas->root);
-        
-    char* message = antiSound_handler_collectResponse(response);
-    
-    antiSound_api_addtask(datas->messages, message, datas->key);
+    antiSound_handler_tasksHandler(request, response, root);
 
-    free(response);
+ 
 
     return NULL;
 }
 
 bool antiSound_api_sendKey(int clientSocket, char* key)
 {
-    response_t* response = antiSound_handler_initializeResponse();
-    response->status = "HTTP/1.1 200 OK\n";
+    datas_t* datas = antiSound_http_initializeDatas();
+    datas->response  = antiSound_handler_initializeResponse();
+    datas->response->status = "HTTP/1.1 200 OK\n";
 
-    response->body = antiSound_constructor_addLayout(antiSound_constructor_decodeItemToJson("id", key), "{%s}");
+    datas->response->body = antiSound_constructor_addLayout(antiSound_constructor_decodeItemToJson("id", key), "{%s}");
 
-    char* message = antiSound_handler_collectResponse(response);
+    char* message = antiSound_handler_collectResponse(datas->response);
 
     send(clientSocket, message, strlen(message), 0);
+
+    free(datas->response->body);
+    free(datas->response);
+    free(datas);
 
     return true;
 }
@@ -164,19 +169,68 @@ void antiSound_api_addtask(binaryTree_t* responses, char* message, char* key)
     antiSound_binaryTree_addNewNode(responses, messages);
 }
 
-void* antiSound_handler_messageHandler(void* data)
+void* antiSound_handler_messageHandler(int clientSocket, request_t* request, binaryTree_t* messages)
 {
-    datas_t* datas = data;
-    body_t* body = antiSound_http_getBodyParamter(datas->request, "id");
+    body_t* body = antiSound_http_getBodyParamter(request, "id");
 
-    binaryTree_t* node = antiSound_binaryTree_getResponse(datas->messages, body->name);
+    binaryTree_t* node = antiSound_binaryTree_getResponse(messages, body->name);
     messege_t* response = node->data;
 
     char* message = response->message;
     
-    send(datas->clientSocket, message, strlen(message), 0);
+    send(clientSocket, message, strlen(message), 0);
 
     antiSound_binaryTree_removeNode(node, atoi(body->name));
 
     return NULL;
+}
+
+void antiSound_api_freeDatas(void* data)
+{
+    datas_t* datas = data;
+    free(datas->request->method);
+
+    list_t* pointer = datas->request->body;
+
+    while(pointer != NULL)
+    {
+        list_t* remove = pointer;
+        body_t* body = remove->data;
+
+        pointer = pointer->next;
+
+        free(body);
+        free(remove);
+    }
+
+    pointer = datas->request->url->queryParameters;
+
+    while(pointer != NULL)
+    {
+        list_t* remove = pointer;
+        queryParameter_t* queryPatameter = remove->data;
+
+        pointer = pointer->next;
+        
+        free(queryPatameter);
+        free(remove); 
+    }
+
+    pointer = datas->request->headers;
+
+    while(pointer != NULL)
+    {
+        list_t* remove = pointer;
+        headerParameter_t* headerParameter = remove->data;
+
+        pointer = pointer->next;
+
+        free(headerParameter);
+        free(remove); 
+    }
+    
+    free(datas->request->http);
+    free(datas->request->path);
+    free(datas->request->url->host);
+    free(datas->request->url->port);
 }

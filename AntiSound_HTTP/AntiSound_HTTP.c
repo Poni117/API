@@ -31,6 +31,7 @@ request_t* antiSound_http_parseRuqest(char* requestData)
    antiSound_http_testParseQueryParameters(request, requestData);
    antiSound_http_testParseBody(request, requestData);
 
+   free(requestData);
    return request;
 }
 
@@ -85,6 +86,7 @@ headerParameter_t* antiSound_http_getHeaderParamter(request_t* request, char* id
 body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
 {
    list_t* pointer = request->body;
+
    if(pointer->id == -1)
    {
       pointer = pointer->next;
@@ -93,7 +95,6 @@ body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
    while (pointer != NULL)
    {
       body_t* body = pointer->data;
-
       if(strcmp(body->id, soughtItem) == 0)
       {
          return body;
@@ -102,6 +103,7 @@ body_t* antiSound_http_getBodyParamter(request_t* request, char* soughtItem)
       pointer = pointer->next;
    }
    
+   printf("end\n");
    return NULL;
 }
 
@@ -117,6 +119,7 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
    char* notFound =  "HTTP/1.1 404 Not Found\n";
 
    char* internalServerError = "HTTP/1.1 500 Internal Server Error\n";
+
 
    if(strcmp(request->method, "GET") == 0)
    {
@@ -149,6 +152,7 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
       }
    }
 
+   
    if(strcmp(request->method, "POST") == 0)
    {
       if(antiSound_http_checkExistingItem(request, root))
@@ -157,11 +161,7 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
          return isParameterExist;
       }
 
-      body_t* id = antiSound_http_getBodyParamter(request, "id");
-      body_t* name = antiSound_http_getBodyParamter(request, "name");
-      body_t* lastName = antiSound_http_getBodyParamter(request, "lastname");
-
-      if(id == NULL || name == NULL || lastName == NULL)
+      if(antiSound_item_testCreate(request, root))
       {
          response->status = badRequest;
          return isParameterExist;
@@ -182,11 +182,7 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
          return isParameterExist;
       }
 
-      body_t* id = antiSound_http_getBodyParamter(request, "id");
-      body_t* name = antiSound_http_getBodyParamter(request, "name");
-      body_t* lastName = antiSound_http_getBodyParamter(request, "lastname");
-
-      if(id == NULL || name == NULL || lastName == NULL)
+      if(antiSound_http_testGetBodyParameters(request))
       {
          response->status = badRequest;
          return isParameterExist;
@@ -254,10 +250,9 @@ bool antiSound_http_checkExistingItem(request_t* request, binaryTree_t* root)
 datas_t* antiSound_http_initializeDatas()
 {
    datas_t* datas = malloc(sizeof(datas_t));
-   datas->clientSocket = -1;
    datas->request = NULL;
    datas->root = NULL;
-   datas->key = NULL;
+   datas->response = NULL;
 
    return datas;
 }
@@ -266,8 +261,34 @@ messege_t* antiSound_http_initializeMesseges()
 {
    messege_t* messege = malloc(sizeof(messege_t));
    messege->key = -1;
-   messege->message = NULL;
+   messege->message = "\0";
 
    return messege;
 }
 
+queryParameter_t* antiSound_http_initializeQueryParameter()
+{
+   queryParameter_t* queryParameter = malloc(sizeof(queryParameter_t));
+   queryParameter->id = "\0";
+   queryParameter->name = "\0";
+
+   return queryParameter;
+}
+
+headerParameter_t* antiSound_http_initializeHeaderParameter()
+{
+   headerParameter_t* headerParameter = malloc(sizeof(headerParameter_t));
+   headerParameter->id = "\0";
+   headerParameter->name = "\0";
+
+   return headerParameter;
+}
+
+body_t* antiSound_http_initializeBody()
+{
+   body_t* body = malloc(sizeof(body_t));
+   body->id = "\0";
+   body->name = "\0";
+
+   return body;
+}

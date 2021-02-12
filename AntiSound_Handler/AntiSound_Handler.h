@@ -6,8 +6,8 @@
 
 response_t* antiSound_handler_initializeResponse();
 
-response_t* antiSound_handler_tasksHandler(request_t* request, binaryTree_t* root);
+void antiSound_handler_tasksHandler(request_t* request, response_t* response, binaryTree_t* root);
 
 char* antiSound_handler_collectResponse(response_t* response);
 
-void* antiSound_handler_messageHandler(void* data);
+void* antiSound_handler_messageHandler(int clientSocket, request_t* request, binaryTree_t* messages);

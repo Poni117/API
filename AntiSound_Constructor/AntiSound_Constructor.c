@@ -127,7 +127,7 @@ char* antiSound_constructor_generateKey()
         i++;
     }
     
-    char* key = calloc(0, sizeof(char));
+    char* key = calloc(1, sizeof(char));
     i = 0;
 
     while (i != 5)

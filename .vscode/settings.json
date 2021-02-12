@@ -6,6 +6,11 @@
         "limits": "cpp",
         "*.tcc": "cpp",
         "stdbool.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "antisound_constructor.h": "c",
+        "antisound_threads.h": "c",
+        "antisound_fifo.h": "c",
+        "antisound_http.h": "c",
+        "stdlib.h": "c"
     }
 }

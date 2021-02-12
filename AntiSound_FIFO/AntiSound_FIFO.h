@@ -40,5 +40,6 @@ bool antiSound_fifo_isEmpty(fifo_t* fifo);
  */
 int antiSound_fifo_size(fifo_t* fifo);
 
+fifo_t* antiSound_fifo_getHead(fifo_t* head);
 
 #endif // ANTISOUND_FIFO_H

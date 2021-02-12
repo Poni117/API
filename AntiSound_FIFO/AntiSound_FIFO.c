@@ -1,8 +1,11 @@
 #include  <stdlib.h>
 #include  <stdbool.h>
 #include  <stdio.h>
+#include  <pthread.h>
 
 #include "../AntiSound_FIFO/AntiSound_FIFO.h"
+
+
 
 fifo_t* antiSound_fifo_initializeFifo()
 {
@@ -32,7 +35,7 @@ bool antiSound_fifo_pop(fifo_t* head)
     fifo_t* newHead = head->next->next;
     free(head->next);
     head->next = newHead;
-
+    
     return true;
 }
 
@@ -40,7 +43,7 @@ bool antiSound_fifo_isEmpty(fifo_t* head)
 {
     bool isNextItemExist = true;
 
-    if(head != head->tale)
+    if(head->next != NULL)
     {
         isNextItemExist = false; 
     }
@@ -62,3 +65,4 @@ int antiSound_fifo_size(fifo_t* head)
 
     return size;
 }
+

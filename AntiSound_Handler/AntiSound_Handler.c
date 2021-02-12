@@ -4,6 +4,8 @@
 #include "../AntiSound_Constructor/AntiSound_Constructor.h"
 #include "../AntiSound_Item/AntiSound_Item.h"
 #include "../AntiSound_BinaryTree/AntiSound_BinaryTree.h"
+#include "../AntiSound_FIFO/AntiSound_FIFO.h"
+
 
 #include <stdio.h>
 #include <stdlib.h> 
@@ -22,36 +24,10 @@ response_t* antiSound_handler_initializeResponse()
     return response;
 }
 
-response_t* antiSound_handler_tasksHandler(request_t* request, binaryTree_t* root)
+void antiSound_handler_tasksHandler(request_t* request, response_t* response, binaryTree_t* root)
 {
-    response_t* response = antiSound_handler_initializeResponse();
     
-    if(antiSound_http_checkParameters(request, response, root) == false)
-    {
-        return response;
-    }
-
-    if(strcmp(request->method, "GET") == 0)
-    {   
-        antiSound_item_read(request, response, root);
-    }
     
-    if(strcmp(request->method, "POST") == 0)
-    {
-        antiSound_item_create(request, root);
-    }
-
-    if(strcmp(request->method, "PUT") == 0)
-    {
-        antiSound_item_update(request, root);
-    }
-
-    if(strcmp(request->method, "DELETE") == 0)
-    {
-        antiSound_item_remove(request, root);
-    }
-
-    return response;
 }
 
 char* antiSound_handler_collectResponse(response_t* response)
