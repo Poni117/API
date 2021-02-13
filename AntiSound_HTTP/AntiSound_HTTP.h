@@ -149,6 +149,11 @@ bool antiSound_http_checkExistingItem(request_t* request, binaryTree_t* root);
  */
 bool antiSound_http_checkParameters(request_t* request, response_t* response, binaryTree_t* root);
 
+/*
+ * frees struct request_t
+ */
+void antiSound_http_freeRequest(void* data);
+
 //==============================================================================================
 
 /*
@@ -174,6 +179,6 @@ bool antiSound_http_testGetBodyParamter(request_t* request, char* soughtItem);
  * test of antiSound_http_getBodyParamters
  * returns true in case test true, otherwise false
  */
-bool antiSound_http_testGetBodyParameters(request_t* request);
+bool antiSound_http_isBodyParametersExist(request_t* request);
 
 #endif // ANTISOUND_HTTP_H

@@ -31,10 +31,14 @@ bool antiSound_fifo_push(fifo_t* head, void* data)
 
 bool antiSound_fifo_pop(fifo_t* head)
 {
-    head->next->data = NULL;
     fifo_t* newHead = head->next->next;
     free(head->next);
     head->next = newHead;
+
+    if(head->next == NULL)
+    {
+        head->tale = head;
+    }
     
     return true;
 }

@@ -28,6 +28,7 @@ bool antiSound_api_newServer()
 
     pthread_t thread;
     pthread_create(&thread, NULL, antiSound_threads_checkFifo, fifo);
+    pthread_detach(thread);
     
     while(true)
     {
@@ -38,7 +39,6 @@ bool antiSound_api_newServer()
 
         datas_t* datas = antiSound_http_initializeDatas();
         datas->request = antiSound_http_parseRuqest(antiSound_api_removeCorrector(buffer));
-        printf("api method [%p]\n", datas->request->method);
 
         datas->root = root;
         datas->response = antiSound_handler_initializeResponse();
@@ -48,7 +48,6 @@ bool antiSound_api_newServer()
             char* key = antiSound_constructor_generateKey();
 
             antiSound_api_sendKey(clientSocket, key);
-
 
             printf("antiSound_fifo_push[%d]\n", antiSound_fifo_push(fifo, datas));
 
@@ -74,9 +73,6 @@ bool antiSound_api_newServer()
             antiSound_handler_messageHandler(clientSocket, datas->request, messages);
         }
 
-        antiSound_api_freeDatas(datas);
-
-        sleep(15);
         close(clientSocket);
     }
 
@@ -122,6 +118,10 @@ int antiSound_api_copySocket()
     if(bindStatus != -1)
     {
         isServerExist = true;
+    }
+    else
+    {
+        return bindStatus;
     }
     
     printf("isServerExist[%d]\n", isServerExist);
@@ -185,52 +185,3 @@ void* antiSound_handler_messageHandler(int clientSocket, request_t* request, bin
     return NULL;
 }
 
-void antiSound_api_freeDatas(void* data)
-{
-    datas_t* datas = data;
-    free(datas->request->method);
-
-    list_t* pointer = datas->request->body;
-
-    while(pointer != NULL)
-    {
-        list_t* remove = pointer;
-        body_t* body = remove->data;
-
-        pointer = pointer->next;
-
-        free(body);
-        free(remove);
-    }
-
-    pointer = datas->request->url->queryParameters;
-
-    while(pointer != NULL)
-    {
-        list_t* remove = pointer;
-        queryParameter_t* queryPatameter = remove->data;
-
-        pointer = pointer->next;
-        
-        free(queryPatameter);
-        free(remove); 
-    }
-
-    pointer = datas->request->headers;
-
-    while(pointer != NULL)
-    {
-        list_t* remove = pointer;
-        headerParameter_t* headerParameter = remove->data;
-
-        pointer = pointer->next;
-
-        free(headerParameter);
-        free(remove); 
-    }
-    
-    free(datas->request->http);
-    free(datas->request->path);
-    free(datas->request->url->host);
-    free(datas->request->url->port);
-}

@@ -80,26 +80,21 @@ bool antiSound_item_testRead(request_t* request, response_t* response, binaryTre
 
 bool antiSound_item_testCreate(request_t* request, binaryTree_t* root)
 {
-    bool isCreateExist = false;
-    bool isParameterExist = antiSound_http_testGetBodyParameters(request);
+    bool isParametersExist = antiSound_http_isBodyParametersExist(request);
 
-    if(isParameterExist == true)
-    {
-       isCreateExist = antiSound_item_create(request, root);
-    }
-    else
+    if(isParametersExist == false)
     {
         printf("---------------------------------\n");
         printf("antiSound_item_testCreate\n");
-        printf("isParameterExist[%d]\n", isParameterExist);
+        printf("isParametersExist[%d]\n", isParametersExist);
     }
-    
-    return isCreateExist;
+
+    return isParametersExist;
 }
 
-bool antiSound_http_testGetBodyParameters(request_t* request)
+bool antiSound_http_isBodyParametersExist(request_t* request)
 {
-    bool isCreateSuccess = false;
+    bool isBodyParametersExist = false;
 
     bool isIdExist = antiSound_http_testGetBodyParamter(request, "id");
     bool isNameExist = antiSound_http_testGetBodyParamter(request, "name");
@@ -107,8 +102,15 @@ bool antiSound_http_testGetBodyParameters(request_t* request)
 
     if(isIdExist == true && isNameExist == true && isLastNameExist == true)
     {
-        isCreateSuccess = true;
+        isBodyParametersExist = true;
     }
 
-    return isCreateSuccess;
+    if(isBodyParametersExist == false)
+    {
+        printf("---------------------------------\n");
+        printf("antiSound_http_isBodyParametersExist\n");
+        printf("isBodyParametersExist[%d]\n", isBodyParametersExist);
+    }
+
+    return isBodyParametersExist;
 }

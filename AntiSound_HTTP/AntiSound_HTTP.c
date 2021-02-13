@@ -151,7 +151,6 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
          return isParameterExist;
       }
    }
-
    
    if(strcmp(request->method, "POST") == 0)
    {
@@ -161,7 +160,7 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
          return isParameterExist;
       }
 
-      if(antiSound_item_testCreate(request, root))
+      if(antiSound_item_testCreate(request, root) == false)
       {
          response->status = badRequest;
          return isParameterExist;
@@ -182,7 +181,7 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
          return isParameterExist;
       }
 
-      if(antiSound_http_testGetBodyParameters(request))
+      if(antiSound_http_isBodyParametersExist(request))
       {
          response->status = badRequest;
          return isParameterExist;
@@ -228,6 +227,8 @@ bool antiSound_http_checkParameters(request_t* request, response_t* response, bi
    }
 
    response->status = ok;
+
+
    return isParameterExist = true;
 }
 
@@ -291,4 +292,54 @@ body_t* antiSound_http_initializeBody()
    body->name = "\0";
 
    return body;
+}
+
+void antiSound_http_freeRequest(void* data)
+{
+   datas_t* datas = data;
+   free(datas->request->method);
+
+   list_t* pointer = datas->request->body;
+
+   while(pointer != NULL)
+   {
+      list_t* remove = pointer;
+      body_t* body = remove->data;
+
+      pointer = pointer->next;
+
+      free(body);
+      free(remove);
+   }
+
+   pointer = datas->request->url->queryParameters;
+
+   while(pointer != NULL)
+   {
+      list_t* remove = pointer;
+      queryParameter_t* queryPatameter = remove->data;
+
+      pointer = pointer->next;
+      
+      free(queryPatameter);
+      free(remove); 
+   }
+
+   pointer = datas->request->headers;
+
+   while(pointer != NULL)
+   {
+      list_t* remove = pointer;
+      headerParameter_t* headerParameter = remove->data;
+
+      pointer = pointer->next;
+
+      free(headerParameter);
+      free(remove); 
+   }
+   
+   free(datas->request->http);
+   free(datas->request->path);
+   free(datas->request->url->host);
+   free(datas->request->url->port);
 }

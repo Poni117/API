@@ -2,6 +2,7 @@
 #include "../AntiSound_FIFO/AntiSound_FIFO.h"
 #include "../AntiSound_HTTP/AntiSound_HTTP.h"
 #include "../AntiSound_Item/AntiSound_Item.h"
+#include "../AntiSound_API/AntiSound_API.h"
 
 #include <stdlib.h> 
 #include <stdio.h> 
@@ -18,6 +19,7 @@ void* antiSound_threads_checkFifo(void* data)
         if(antiSound_fifo_isEmpty(fifo) == false)
         {
             printf("exe[%d]\n", antiSound_threads_exeRequest(fifo->next->data));
+            antiSound_http_freeRequest(fifo->next->data);
             antiSound_fifo_pop(fifo);
         }
     }
@@ -36,12 +38,12 @@ bool antiSound_threads_exeRequest(datas_t* datas)
 
     if(strcmp(datas->request->method, "GET") == 0)
     {   
-        isExeRequestSuccess =  antiSound_item_read(datas->request, datas->response, datas->root);
+        isExeRequestSuccess = antiSound_item_read(datas->request, datas->response, datas->root);
     }
     
     if(strcmp(datas->request->method, "POST") == 0)
     {
-        isExeRequestSuccess = antiSound_item_testCreate(datas->request, datas->root);
+        isExeRequestSuccess = antiSound_item_create(datas->request, datas->root);
     }
 
     if(strcmp(datas->request->method, "PUT") == 0)

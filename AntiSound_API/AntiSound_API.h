@@ -29,7 +29,6 @@ bool antiSound_api_testConnect();
  */
 void antiSound_api_response(int serverSocket);
 
-void antiSound_api_freeDatas(void* data);
 
 void* antiSound_api_processRequest(request_t* request, response_t* response, binaryTree_t* root);
 
