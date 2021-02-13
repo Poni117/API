@@ -11,6 +11,7 @@
         "antisound_threads.h": "c",
         "antisound_fifo.h": "c",
         "antisound_http.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "antisound_api.h": "c"
     }
 }

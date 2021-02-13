@@ -18,9 +18,10 @@ void* antiSound_threads_checkFifo(void* data)
     {
         if(antiSound_fifo_isEmpty(fifo) == false)
         {
-            printf("exe[%d]\n", antiSound_threads_exeRequest(fifo->next->data));
-            antiSound_http_freeRequest(fifo->next->data);
             antiSound_fifo_pop(fifo);
+            datas_t* task = fifo->next->data;
+            printf("exe[%d]\n", antiSound_threads_exeRequest(task));
+            antiSound_http_freeRequest(fifo->next->data);
         }
     }
 
