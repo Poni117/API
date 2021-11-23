@@ -12,6 +12,15 @@
         "antisound_fifo.h": "c",
         "antisound_http.h": "c",
         "stdlib.h": "c",
-        "antisound_api.h": "c"
+        "antisound_api.h": "c",
+        "antisound_item.h": "c",
+        "antisound_list.h": "c",
+        "stdio.h": "c",
+        "item.h": "c",
+        "http.h": "c",
+        "api.h": "c",
+        "constructor.h": "c",
+        "threads.h": "c",
+        "http_parse.h": "c"
     }
 }
