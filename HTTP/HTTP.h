@@ -7,7 +7,6 @@
 
 #include <stdbool.h>
 
-
 typedef struct HttpVersion
 {
     int minor;
@@ -120,7 +119,7 @@ body_t* http_initializeBody();
 /*
  * parses request to struct and returns pointer to request_t
  */
-request_t* http_parseRuqest(char* request);
+request_t* http_parseRequest(char* request);
 
 /*
  * finds header parameter from request and returns pointer to headerParameter_t
@@ -157,7 +156,7 @@ void http_freeRequest(void* data);
 //==============================================================================================
 
 /*
- * test of antiSound_http_getQueryParamter
+ * test of http_getQueryParamter
  * returns true in case test true, otherwise false
  */
 bool http_testGetQueryParamter(request_t* request, char* soughtItem);
@@ -169,7 +168,7 @@ bool http_testGetQueryParamter(request_t* request, char* soughtItem);
 bool antiSound_http_testGetHeaderParamter(request_t* request, char* id);
 
 /*
- * test of antiSound_http_getBodyParamter
+ * test of http_getBodyParamter
  * returns true in case test true, otherwise false
  */
 bool http_testGetBodyParamter(request_t* request, char* soughtItem);

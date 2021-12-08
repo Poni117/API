@@ -112,13 +112,13 @@ bool binaryTree_removeParentLeftNode(binaryTree_t* node);
  * removes right sub-node of parent of node
  * returns true in case success, otherwise false
  */
-bool antiSound_binaryTree_removeParentRightNode(binaryTree_t* node);
+bool binaryTree_removeParentRightNode(binaryTree_t* node);
 
 /*
  * removes root node
  * returns true in case success, otherwise false
  */
-bool antiSound_binaryTree_removeRoot(binaryTree_t* node);
+bool binaryTree_removeRoot(binaryTree_t* node);
 
 /*
  * establishes new connections between the parents of a new node right
@@ -130,10 +130,13 @@ binaryTree_t* binaryTree_getNodeRightSide(binaryTree_t* node);
  */
 binaryTree_t* binaryTree_getNodeLeftSide(binaryTree_t* node);
 
+
+binaryTree_t* binaryTree_getResponse(binaryTree_t* responses, char* searchKey);
+
 //=============================================================================================================
 
-bool antiSound_binaryTree_testInitializeNode();
+bool binaryTree_testInitializeNode();
 
-bool antiSound_bynaryTree_testGetNode(binaryTree_t* node, int id);
+bool bynaryTree_testGetNode(binaryTree_t* node, int id);
 
 #endif // ANTISOUND_BYNARYTREE_H

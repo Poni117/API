@@ -15,9 +15,9 @@ request_t* http_initializeRequest()
 
     request->method = "\0";
 
-    request->body = antiSound_list_new();
+    request->body = list_new();
 
-    request->headers = antiSound_list_new();
+    request->headers = list_new();
 
     request->http = malloc(sizeof(httpVersion_t));
 
@@ -35,17 +35,18 @@ request_t* http_initializeRequest()
 
     request->url->anchor = "\0";
 
-    request->url->queryParameters = antiSound_list_new();
+    request->url->queryParameters = list_new();
 
     return request;
 }
 
 bool http_parseMethod(request_t* request, char* requestData)
 {
+
     bool isParsedMethodExist = false;
 
     request->method = http_isolateData(requestData, requestData[0], ' ');
-
+    
     if(request->method[0] != '\0')
     {
         isParsedMethodExist = true;
@@ -138,7 +139,7 @@ bool http_parseUrl(request_t* request, char* requestData)
     return isParseUrlSuccess;
 }
 
-bool antiSound_http_parsePath(request_t* request, char* requestData)
+bool http_parsePath(request_t* request, char* requestData)
 {
     bool isParsePathExist = false;
 
@@ -216,6 +217,7 @@ bool http_parseBody(request_t* request, char* requestData)
 
     isParseBodyExist = http_parseData(request->body, alteratedBodyParameter, ',');
     
+
     free(alteratedBodyParameter);
 
     free(isolatedBodyParameters);
@@ -269,7 +271,7 @@ bool http_parseData(list_t* list, char* isolatedData, char delimiter)
         structure = body;
     }
 
-    antiSound_list_add(list, structure);
+    list_add(list, structure);
 
     if(parameter[0] != '\0')
     {

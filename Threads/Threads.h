@@ -2,7 +2,7 @@
 #include <stdbool.h>
 
 #include "../FIFO/FIFO.h"
-#include "../HTTP.h"
+#include "../HTTP/HTTP.h"
 
 void* threads_checkFifo(void* data);
 

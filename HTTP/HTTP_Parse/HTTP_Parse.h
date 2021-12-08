@@ -18,7 +18,7 @@ bool http_parseMethod(request_t* request, char* requestData);
 /*
  *  parses tasks from requestData and returns true if parse success, otherwise return false
  */
-bool antiSound_http_parsePath(request_t* request, char* requestData);
+bool http_parsePath(request_t* request, char* requestData);
 
 /*
  *  parses http from requestData and returns true if parse success, otherwise returns false
@@ -69,7 +69,7 @@ void http_testInitializeRequest();
 void http_testParseMethod(request_t* request, char* requestData);
 
 /*
- *  tests of antiSound_http_parsePath
+ *  tests of http_parsePath
  */
 void http_testParsePath(request_t* request, char* requestData);
 
@@ -84,7 +84,7 @@ void http_testParseHttpVersion(request_t* request, char* requestData);
 void http_testParseQueryParameters(request_t* request, char* requestData);
 
 /*
- *  tests of antiSound_http_parseUrl
+ *  tests of http_parseUrl
  */
 void http_testParseUrl(request_t* request, char* requestData);
 

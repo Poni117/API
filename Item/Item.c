@@ -1,14 +1,14 @@
 #include "Item.h"
 
-#include "../HTTP/HTTP.h";
+#include "../HTTP/HTTP.h"
 #include "../List/List.h"
 #include "../Constructor/Constructor.h"
 #include "../BinaryTree/BinaryTree.h"
 
-#include <stdbool.h>;
-#include <stdlib.h>;
-#include <stdio.h>;
-#include <string.h>;
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 item_t* item_initializeItem()
 {

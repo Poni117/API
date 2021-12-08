@@ -15,13 +15,13 @@ typedef struct List
 /* 
  * initializes List and returns pointer to list
  */ 
-list_t* antiSound_list_new();
+list_t* list_new();
 
 /*
  * adds new item to the list with specified data  
  * returns id of newly created item
  */
-int antiSound_list_add(list_t* list, void* data);
+int list_add(list_t* list, void* data);
 
 /*
  * updates existing item
@@ -56,38 +56,38 @@ int list_length(list_t* list);
 void list_redefineId(list_t* pointer);
 
 /*
- * test of antiSound_list_new
+ * test of list_new
  */
 list_t* antiSound_list_testNew();
 
 /*
- * test of antiSound_list_add
+ * test of list_add
  */
-void antiSound_list_testAdd(list_t* list);
+void list_testAdd(list_t* list);
 
 /*
  * test of antiSound_list_update
  */
-void antiSound_list_testUpdate(list_t* list, int id, void* newData);
+void list_testUpdate(list_t* list, int id, void* newData);
 
 /*
  * test of antiSound_list_getItem
  */
-bool antiSound_list_testGetItem(list_t* list, int id);
+bool list_testGetItem(list_t* list, int id);
 
 /*
  * test of antiSound_list_getData
  */
-bool antiSound_list_testGetData(list_t* list, int id);
+bool list_testGetData(list_t* list, int id);
 
 /*
  * test of antiSound_list_remove
  */
-void antiSound_list_testRemove(list_t* list);
+void list_testRemove(list_t* list);
 
 /*
  * test of antiSound_list_length
  */
-void antiSound_list_testLength(list_t* list);
+void list_testLength(list_t* list);
 
 #endif // ANTISOUND_LIST_H

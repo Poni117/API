@@ -40,8 +40,6 @@ bool binaryTree_addNewNode(binaryTree_t* node, void* data)
     if(getedNode == node && getedNode->data == NULL)
     {
         getedNode->data = data;
-        
-        return;
     }
 
     if(newData->id < getedItem->id)
@@ -241,7 +239,7 @@ bool binaryTree_removeNode(binaryTree_t* node, int id)
 
     if(removeNode->parent == NULL)
     {
-        return antiSound_binaryTree_removeRoot(removeNode);
+        return binaryTree_removeRoot(removeNode);
     }
 
     if(removeNode->parent->left == removeNode)
@@ -251,7 +249,7 @@ bool binaryTree_removeNode(binaryTree_t* node, int id)
 
     if(removeNode->parent->right == removeNode)
     {
-        return antiSound_binaryTree_removeParentRightNode(removeNode);
+        return binaryTree_removeParentRightNode(removeNode);
     }
 
     return false;
@@ -380,7 +378,7 @@ bool binaryTree_removeParentLeftNode(binaryTree_t* node)
     return false;
 }
 
-bool antiSound_binaryTree_removeParentRightNode(binaryTree_t* node)
+bool binaryTree_removeParentRightNode(binaryTree_t* node)
 {
     int leftHeight = binaryTree_height(node->left);
 
@@ -425,7 +423,7 @@ bool antiSound_binaryTree_removeParentRightNode(binaryTree_t* node)
     return false; 
 }
 
-bool antiSound_binaryTree_removeRoot(binaryTree_t* node)
+bool binaryTree_removeRoot(binaryTree_t* node)
 {
     int leftHeight = binaryTree_height(node->left);
 
@@ -479,4 +477,38 @@ binaryTree_t* binaryTree_getNodeLeftSide(binaryTree_t* node)
     }
 
     return newNode;
+}
+
+binaryTree_t* binaryTree_getResponse(binaryTree_t* responses, char* searchKey)
+{
+    int key = atoi(searchKey);
+    
+    if(responses == NULL)
+    {
+        return NULL;
+    }
+
+    if(responses->data == NULL)
+    {
+        return responses;
+    }
+
+    messege_t* messege = responses->data;
+
+    if(messege->key == key)
+    {
+        return responses;
+    }
+
+    if(key < messege->key && responses->left != NULL)
+    {
+        responses = binaryTree_getNode(responses->left, key);
+    }
+
+    if(key > messege->key && responses->right != NULL)
+    {
+        responses = binaryTree_getNode(responses->right, key);
+    }
+
+    return responses;
 }

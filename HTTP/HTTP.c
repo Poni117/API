@@ -19,19 +19,27 @@ task_t* http_initializeTask()
    return task;
 }
 
-request_t* http_parseRuqest(char* requestData)
+request_t* http_parseRequest(char* requestData)
 {
    request_t* request = http_initializeRequest();
 
    http_testParseMethod(request, requestData);
+
    http_testParseHttpVersion(request, requestData);
+   
    http_testParseHeaders(request, requestData);
+
    http_testParseUrl(request, requestData);
-   antiSound_http_parsePath(request, requestData);
+
+   http_testParsePath(request, requestData);
+
    http_testParseQueryParameters(request, requestData);
+
    http_testParseBody(request, requestData);
 
+
    free(requestData);
+
    return request;
 }
 

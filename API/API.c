@@ -32,7 +32,7 @@ bool api_newServer()
 
     pthread_detach(thread);
     
-    while(true)
+    while(serverSocket != -1)
     {
         int clientSocket = accept(serverSocket, NULL, NULL);
 
@@ -42,7 +42,7 @@ bool api_newServer()
 
         datas_t* datas = http_initializeDatas();
 
-        datas->request = http_parseRuqest(api_removeCorrector(buffer));
+        datas->request = http_parseRequest(api_removeCorrector(buffer));
 
         datas->root = root;
 
@@ -54,7 +54,7 @@ bool api_newServer()
 
             api_sendKey(clientSocket, key);
 
-            printf("antiSound_fifo_push[%d]\n", fifo_push(fifo, datas));
+            printf("fifo_push[%d]\n", fifo_push(fifo, datas));
 
             char* message = handler_collectResponse(datas->response);
     
@@ -121,7 +121,7 @@ int api_copySocket()
 
     setConnect.sin_family = AF_INET;
 
-    setConnect.sin_port = ntohs(8090);
+    setConnect.sin_port = ntohs(8080);
 
     setConnect.sin_addr.s_addr = inet_addr("127.0.0.1");
 
@@ -136,9 +136,10 @@ int api_copySocket()
         return bindStatus;
     }
     
+    printf("serverSocket {%d}\r\n", serverSocket);
     printf("isServerExist[%d]\n", isServerExist);
 
-    listen(serverSocket, 1);
+    listen(serverSocket, 5);
 
     return serverSocket;
 }
@@ -194,6 +195,7 @@ void* handler_messageHandler(int clientSocket, request_t* request, binaryTree_t*
 
     char* message = response->message;
     
+    printf("%s", message);
     send(clientSocket, message, strlen(message), 0);
 
     binaryTree_removeNode(node, atoi(body->name));

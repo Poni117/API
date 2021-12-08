@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-list_t* antiSound_list_new()
+list_t* list_new()
 {
     list_t* list = malloc(sizeof(list_t));
     list->data = NULL;
@@ -16,7 +16,7 @@ list_t* antiSound_list_new()
     return list;
 }
 
-int antiSound_list_add(list_t* list, void* data)
+int list_add(list_t* list, void* data)
 {
     list_t* pointer = NULL;
 
@@ -39,7 +39,7 @@ int antiSound_list_add(list_t* list, void* data)
         pointer = pointer->next;
     }
     
-    pointer->next = antiSound_list_new();
+    pointer->next = list_new();
 
     pointer->next->id = pointer->id + 1;
 
@@ -56,7 +56,7 @@ bool list_update(list_t* list, int id, void* newData)
 {
     bool isUpdateSuccess = false;
 
-    bool isItemExist = antiSound_list_testGetItem(list, id);
+    bool isItemExist = list_testGetItem(list, id);
 
     if(isItemExist == false)
     {
@@ -68,6 +68,7 @@ bool list_update(list_t* list, int id, void* newData)
     size_t sizeOfNewData = strlen(newData);
 
     free(item->data);
+
     item->data = realloc(newData, sizeOfNewData);
 
     return isUpdateSuccess = true;
@@ -100,7 +101,7 @@ bool list_remove(list_t* list, int id)
 {
     bool isRemoveSuccess = false;
 
-    bool isItemExist = antiSound_list_testGetItem(list, id);
+    bool isItemExist = list_testGetItem(list, id);
 
     if(isItemExist == false)
     {
@@ -142,11 +143,15 @@ int list_length(list_t* list)
 void list_redefineId(list_t* list)
 {
     list_t* pointer = list;
+
     int i = -1;
+
     while(pointer != NULL)
     {
         pointer->id = i;
+
         pointer = pointer->next;
+        
         i++;
     }
 }

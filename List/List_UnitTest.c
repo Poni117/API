@@ -4,13 +4,13 @@
 #include <string.h>
 #include "List.h"
 
-void antiSound_list_message(int id);
+void list_message(int id);
 
 list_t* antiSound_list_testNew()
 {
     bool status = false;
 
-    list_t* list = antiSound_list_new();
+    list_t* list = list_new();
 
     if(list->data == NULL) // check first element
     {
@@ -21,13 +21,13 @@ list_t* antiSound_list_testNew()
     {
         printf("< antiSound_list_testNew >\n");
         printf("status[%d]\n", status);
-        antiSound_list_message(0);
+        list_message(0);
     }
 
     return list;
 }
 
-void antiSound_list_testAdd(list_t* list)
+void list_testAdd(list_t* list)
 {
     bool status = false;
 
@@ -37,7 +37,7 @@ void antiSound_list_testAdd(list_t* list)
 
     void* data = "name=Dmitry";
 
-    int id = antiSound_list_add(list, data);
+    int id = list_add(list, data);
 
     list_t* item = list_getItem(list, id);
     
@@ -60,15 +60,15 @@ void antiSound_list_testAdd(list_t* list)
 
     if(status == false)
     {
-        printf("< antiSound_list_testAdd >\n\n");
+        printf("< list_testAdd >\n\n");
 
         printf("status[%d]\n", status);
         
-        antiSound_list_message(0);
+        list_message(0);
     }
 }
 
-void antiSound_list_testUpdate(list_t* list, int id, void* newData)
+void list_testUpdate(list_t* list, int id, void* newData)
 {
     bool status = false;
 
@@ -92,15 +92,15 @@ void antiSound_list_testUpdate(list_t* list, int id, void* newData)
 
     if(status == false)
     {
-        printf("< antiSound_list_testUpdate >\n\n");
+        printf("< list_testUpdate >\n\n");
 
         printf("status[%d]\n", status); 
 
-        antiSound_list_message(0);
+        list_message(0);
     }
 }
 
-bool antiSound_list_testGetItem(list_t* list, int id)
+bool list_testGetItem(list_t* list, int id)
 {
     bool status = false;
 
@@ -120,21 +120,21 @@ bool antiSound_list_testGetItem(list_t* list, int id)
     
     if(status == false)
     {
-        printf("< antiSound_list_testGetItem >\n\n");
+        printf("< list_testGetItem >\n\n");
 
         printf("status[%d]\n", status);
 
-        antiSound_list_message(0);
+        list_message(0);
     }
 
     return status;
 }
 
-bool antiSound_list_testGetData(list_t* list, int id)
+bool list_testGetData(list_t* list, int id)
 {
     bool status = false;
 
-    bool isItemExist = antiSound_list_testGetItem(list, id);
+    bool isItemExist = list_testGetItem(list, id);
 
     if(isItemExist == false)
     {
@@ -152,18 +152,18 @@ bool antiSound_list_testGetData(list_t* list, int id)
     
     if(status == false)
     {
-        printf("< antiSound_list_testGetData >\n\n");
+        printf("< list_testGetData >\n\n");
 
         printf("status[%d]\n", status);
 
-        antiSound_list_message(0);
+        list_message(0);
     }
 
     return status;
 
 }
 
-void antiSound_list_testRemove(list_t* list)
+void list_testRemove(list_t* list)
 {
     bool status = false;
 
@@ -211,15 +211,15 @@ void antiSound_list_testRemove(list_t* list)
 
     if(status == false)
     {
-        printf("< antiSound_list_testRemove >\n\n");
+        printf("< list_testRemove >\n\n");
 
         printf("status[%d]\n", status);
 
-        antiSound_list_message(0);
+        list_message(0);
     }
 }
 
-void antiSound_list_testLength(list_t* list)
+void list_testLength(list_t* list)
 {
     bool status = false;
 
@@ -232,15 +232,15 @@ void antiSound_list_testLength(list_t* list)
 
     if(status == false)
     {
-        printf("< antiSound_list_testLength >\n\n");
+        printf("< list_testLength >\n\n");
 
         printf("status[%d]\n", status);
 
-        antiSound_list_message(0);
+        list_message(0);
     }
 }
 
-void antiSound_list_message(int id)
+void list_message(int id)
 {
         switch (id)
         {

@@ -21,6 +21,9 @@
         "api.h": "c",
         "constructor.h": "c",
         "threads.h": "c",
-        "http_parse.h": "c"
+        "http_parse.h": "c",
+        "binarytree.h": "c",
+        "socket.h": "c",
+        "inet.h": "c"
     }
 }

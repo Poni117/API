@@ -69,7 +69,6 @@ bool item_testGetItem(int id, binaryTree_t* root);
  */
 bool item_testRead(request_t* request, response_t* response, binaryTree_t* root);
 
-
 /*
  *  test of antiSound_item_create
  */

@@ -6,7 +6,7 @@
 #include "../Item/Item.h"
 #include "../BinaryTree/BinaryTree.h"
 
-bool antiSound_binaryTree_testInitializeNode()
+bool binaryTree_testInitializeNode()
 {
     bool isNodeInitialzed = false;
 
@@ -47,7 +47,7 @@ bool antiSound_binaryTree_testInitializeNode()
 
     if (isNodeInitialzed == false)
     {
-        printf("< antiSound_binaryTree_testInitializeNode >\n");
+        printf("< binaryTree_testInitializeNode >\n");
 
         printf("isNodeInitialzed[%d]\n", isNodeInitialzed);
 
@@ -55,7 +55,7 @@ bool antiSound_binaryTree_testInitializeNode()
     }
 }
 
-bool antiSound_bynaryTree_testGetNode(binaryTree_t* node, int id)
+bool bynaryTree_testGetNode(binaryTree_t* node, int id)
 {
     bool isNodeExist = false;
 
@@ -68,7 +68,7 @@ bool antiSound_bynaryTree_testGetNode(binaryTree_t* node, int id)
 
     if(isNodeExist == false)
     {
-        printf("< antiSound_bynaryTree_testGetNode >\n");
+        printf("< bynaryTree_testGetNode >\n");
 
         printf("isNodeExist[%d]\n", isNodeExist);
 
